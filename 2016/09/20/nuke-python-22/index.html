@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://cgcoder.com/2016/09/20/nuke-python-22/index.html">
 <meta property="og:site_name" content="Cgcoder">
 <meta property="og:description" content="性能分析">
-<meta property="og:updated_time" content="2016-09-20T04:23:44.065Z">
+<meta property="og:updated_time" content="2016-09-20T06:55:35.955Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nuke Python 性能分析">
 <meta name="twitter:description" content="性能分析">
@@ -96,7 +96,7 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#使用性能计时器"><span class="toc-number">1.</span> <span class="toc-text">使用性能计时器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Nuke架构上的注意事项"><span class="toc-number">2.</span> <span class="toc-text">Nuke架构上的注意事项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#通过python获取能耗时间"><span class="toc-number">3.</span> <span class="toc-text">通过python获取能耗时间</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#其他性能统计"><span class="toc-number">4.</span> <span class="toc-text">其他性能统计</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#讲性能信息写入XML"><span class="toc-number">5.</span> <span class="toc-text">讲性能信息写入XML</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#使用性能计时器"><span class="toc-number">1.</span> <span class="toc-text">使用性能计时器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Nuke架构上的注意事项"><span class="toc-number">2.</span> <span class="toc-text">Nuke架构上的注意事项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#通过python获取能耗时间"><span class="toc-number">3.</span> <span class="toc-text">通过python获取能耗时间</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#其他性能统计"><span class="toc-number">4.</span> <span class="toc-text">其他性能统计</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#性能信息写入XML"><span class="toc-number">5.</span> <span class="toc-text">性能信息写入XML</span></a></li></ol>
 		
 		</div>
 		
@@ -137,7 +137,7 @@
 <p>正如预料的,Defocus大部分时间花在了engine处理上,store,validate,request相对都很快.<br>如果并非如此,或者<strong>callCount</strong>显示store,validate,request调用次数很多,就说明这<br>是一个影响性能的问题了.</p>
 <p>注意某些节点就是要比例子中的Defocus在store,validate,request阶段花费更多时间.例如,<br>reader在validate阶段更长,因为需要打开文件,如果是网络文件就会更慢. ScanlineReader节点<br>是另一个例子,validate要更长,同事store节点比RotoPaint更慢,因为需要bake曲线.带有耗时<br>表达式的knbo也会在store节点花费更多时间.</p>
 <p><br></p>
-<h5 id="讲性能信息写入XML"><a href="#讲性能信息写入XML" class="headerlink" title="讲性能信息写入XML"></a>讲性能信息写入XML</h5><p>当使用 “-Pf <filename>“参数运行nuke时,性能数据连带部分系统数据会自动写入XML文件.<br>此模式下,性能计时器会再渲染开始前启动,渲染结束后就讲数据写入xml文件. 当nuke在<br>此模式运行时,调用:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.performanceProfileFilename()</div></pre></td></tr></table></figure></filename></p>
+<h5 id="性能信息写入XML"><a href="#性能信息写入XML" class="headerlink" title="性能信息写入XML"></a>性能信息写入XML</h5><p>当使用 “-Pf <filename>“参数运行nuke时,性能数据连带部分系统数据会自动写入XML文件.<br>此模式下,性能计时器会再渲染开始前启动,渲染结束后就讲数据写入xml文件. 当nuke在<br>此模式运行时,调用:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.performanceProfileFilename()</div></pre></td></tr></table></figure></filename></p>
 <p>会返回xml文件名。</p>
   
 	</div>
@@ -205,7 +205,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#使用性能计时器"><span class="toc-number">1.</span> <span class="toc-text">使用性能计时器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Nuke架构上的注意事项"><span class="toc-number">2.</span> <span class="toc-text">Nuke架构上的注意事项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#通过python获取能耗时间"><span class="toc-number">3.</span> <span class="toc-text">通过python获取能耗时间</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#其他性能统计"><span class="toc-number">4.</span> <span class="toc-text">其他性能统计</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#讲性能信息写入XML"><span class="toc-number">5.</span> <span class="toc-text">讲性能信息写入XML</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#使用性能计时器"><span class="toc-number">1.</span> <span class="toc-text">使用性能计时器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Nuke架构上的注意事项"><span class="toc-number">2.</span> <span class="toc-text">Nuke架构上的注意事项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#通过python获取能耗时间"><span class="toc-number">3.</span> <span class="toc-text">通过python获取能耗时间</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#其他性能统计"><span class="toc-number">4.</span> <span class="toc-text">其他性能统计</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#性能信息写入XML"><span class="toc-number">5.</span> <span class="toc-text">性能信息写入XML</span></a></li></ol>
  
   </div>
 
