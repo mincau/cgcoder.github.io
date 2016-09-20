@@ -1,0 +1,593 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python 获取图像数据 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="获取图像的数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python 获取图像数据">
+<meta property="og:url" content="http://cgcoder.com/2016/09/12/nuke-python-8/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="获取图像的数据">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/getMinMax_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/getMinMax_02.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/getMinMax_03.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/getMinMax_04.png">
+<meta property="og:updated_time" content="2016-09-12T13:50:00.998Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python 获取图像数据">
+<meta name="twitter:description" content="获取图像的数据">
+<meta name="twitter:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/getMinMax_01.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/12/nuke-python-8/" title="Nuke Python 获取图像数据" itemprop="url">Nuke Python 获取图像数据</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-12T13:50:00.998Z" itemprop="datePublished"> 发表于 2016-09-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#使用CurveTool"><span class="toc-number">1.</span> <span class="toc-text">使用CurveTool</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用sample方法"><span class="toc-number">2.</span> <span class="toc-text">使用sample方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例子"><span class="toc-number">3.</span> <span class="toc-text">例子</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#getMinMax"><span class="toc-number">3.1.</span> <span class="toc-text">getMinMax</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#使用Sample"><span class="toc-number">3.2.</span> <span class="toc-text">使用Sample</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>通过python有两种方式读取图像的像素数据：</p>
+<ul>
+<li>创建分析图像的节点（比如，MinColor， CurveTool），执行，然后读取其结果的knob数值</li>
+<li>sample方法可以直接抽样节点的像素。</li>
+</ul>
+<p><br></p>
+<h5 id="使用CurveTool"><a href="#使用CurveTool" class="headerlink" title="使用CurveTool"></a>使用CurveTool</h5><p>创建CurveTool节点，执行后删除，并显示其分析结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">noise = nuke.createNode(<span class="string">'Noise'</span>)</div><div class="line">noise[<span class="string">'zoffset'</span>].setExpression( <span class="string">'frame*100 '</span> )</div><div class="line">ct = nuke.createNode(<span class="string">'CurveTool'</span>)</div><div class="line"></div><div class="line">nuke.execute( ct, nuke.frame(), nuke.frame() )</div><div class="line"></div><div class="line">dat = ct[<span class="string">'intensitydata'</span>].value()</div><div class="line"></div><div class="line">nuke.delete(ct)</div><div class="line">nuke.message( <span class="string">'average luminance is %s'</span> % dat )</div></pre></td></tr></table></figure></p>
+<h5 id="使用sample方法"><a href="#使用sample方法" class="headerlink" title="使用sample方法"></a>使用sample方法</h5><p>创建Noise节点，在x=500，y=600抽样红色通道，并输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">noise = nuke.createNode(&apos;Noise&apos;)</div><div class="line">print noise.sample(&apos;red&apos;, 500, 600)</div></pre></td></tr></table></figure></p>
+<p>下面代码结果一样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">print nuke.sample(noise, &apos;red&apos;, 500, 600)</div></pre></td></tr></table></figure></p>
+<p><br></p>
+<h5 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h5><h6 id="getMinMax"><a href="#getMinMax" class="headerlink" title="getMinMax"></a>getMinMax</h6><p>此工具可以抽取通道中的最大最小值。最近nuke的python api中没有现成的方法，一般利用MinColor的功能来实现。因此工作流中创建一<br>些临时节点，在当前帧上执行（为我们计算），然后删除。</p>
+<p>刚开始，先创建一个测试方案：创建Ramp节点，将Grade节点挂到上面。确保Grade的black clamp knob禁止，然后可以用任意值来测试lift和gain knob。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/getMinMax_01.png" alt="_images/getMinMax_01.png"></p>
+<p>创建MinColor节点，挂到Grade节点，MinColor的channels knob设置成默认rgba就行，调整其他knob。当目标knob被设置为0时，在当前<br>帧执行。输入节点的rgba层的delta knob保存了最小值。delta knob的值和你在Grade节点的lift knob的值很接近，但为负的。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/getMinMax_02.png" alt="_images/getMinMax_02.png"></p>
+<p>想获取最大值，那么反转图像先，使用MinColor节点再走一边上面的流程。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/getMinMax_03.png" alt="_images/getMinMax_03.png"></p>
+<p>反转图像意味着像素值从1到1-x，需要给delta knob加上1才能获得原始图像的最大值（方法很多）<br>现在知道怎么获取最大最小值。删除MinColor，反转节点，写一段脚本来干此事。<br>先从DAG图中抓取Grade1节点，然后添加MinColor节点，其target knob通过python设置为0：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">srcNode = nuke.toNode(<span class="string">'Grade1'</span>)</div><div class="line">nuke.nodes.MinColor( target=<span class="number">0</span> )</div></pre></td></tr></table></figure></p>
+<p>其toNode（）可以直接获取DAG中的节点。nuke.nodes可以替代nuke.createNode()方法。不同之处在于createNode()和从菜单创建是一样<br>的。这意味着：</p>
+<ul>
+<li>将选择的焦点切换到新节点</li>
+<li>尝试链接新节点</li>
+<li>自动给新节点定位</li>
+<li>挂起当前视图缓冲区</li>
+<li>打开默认panel控制面板</li>
+</ul>
+<p>nuke.nodes就不是手工操作了，创建节点后，啥也不改变。我们要创建临时节点，后面还要删除，这样用户的节点图就不会因为临时节点<br>改变。麻烦就是需要手工链接新节点：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">srcNode = nuke.toNode(&apos;Grade1&apos;)</div><div class="line">nuke.nodes.MinColor( target=0, inputs=[srcNode])</div></pre></td></tr></table></figure></p>
+<p>inputs参数接收一个列表，因为会有多输入。这样，可以一次将其全部链接。<br>现在需要赋一个参数来定义不需要分析的通道，同时我们不想限制到rgba上。将新节点赋值给变量，随后可以在代码中使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">srcNode = nuke.toNode(&apos;Grade1&apos;)</div><div class="line">channel = &apos;rgba.red&apos;</div><div class="line">MinColor = nuke.nodes.Mincolor( channels=channel, target=0, inputs=[srcNode])</div></pre></td></tr></table></figure></p>
+<p>上面的代码仅分析red通道。<br>现在创建新MinColor，并反转图像，确保链接对应的输入，并在对应的通道上工作（或许想删除前面的临时节点）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">srcNode = nuke.toNode(&apos;Grade1&apos;)</div><div class="line">channel = &apos;rgba.red&apos;</div><div class="line">MinColor = nuke.nodes.MinColor( channels = channel, target=0, inputs=[srcNode] )</div><div class="line">Inv = nuke.nodes.Invert( channels = channel, inputs=[srcNode])</div><div class="line">MaxColor = nuke.nodes.MinColor( channels = channel, target=0, inputs[Inv] )</div></pre></td></tr></table></figure></p>
+<p>结果如下：<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/getMinMax_04.png" alt="images/getMinMax_04.png"></p>
+<p>现在，节点树已有，执行MinColor节点来获取我们所需。nuke.execute()来办事：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">curFrame = nuke.frame()</div><div class="line">nuke.execute( MinColor, curFrame, curFrame)</div></pre></td></tr></table></figure></p>
+<p>可以看到，需要给节点提供起始帧作为参数，可以用FrameRanges对象替代。在pixeldelta knob中可以找到最小颜色。记得取反才是正确值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">minV = -MinColor[&apos;pixeldelta&apos;].value()</div></pre></td></tr></table></figure></p>
+<p>现在第二个MinColor干一样的事情，连接到Invert节点（我们存在了MaxColor里面），记得给结果加上1来取得真正的最大值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.execute(MaxColor, curFrame, curFrame)</div><div class="line">maxV = MaxColor[&apos;pixeldelta&apos;].value() + 1</div></pre></td></tr></table></figure></p>
+<p>现在是清理时间，让我们删除这些节点：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for n in ( MinColor, MaxColor, Inv ):</div><div class="line">    nuke.delete(n)</div></pre></td></tr></table></figure></p>
+<p>完成代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">srcNode = nuke.toNode(<span class="string">' Grade1'</span>)</div><div class="line">channel = <span class="string">'rgba.red'</span></div><div class="line">MinColor = nuke.nodes.MinColor( channels=channel, target=<span class="number">0</span>, inputs=[srcNode] )</div><div class="line">Inv = nuke.nodes.Invert( channels = channel, inputs= [srcNode])</div><div class="line">MaxColor = nuke.nodes.MinColor( channels =channel, target=<span class="number">0</span>, inputs=[Inv] )</div><div class="line"></div><div class="line">curFrame = nuke.frame()</div><div class="line">nuke.execute( MinColor, curFrame, curFrame)</div><div class="line">minV = -MinColor[<span class="string">'pixeldelta'</span>].value()</div><div class="line"></div><div class="line">nuke.execute( MaxColor, curFrame, curFrame)</div><div class="line">maxV = MaxColor[<span class="string">'pixeldelta'</span>].value + <span class="number">1</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> n <span class="keyword">in</span> ( MinColor, MaxColor, Inv):</div><div class="line">    nuke.delete(n)</div></pre></td></tr></table></figure></p>
+<p>将代码封装成函数，参数为node和channel，默认分析深度通道：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMinMax</span><span class="params">( srcNode, channel=<span class="string">'depth.Z'</span> )</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    Return the min and max values of a given node's image as a tuple</div><div class="line">    args:</div><div class="line">       srcNode  - node to analyse</div><div class="line">       channels  - channels to analyse. This can either be a channel or layer name</div><div class="line">    '''</div><div class="line">    MinColor = nuke.nodes.MinColor( channels=channel, target=<span class="number">0</span>, inputs=[srcNode] )</div><div class="line">    Inv = nuke.nodes.Invert( channels=channel, inputs=[srcNode])</div><div class="line">    MaxColor = nuke.nodes.MinColor( channels=channel, target=<span class="number">0</span>, inputs=[Inv] )</div><div class="line"></div><div class="line">    curFrame = nuke.frame()</div><div class="line">    nuke.execute( MinColor, curFrame, curFrame )</div><div class="line">    minV = -MinColor[<span class="string">'pixeldelta'</span>].value()</div><div class="line"></div><div class="line">    nuke.execute( MaxColor, curFrame, curFrame )</div><div class="line">    maxV = MaxColor[<span class="string">'pixeldelta'</span>].value() + <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> ( MinColor, MaxColor, Inv ):</div><div class="line">        nuke.delete( n )</div><div class="line">    <span class="keyword">return</span> minV, maxV</div></pre></td></tr></table></figure>
+<p>将次模块放到插件路径下，用black 和white点创建Grade节点，并设置为深度通道的最大最小值，其会自动归一化：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">minV, maxV = getMinMax(nuke.selectedNode())</div><div class="line">grade =nuke.createNode(<span class="string">'Grade'</span>)</div><div class="line">grade[<span class="string">'blackpoint'</span>].setValue(minV)</div><div class="line">grade[<span class="string">'whitepoint'</span>].setValue(maxV)</div></pre></td></tr></table></figure></p>
+<p>更加简洁的做法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.createNode(&apos;Grade&apos;, &apos;channels depth.Z blackpoint %s whitepoint %s&apos; % examples.getMinMax(nuke.selectedNode()))</div></pre></td></tr></table></figure></p>
+<p><br></p>
+<h6 id="使用Sample"><a href="#使用Sample" class="headerlink" title="使用Sample"></a>使用Sample</h6><p>下面是一个LUT的例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getLUT</span><span class="params">( size=<span class="number">1024</span> )</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    Get the current viewer process node and generate a simple lut from it</div><div class="line">    args:</div><div class="line">       size  -  size of resulting lut (default=1024)</div><div class="line">    '''</div><div class="line">    vpNode = nuke.ViewerProcess.node()</div><div class="line">    vp = eval( <span class="string">'nuke.nodes.%s()'</span> % vpNode.Class() )</div><div class="line">    _copyKnobsFromScriptToScript( vpNode, vp )</div><div class="line"></div><div class="line">    ramp = nuke.nodes.Ramp()</div><div class="line">    ramp[<span class="string">'p0'</span>].setValue( (<span class="number">0</span>, <span class="number">0</span>) )</div><div class="line">    ramp[<span class="string">'p1'</span>].setValue( (size, <span class="number">0</span>) )</div><div class="line"></div><div class="line">    vp.setInput(<span class="number">0</span>, ramp )</div><div class="line"></div><div class="line">    saturation = nuke.nodes.Saturation( saturation = <span class="number">0</span> )</div><div class="line">    saturation.setInput(<span class="number">0</span>, vp )</div><div class="line">    lut = [ saturation.sample(<span class="string">"rgba.red"</span>, i+<span class="number">.5</span>, <span class="number">0.5</span>) <span class="keyword">for</span> i <span class="keyword">in</span> xrange( <span class="number">0</span>, size )]</div><div class="line"></div><div class="line">    nuke.delete( saturation )</div><div class="line">    nuke.delete( ramp )</div><div class="line">    nuke.delete( vp )</div><div class="line"></div><div class="line">    <span class="keyword">return</span> lut</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">createLutNode</span><span class="params">( lut )</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    Create a ColorLookup node to hold lut. The values are normalised.</div><div class="line">    args:</div><div class="line">        lut  -  list of floating point numbers</div><div class="line">    '''</div><div class="line">    lutNode = nuke.createNode( <span class="string">'ColorLookup'</span> )</div><div class="line">    lutKnob = lutNode[<span class="string">'lut'</span>]</div><div class="line">    <span class="keyword">for</span> i, y <span class="keyword">in</span> enumerate( lut ):</div><div class="line">        x = float(i) / len(lut)</div><div class="line">        lutKnob.setValueAt( y, x )</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_copyKnobsFromScriptToScript</span><span class="params">( srcNode, trgNode)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    Copy knobs between nodes.</div><div class="line">    This function can also be found in the default menu.py</div><div class="line">    args:</div><div class="line">       srcNode  -  node to copy values from</div><div class="line">       trgNode  -  node to copy values to</div><div class="line">    '''</div><div class="line">    srcKnobs = srcNode.knobs()</div><div class="line">    trgKnobs = trgNode.knobs()</div><div class="line">    excludedKnobs = [<span class="string">"name"</span>, <span class="string">"xpos"</span>, <span class="string">"ypos"</span>]</div><div class="line">    intersection = dict([ (item, srcKnobs[ item ]) <span class="keyword">for</span> item <span class="keyword">in</span> srcKnobs.keys() <span class="keyword">if</span> item <span class="keyword">not</span> <span class="keyword">in</span> excludedKnobs <span class="keyword">and</span> trgKnobs.has_key( item ) ])</div><div class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> intersection.keys():</div><div class="line">                trgNode[ k ].fromScript( srcNode[ k ].toScript() )</div></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/09/12/nuke-python-8/" data-title="Nuke Python 获取图像数据 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/12/nuke-python-9/" title="Nuke Python 自定义Panel">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 自定义Panel</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/12/nuke-python-7/"  title="Nuke Python roto">
+ <strong>下一篇：</strong><br/> 
+ <span>Nuke Python roto
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/12/nuke-python-8/" data-title="Nuke Python 获取图像数据" data-url="http://cgcoder.com/2016/09/12/nuke-python-8/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#使用CurveTool"><span class="toc-number">1.</span> <span class="toc-text">使用CurveTool</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用sample方法"><span class="toc-number">2.</span> <span class="toc-text">使用sample方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例子"><span class="toc-number">3.</span> <span class="toc-text">例子</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#getMinMax"><span class="toc-number">3.1.</span> <span class="toc-text">getMinMax</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#使用Sample"><span class="toc-number">3.2.</span> <span class="toc-text">使用Sample</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

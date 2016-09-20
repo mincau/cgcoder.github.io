@@ -1,0 +1,582 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Yeti 命令教程 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="简单介绍Yeti基本的mel命令，获取cache，texture路径。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Yeti 命令教程">
+<meta property="og:url" content="http://cgcoder.com/2016/07/29/Yeti-Command/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="简单介绍Yeti基本的mel命令，获取cache，texture路径。">
+<meta property="og:updated_time" content="2016-08-23T06:11:23.258Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Yeti 命令教程">
+<meta name="twitter:description" content="简单介绍Yeti基本的mel命令，获取cache，texture路径。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/07/29/Yeti-Command/" title="Yeti 命令教程" itemprop="url">Yeti 命令教程</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-07-29T05:31:31.141Z" itemprop="datePublished"> 发表于 2016-07-29</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-在Maya中获取Yeti-graph-node"><span class="toc-number">1.</span> <span class="toc-text">1.  在Maya中获取Yeti graph node</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-获取Yeti-graph-node中的-cache-文件路径"><span class="toc-number">2.</span> <span class="toc-text">2.   获取Yeti graph node中的 cache 文件路径</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-获取Yeti节点图内部节点"><span class="toc-number">3.</span> <span class="toc-text">3.  获取Yeti节点图内部节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-获取Yeti节点图中的某种节点"><span class="toc-number">4.</span> <span class="toc-text">4.  获取Yeti节点图中的某种节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-获取Yeti节点图中某个节点所有属性"><span class="toc-number">5.</span> <span class="toc-text">5.  获取Yeti节点图中某个节点所有属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-获取Yeti节点属性"><span class="toc-number">6.</span> <span class="toc-text">6.  获取Yeti节点属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#7-修改Yeti节点属性"><span class="toc-number">7.</span> <span class="toc-text">7.  修改Yeti节点属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#8-一点参考代码"><span class="toc-number">8.</span> <span class="toc-text">8.  一点参考代码</span></a></li></ol>
+		
+		</div>
+		
+		<p>我其实不会用Yeti插件，做不出好看的皮毛效果，因项目而熟悉Yeti的mel。Yeti的文档是相当全，不懂的完全可以看<a href="http://documentation.peregrinelabs.com/yeti/scriptingref.html" target="_blank" rel="external">Yeti官方文档</a>，进入正题。</p>
+<p>最近实际使用中发现一个常识性问题，汗。Yeti在导出成cache后，就不能修改<strong>graph</strong>里面节点<br>的属性了。 想改就得切换到非<strong>cache</strong>模式（<strong>none</strong>，cache，groom），改完后需要重新导出<br><strong>cache</strong>，很费时间。<br><br></p>
+<h5 id="1-在Maya中获取Yeti-graph-node"><a href="#1-在Maya中获取Yeti-graph-node" class="headerlink" title="1.  在Maya中获取Yeti graph node"></a>1.  在Maya中获取Yeti graph node</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> maya.cmds <span class="keyword">as</span> cmd</div><div class="line">all = cmd.ls(type=<span class="string">'pgYetiMaya'</span>)</div></pre></td></tr></table></figure>
+<p>node的类名为 <strong>pgYetiMaya</strong>。 长时间不用Maya都忘了去哪找node的type了。</p>
+<p><br></p>
+<h5 id="2-获取Yeti-graph-node中的-cache-文件路径"><a href="#2-获取Yeti-graph-node中的-cache-文件路径" class="headerlink" title="2.   获取Yeti graph node中的 cache 文件路径"></a>2.   获取Yeti graph node中的 cache 文件路径</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cmd.getAttr(node+<span class="string">'.cacheFileName'</span>)</div></pre></td></tr></table></figure>
+<p>node为 1 中获取的节点名。 大部分时间不知道属性名，只能悲催地用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cmd.listAttr(node,  r=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>列出来慢慢找了。</p>
+<p><br></p>
+<h5 id="3-获取Yeti节点图内部节点"><a href="#3-获取Yeti节点图内部节点" class="headerlink" title="3.  获取Yeti节点图内部节点"></a>3.  获取Yeti节点图内部节点</h5><p>其实Yeti本身内部就是一个旧节点图，通过命令可以获取到这些节点，并能修改其属性。mel命令如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgYetiGraph -listNodes node</div></pre></td></tr></table></figure>
+<p>node为 1 中获取的节点名</p>
+<p><br></p>
+<h5 id="4-获取Yeti节点图中的某种节点"><a href="#4-获取Yeti节点图中的某种节点" class="headerlink" title="4.  获取Yeti节点图中的某种节点"></a>4.  获取Yeti节点图中的某种节点</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgYetiGraph -listNodes -type <span class="string">"texture"</span> node</div></pre></td></tr></table></figure>
+<p>-type指定 节点类型，类型可以在Yeti的Graph editor中查看。通过maya.mel.eval() 执行后会得到一个包含node name的list</p>
+<p><br></p>
+<h5 id="5-获取Yeti节点图中某个节点所有属性"><a href="#5-获取Yeti节点图中某个节点所有属性" class="headerlink" title="5.  获取Yeti节点图中某个节点所有属性"></a>5.  获取Yeti节点图中某个节点所有属性</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgYetiGraph -node <span class="string">"texture"</span> -listParams node</div></pre></td></tr></table></figure>
+<p>-node 指定Graph editor中存在的节点。  -listParams 说明要列出所有属性</p>
+<p><br></p>
+<h5 id="6-获取Yeti节点属性"><a href="#6-获取Yeti节点属性" class="headerlink" title="6.  获取Yeti节点属性"></a>6.  获取Yeti节点属性</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgYetiGraph -node <span class="string">"texture01"</span> -param <span class="string">"file_name"</span> -getParamValue node</div></pre></td></tr></table></figure>
+<p>-param 指定属性名。大部分时候不知道属性名，就需要5中的方法，先全列出来看看。-getParamValue 说明是获取属性。很明显肯定有<br>对应修改属性的参数。</p>
+<p><br></p>
+<h5 id="7-修改Yeti节点属性"><a href="#7-修改Yeti节点属性" class="headerlink" title="7.  修改Yeti节点属性"></a>7.  修改Yeti节点属性</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgYetiGraph -node <span class="string">"texture01"</span> -param <span class="string">"file_name"</span> -setParamValueString <span class="string">"new_path"</span>  node</div></pre></td></tr></table></figure>
+<p>-setParamValueString 后面加空格 跟上新路径</p>
+<p><br></p>
+<h5 id="8-一点参考代码"><a href="#8-一点参考代码" class="headerlink" title="8.  一点参考代码"></a>8.  一点参考代码</h5><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">import maya.cmds as cmd</div><div class="line">import maya.mel as mel</div><div class="line"></div><div class="line">def get_graph_path(node):</div><div class="line">    return cmd.getAttr(node+'.cacheFileName')</div><div class="line"></div><div class="line">def set_graph_path(node, path):</div><div class="line">    cmd.setAttr(node+'.cacheFileName', path)</div><div class="line"></div><div class="line">def get_texture_node(graph_node):</div><div class="line">    mel_cmd = 'pgYetiGraph -listNodes -type "texture" %s' % str(graph_node)</div><div class="line">    texture_nodes = mel.eval(mel_cmd)</div><div class="line">    return texture_nodes</div><div class="line"></div><div class="line">def get_texture_path(texture, graph):</div><div class="line">    mel_cmd = 'pgYetiGraph -node "%s" -param "file_name" -getParamValue %s' %(str(texture), str(graph))</div><div class="line">    path = mel.eval(mel_cmd)</div><div class="line">    return path</div><div class="line"></div><div class="line">def set_texture_path(path, node, graph):</div><div class="line">    mel_cmd = 'pgYetiGraph -node "&#123;node_name&#125;" -param "file_name" -setParamValueString &#123;path&#125;  &#123;graph&#125;'\</div><div class="line">    .format(node_name=str(node), path=str(path), graph=str(graph))</div><div class="line">    print mel_cmd</div><div class="line"></div><div class="line">def get_reference_node(graph_node):</div><div class="line">    mel_cmd = 'pgYetiGraph -listNodes -type "reference" %s' % str(graph_node)</div><div class="line">    ref_nodes = mel.eval(mel_cmd)</div><div class="line">    return ref_nodes</div><div class="line"></div><div class="line">def get_reference_path(node, graph)</div><div class="line">    mel_cmd = 'pgYetiGraph -node "%s" -param "file_name" -getParamValue %s' %(str(node), str(graph))</div><div class="line">    path = mel.eval(mel_cmd)</div><div class="line">    return path</div><div class="line"></div><div class="line">def set_reference_path(path, node, graph):</div><div class="line">	mel_cmd = 'pgYetiGraph -node "&#123;node_name&#125;" -param "reference_file" -setParamValueString &#123;path&#125;  &#123;graph&#125;'.format\</div><div class="line">	(node_name=str(node), path=str(path), graph=str(graph))</div><div class="line">    path = mel.eval(mel_cmd)</div><div class="line">    return path</div><div class="line"></div><div class="line">all_yeti_nodes = cmd.ls(type='pgYetiMaya')</div><div class="line">for node_name in all_yeti_nodes:</div><div class="line">    # 获取yeti cache的路径</div><div class="line">    cache = get_graph_path(node_name)</div><div class="line">    # 每个yeti cahce内部都是个节点图，获取所有 texture节点</div><div class="line">    # 返回的是节点名字的list</div><div class="line">    tnodes = get_texture_node(node_name)</div><div class="line">    for node in tnodes:</div><div class="line">        # 获取texture节点内部的 图片路径</div><div class="line">        texs = get_texture_path(node, node_name)</div><div class="line"></div><div class="line">        # 给texture节点设置新的 path</div><div class="line">        #set_texture_path(texs, node, node_name)</div></pre></td></tr></table></figure>
+<p>更多请参考<a href="http://documentation.peregrinelabs.com/yeti/scriptingref.html" target="_blank" rel="external">Yeti官方文档</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/app-plugin/">app-plugin</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/yeti/">yeti</a><a href="/tags/mel/">mel</a><a href="/tags/fur/">fur</a><a href="/tags/hair/">hair</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/07/29/Yeti-Command/" data-title="Yeti 命令教程 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/08/01/gen-TD/" title="图标生成TD">
+  <strong>上一篇：</strong><br/>
+  <span>
+  图标生成TD</span>
+</a>
+</div>
+
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/07/29/Yeti-Command/" data-title="Yeti 命令教程" data-url="http://cgcoder.com/2016/07/29/Yeti-Command/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-在Maya中获取Yeti-graph-node"><span class="toc-number">1.</span> <span class="toc-text">1.  在Maya中获取Yeti graph node</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-获取Yeti-graph-node中的-cache-文件路径"><span class="toc-number">2.</span> <span class="toc-text">2.   获取Yeti graph node中的 cache 文件路径</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-获取Yeti节点图内部节点"><span class="toc-number">3.</span> <span class="toc-text">3.  获取Yeti节点图内部节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-获取Yeti节点图中的某种节点"><span class="toc-number">4.</span> <span class="toc-text">4.  获取Yeti节点图中的某种节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-获取Yeti节点图中某个节点所有属性"><span class="toc-number">5.</span> <span class="toc-text">5.  获取Yeti节点图中某个节点所有属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-获取Yeti节点属性"><span class="toc-number">6.</span> <span class="toc-text">6.  获取Yeti节点属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#7-修改Yeti节点属性"><span class="toc-number">7.</span> <span class="toc-text">7.  修改Yeti节点属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#8-一点参考代码"><span class="toc-number">8.</span> <span class="toc-text">8.  一点参考代码</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

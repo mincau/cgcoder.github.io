@@ -1,0 +1,580 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Alembic文件格式简介--设计思想和理念 2 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="Alembic中容器的层级关系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Alembic文件格式简介--设计思想和理念 2">
+<meta property="og:url" content="http://cgcoder.com/2016/08/11/Alembic-design-philosophy-section2/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="Alembic中容器的层级关系">
+<meta property="og:updated_time" content="2016-08-15T05:53:11.728Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Alembic文件格式简介--设计思想和理念 2">
+<meta name="twitter:description" content="Alembic中容器的层级关系">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/08/11/Alembic-design-philosophy-section2/" title="Alembic文件格式简介--设计思想和理念 2" itemprop="url">Alembic文件格式简介--设计思想和理念 2</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-08-11T02:03:02.907Z" itemprop="datePublished"> 发表于 2016-08-11</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Alembic中容器的层级关系"><span class="toc-number">1.</span> <span class="toc-text">Alembic中容器的层级关系</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Archive"><span class="toc-number">1.1.</span> <span class="toc-text">Archive</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Object"><span class="toc-number">1.2.</span> <span class="toc-text">Object</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Property"><span class="toc-number">1.3.</span> <span class="toc-text">Property</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#Scalar-Property"><span class="toc-number">1.3.1.</span> <span class="toc-text">Scalar Property</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Array-Property"><span class="toc-number">1.3.2.</span> <span class="toc-text">Array Property</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Sample"><span class="toc-number">1.4.</span> <span class="toc-text">Sample</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#To-Recap"><span class="toc-number">1.5.</span> <span class="toc-text">To Recap</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h4 id="Alembic中容器的层级关系"><a href="#Alembic中容器的层级关系" class="headerlink" title="Alembic中容器的层级关系"></a>Alembic中容器的层级关系</h4><p>上面说了，下面继续</p>
+<p>层级是Alembic的核心概念，并反映在容器的结构上。为了此章，除了直接写出命名空间，例如，<br>AbcA::chorno_t，其他所有类都来自Abc层。同时，这里提到的容器不会冠以“O”或者“I”的<br>前缀，除非重要到必须显式区分读写（如，当提到Abc::OCompoundProperty时，我会用<br>CompoundProperty）。</p>
+<p>那就是说，这儿是从高层来看Alembic的容器层级。一旦建立容器间的总体关系，会逐个容器详细介绍。</p>
+<p><br></p>
+<h5 id="Archive"><a href="#Archive" class="headerlink" title="Archive"></a>Archive</h5><p>Alembic中的Archive是最上层容器，实际上C++类直接对应了硬盘上的文件。Archives包含Objects。</p>
+<p><br></p>
+<h5 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h5><p>Alembic层级中的主要单元是Object。你可以把Archive当做典型的Unix风格文件系统（如ext2fs），Object是文件系统中的文件夹。这个类<br>比不完美，不久就会看到，但也不赖。Objects不直接包含数据，但为其他直接存储数据的接口提供结构。Objects是封装的首要单元。<br>Objects包含Properties。</p>
+<p><br></p>
+<h5 id="Property"><a href="#Property" class="headerlink" title="Property"></a>Property</h5><p>Alembic中有两种Properties，简单的（Simple）和复合的（Compund）。 一个CompoundProperty用来保存其他properties。这将是你最常<br>打交道的容器类型。 简单Properties保存样本（samples），可为标量（scalar）或者数组（array）。事实上这些样本保存了你的数据。</p>
+<p><br></p>
+<h6 id="Scalar-Property"><a href="#Scalar-Property" class="headerlink" title="Scalar Property"></a>Scalar Property</h6><p>ScalarProperty是一个简单property，其样本（sample）的类型和元素数量(extent)是固定的，并在写之前就知道了。FloatProperty就是<br>一个例子（每个样本都是一个32位浮点数;extent=1), StringProperty(每个样本都是一个字符串，无论大小，extent=1），或者<br>M44dProperty（每个样本都是16个64位的浮点数；extent=16）。ScalarProperty的最大extent为256.</p>
+<p><br></p>
+<h6 id="Array-Property"><a href="#Array-Property" class="headerlink" title="Array Property"></a>Array Property</h6><p>ArrayProperty是一个简单property，其包含的样本在写入之前都是已知的，但其extent是变量。DoubleArrayProperty就是一个<br>ArrayProperty的例子（每个样本都是一个变长数组，每个数组元素都是64位浮点数），V3fArrayProperty（每个样本都是变长数组，每<br>个元素都是Imath::Vec3f，为3个32位浮点数），M44fArrayProperty（每个样本都是变长数组，每个元素都是Imath::M44f,或者16个32<br>位浮点数）。</p>
+<p><br></p>
+<h5 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h5><p>样本就是原始数据和时间标签的混合体。和property一起，样本可以使标量（Scalar）或者数组（Array）。</p>
+<p><br></p>
+<h5 id="To-Recap"><a href="#To-Recap" class="headerlink" title="To Recap"></a>To Recap</h5><p>Archives包含Objects，Objects包含Properties，Property可以是简单（simple）或者复合的（compound），Compound Porperties包含<br>Properties，其可以是简单（simple）或者复合（compound）；Simple Property包含样本（samples），其可以是标量（scalar)或者数<br>组（Array）。样本包含数据。</p>
+<p>以上的内容有些微妙的东西，随后会用代码解释。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/open-source/">open source</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/c/">c++</a><a href="/tags/design/">design</a><a href="/tags/alembic/">alembic</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/08/11/Alembic-design-philosophy-section2/" data-title="Alembic文件格式简介--设计思想和理念 2 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/08/12/Alembic-design-philosophy-section3/" title="Alembic文件格式简介--设计思想和理念 3">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Alembic文件格式简介--设计思想和理念 3</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/08/11/Alembic-design-philosophy-section1/"  title="Alembic文件格式简介--设计思想和理念 1">
+ <strong>下一篇：</strong><br/> 
+ <span>Alembic文件格式简介--设计思想和理念 1
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/08/11/Alembic-design-philosophy-section2/" data-title="Alembic文件格式简介--设计思想和理念 2" data-url="http://cgcoder.com/2016/08/11/Alembic-design-philosophy-section2/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Alembic中容器的层级关系"><span class="toc-number">1.</span> <span class="toc-text">Alembic中容器的层级关系</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Archive"><span class="toc-number">1.1.</span> <span class="toc-text">Archive</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Object"><span class="toc-number">1.2.</span> <span class="toc-text">Object</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Property"><span class="toc-number">1.3.</span> <span class="toc-text">Property</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#Scalar-Property"><span class="toc-number">1.3.1.</span> <span class="toc-text">Scalar Property</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Array-Property"><span class="toc-number">1.3.2.</span> <span class="toc-text">Array Property</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Sample"><span class="toc-number">1.4.</span> <span class="toc-text">Sample</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#To-Recap"><span class="toc-number">1.5.</span> <span class="toc-text">To Recap</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

@@ -1,0 +1,600 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python 与资产管理系统和生产线集成 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="nuke与各种管理系统的集成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python 与资产管理系统和生产线集成">
+<meta property="og:url" content="http://cgcoder.com/2016/09/12/nuke-python-19/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="nuke与各种管理系统的集成">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_04.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_02.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_03.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_05.png">
+<meta property="og:updated_time" content="2016-09-20T01:37:09.237Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python 与资产管理系统和生产线集成">
+<meta name="twitter:description" content="nuke与各种管理系统的集成">
+<meta name="twitter:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_01.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/12/nuke-python-19/" title="Nuke Python 与资产管理系统和生产线集成" itemprop="url">Nuke Python 与资产管理系统和生产线集成</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-12T14:12:46.519Z" itemprop="datePublished"> 发表于 2016-09-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#保存工作流的自定义脚本"><span class="toc-number">1.</span> <span class="toc-text">保存工作流的自定义脚本</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#自定义脚本加载流程"><span class="toc-number">2.</span> <span class="toc-text">自定义脚本加载流程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#自定义UDIM分析函数"><span class="toc-number">3.</span> <span class="toc-text">自定义UDIM分析函数</span></a></li></ol>
+		
+		</div>
+		
+		<p>把资产管理系统集成到nuke里面，方法很多，不深入介绍，一切从简。 数据库用简单的目录结构替代，不过有一定的命名规范。代码中创建的工具都存在assertManager这个模块了。其他部分比如创建menu，hotkey等放在menu.py里面。因此记得导入import assertManger.</p>
+<p>目录结构的示例：<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_01.png" alt=""></p>
+<p>大多数设备都用环境变量来辨识正在工作的镜头，一般会有相应的工具让制作人员设置环境变量。为了简化，仅设置SHOW, SEQ,SHOT：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">os.environ[<span class="string">'SHOW'</span>] = <span class="string">'showA'</span></div><div class="line">os.environ[<span class="string">'SEQ'</span>] = <span class="string">'seq1'</span></div><div class="line">os.environ[<span class="string">'SHOT'</span>] = <span class="string">'shot2'</span></div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意：也可以使用nuke的用户knob来保存这些变量。</p>
+</blockquote>
+<p>方便函数，返回项目目录：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">rootDir</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">return</span> <span class="string">'/Users/frank/Desktop/shows'</span></div></pre></td></tr></table></figure></p>
+<p>有了环境变量，以及rootDir（）函数，就可以写各种函数来控制当前shot的输入输出。那就写一个获取当前镜头的nuke脚本吧：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">nukeDir</span><span class="params">()</span>:</span></div><div class="line">    nkDir = os.path.join( root.Dir(), os.getenv(<span class="string">'SHOW'</span>), os.getenv(<span class="string">'SEQ'</span>), os.getenv(<span class="string">'SHOT'</span>), <span class="string">'nuke'</span>)</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.isdir( nkDir ):</div><div class="line">        <span class="keyword">raise</span> ValueError, <span class="string">'NUKE directory dose not exit'</span></div><div class="line">    <span class="keyword">return</span> nkDir</div><div class="line">```    </div><div class="line">要获取当前shot的nuke目录，基于当前镜头的环境变量，在menu.py里面设置动态文件很简单。</div><div class="line">```python</div><div class="line">nuke.addFavoriteDir( name=<span class="string">'NUKE SCRIPTS'</span>, directory = assertManager.nukeDir(), type = nuke.SCRIPT )</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意： 不要忘了在menu.py里面导入包含函数的模块，所有的代码都在assertManager模块</p>
+</blockquote>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_04.png" alt=""></p>
+<h5 id="保存工作流的自定义脚本"><a href="#保存工作流的自定义脚本" class="headerlink" title="保存工作流的自定义脚本"></a>保存工作流的自定义脚本</h5><p>有了nukeDir（），咱就写一个easySave函数，用户无需打开保存界面，也不用担心命令转换，就能完成保存。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">easySave</span><span class="params">()</span>:</span></div><div class="line">    nkDir = nukeDir()</div></pre></td></tr></table></figure></p>
+<p>让用户输入描述文字：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># GET DESCRIPTION FROM USER BUT STRIP ALL WHITE SPACES</span></div><div class="line">description = nuke.getInput( <span class="string">'script description'</span>, <span class="string">'bashComp'</span> ).replace( <span class="string">' '</span>, <span class="string">''</span> )</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_02.png" alt=""></p>
+<p>有了nuke目录和用户描述，就可以添加版本和命令规范了。此例中，用show，sequence，shot name紧跟用户描述和版本.</p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_03.png" alt=""></p>
+<p>这就是easySave函数，构造命名规范。版本从1开始，检查中如果文件存在，版本增加：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">easySave</span><span class="params">()</span>:</span></div><div class="line">    nkDir = nukeDir()</div><div class="line">    description = nuke.getInput(<span class="string">' script description'</span> , <span class="string">'bashCom'</span> ). replace(<span class="string">' '</span>, <span class="string">''</span>)</div><div class="line"></div><div class="line">    fileSaved = <span class="keyword">False</span></div><div class="line">    version = <span class="number">1</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">not</span> fileSaved:</div><div class="line">            nkName = <span class="string">'%s_%s_%s_%s_v%02d.nk'</span> % ( os.getenv(<span class="string">'SHOW'</span>), os.getenv(<span class="string">'SEQ'</span>), os.getenv(<span class="string">'SHOT'</span>), description, version )</div><div class="line">            nkPath = os.path.join( nkDir, nkName )</div><div class="line">            <span class="keyword">if</span> os.path.isfile( nkPath):</div><div class="line">                version += <span class="number">1</span></div><div class="line">                coutinue</div><div class="line">            nuke.scriptSaveAs( nkPath )</div><div class="line">            fileSaved = <span class="keyword">True</span></div><div class="line">    <span class="keyword">return</span> nkPath</div><div class="line">```    </div><div class="line">上面代码用来第一次保存文件，以后就可以使用 菜单File 》 save new version来保存了：</div><div class="line">![](https://docs.thefoundry.co.uk/products/nuke/developers/<span class="number">100</span>/pythondevguide/_images/assetMan_06.png)</div><div class="line"></div><div class="line">添加自定义nuke菜单：</div><div class="line">```python</div><div class="line">shotMenu = <span class="string">'%s-%s'</span> % ( os.getenv(<span class="string">'SEQ'</span>), osgetenv(<span class="string">'SHOT'</span>))</div><div class="line">nuke.menu(<span class="string">'Nuke'</span> ).addCommand( shotMenu + <span class="string">'/Easy Save'</span>, assertManger.easySave)</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/assetMan_05.png" alt=""></p>
+<p>想要nuke的脚本都带版本号保存（如果用户忽略easySave），就用脚本来检测文件名，时候包含大小写的v后跟数字来简单判断：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">checkScriptName</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> re.search( <span class="string">r' [vV]\d+'</span>, nuke.root().name() ):</div><div class="line">            <span class="keyword">raise</span> NameError, <span class="string">'Please include a version number and save script again.'</span></div><div class="line">```            </div><div class="line">将此函数挂接到一个回调函数上，这最好放到menu.py里面：</div><div class="line">```python</div><div class="line">nuke.addOnScriptSave( assertManager.checkScriptName )</div></pre></td></tr></table></figure></p>
+<p>如果文件不包含版本信息，此函数会抛出异常，存储就会终止，进而强迫输入版本信息。其函数的其他好处：</p>
+<ul>
+<li>确保NUKE脚本仅保存在nuke目录下面</li>
+<li>保存过程写到log文件</li>
+<li>备份nuke脚本到其他地方</li>
+</ul>
+<h5 id="自定义脚本加载流程"><a href="#自定义脚本加载流程" class="headerlink" title="自定义脚本加载流程"></a>自定义脚本加载流程</h5><p>现在看看如何通过自定义面板显示镜头nuke下的所有脚本并加载的。首先，写一个函数返回目录结构下的所有脚本，可以用glob来抓取nukeDir（）目录：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getNukeScripts</span><span class="params">()</span>:</span></div><div class="line">    nkFiles = glob( os.path.join( nukeDir(), <span class="string">'*.nk'</span> ))</div><div class="line">    <span class="keyword">return</span> nkFiles</div></pre></td></tr></table></figure></p>
+<p>给找到的基本弄个checkbox：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">NkPanel</span><span class="params">( nukescripts.PythonPanel )</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">( self, nkScripts )</span>:</span></div><div class="line">        nukescripts.PythonPanel.__init__(self, <span class="string">'Open NUKE Script'</span> )</div><div class="line">        self.checkboxs = []</div><div class="line">        self.nkScripts = nkScripts</div><div class="line">        </div><div class="line">        <span class="keyword">for</span> i, n <span class="keyword">in</span> enumerate( self.nkScripts ):</div><div class="line">            k = nuke.boolean_Knob( <span class="string">' nk_%s'</span>, % i, os.path.basename( n ))</div><div class="line">            self.addKnob( k )</div><div class="line">            k.setFlag( nuke.STARTLine)</div><div class="line">            self.checkboxs.append( k )</div></pre></td></tr></table></figure></p>
+<p>理想状态，我们会用单选按钮来让用户选择一个脚本，但nuke没此功能，那我们就挂载上一个knobChanged来保证仅有一个checkbox选中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">knobChanged</span><span class="params">( self, knob )</span>:</span></div><div class="line">    <span class="keyword">if</span> knob <span class="keyword">in</span> self.checkboxes:</div><div class="line">        <span class="keyword">for</span> cb <span class="keyword">in</span> self.checkboxes:</div><div class="line">            <span class="keyword">if</span> knob == cb:</div><div class="line">                index = int( knob.name().split(<span class="string">'_'</span>)[<span class="number">-1</span>] )</div><div class="line">                self.selectedScript = self.nkScript[ index ]</div><div class="line">                <span class="keyword">continue</span></div><div class="line">            cb.setValue( <span class="keyword">False</span> )</div></pre></td></tr></table></figure></p>
+<p>下面是完整的panel代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">NkPanel</span><span class="params">( nukescripts.PythonPanel )</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">( self, nkScripts )</span>:</span></div><div class="line">        nukescripts.PythonPanel.__init__(self, <span class="string">'Open nuke script'</span> )</div><div class="line">        self.checkboxes = []</div><div class="line">        self.nkScripts = nkScripts</div><div class="line">        self.selectedScript = <span class="string">''</span></div><div class="line">    </div><div class="line">        <span class="keyword">for</span> i, n <span class="keyword">in</span> enumerate( self.nkScripts ):</div><div class="line">            k = nuke.Boolean_Knob(<span class="string">'nk_%s'</span> % i, os.path.basename(n))</div><div class="line">            self.addKnob( k)</div><div class="line">            k.setFlag( nuke.STARTLINE )</div><div class="line">            self.checkboxes.append(k)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">knobChanged</span><span class="params">( self, knob )</span>:</span></div><div class="line">        <span class="keyword">if</span> knob <span class="keyword">in</span> self.checkboxes:</div><div class="line">            <span class="keyword">for</span> cb <span class="keyword">in</span> self.checkboxes:</div><div class="line">                <span class="keyword">if</span> konb == cb:</div><div class="line">                    index = int(knob.name().split(<span class="string">'_'</span>)[<span class="number">-1</span>]</div><div class="line">                    self.selectedScript = self.nkScripts[ index ]</div><div class="line">                    <span class="keyword">continue</span></div><div class="line">                cb.setValue( <span class="keyword">False</span> )</div><div class="line">```                </div><div class="line">更多信息请看custom panel</div><div class="line">有了panel代码，创建一个帮助函数（在menu.py）里面来打开panel，并返回check的值。如果需要打开所要求的脚本：</div><div class="line">```python</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">nkPanelHelper</span><span class="params">()</span>:</span></div><div class="line">    nkScripts = assertManager.getNukeScripts(<span class="number">0</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> nkScirpts:</div><div class="line">        <span class="keyword">return</span></div><div class="line">    p = assertManager.NkPanel( nkScripts )</div><div class="line">    p.setMinimumSize( <span class="number">200</span>, <span class="number">200</span> )</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> p.showModalDialog():</div><div class="line">        <span class="keyword">if</span> p.selectedScript:</div><div class="line">            nuke.scriptOpen( p.selectedScript )</div><div class="line">```            </div><div class="line">代码运行后的界面：</div><div class="line">![](https://docs.thefoundry.co.uk/products/nuke/developers/<span class="number">100</span>/pythondevguide/_images/assetMan_07.png)</div><div class="line"></div><div class="line"><span class="comment">##### 自定义write节点</span></div><div class="line">很多机构都用自己的write节点，或者修改后的write节点，来约束制作人员遵守命名规范和工作目录。如果这个有效，那将降低可能的人为错误，看看例子吧。</div><div class="line">    _images/assetMan_08.png</div><div class="line">    这仅仅是一个单独的write节点使用python和tcl挂载了gizmo属性面板。制作人员选择渲染类型就可以了（其将决定目标文件夹），赋给版本号和描述（用来建立正确的文件名）点击 “Render”，看看内容：</div><div class="line">    _images/assetMan_11.png</div><div class="line">    两个用户knob再加上后缀.exr就构成了file控制选项（ 在这个例子里，我们总是渲染exr文件）</div><div class="line">    _images/assetMan_12.png</div><div class="line">    两个用户knob是dirname和filename，临时变量，因此我们不用将所有代码压缩到file控制里面：</div><div class="line">    _images/assetMan_13.png</div><div class="line">    driname是靠组合root目录，环境变量和knob type来组成的：</div><div class="line">    os.path.join( assertManager.rootDir(), os.getenv(<span class="string">'SHOW'</span>, os.getenv(<span class="string">'SEQ'</span>), os.getenv(<span class="string">'SHOT'</span>), nuke.thisParent.knob(<span class="string">'type'</span>).value() )</div><div class="line">    </div><div class="line">    fileName 实际使用TCL语法来建立文件名，这种情况，tcl比python更加简洁：</div><div class="line">    [value parent.type]_[value parent.description]_v[format %<span class="number">02</span>d [ value parent.version]]</div><div class="line">    如果你真想用python，如下：</div><div class="line">    [python <span class="string">'%s_%s_v%02d'</span> % ( nuke.thisParent().knob(<span class="string">'type'</span>).value(), nuke.thisParent().knob(<span class="string">'description'</span>).value(), nuke.thisParent().knob(<span class="string">'version'</span>).value() )]</div><div class="line">    有时好的TCL也不赖。</div><div class="line">    有时会保存成名为WriteAssert的gizmo，因为以Write开始的节点类，nuke会自动显示其文件名。</div><div class="line">    _images/assetMan_14.png</div><div class="line">    在menu.py将新的gizmo挂载上Image菜单，并赋给w快捷键：</div><div class="line">    nuke.menu(<span class="string">'Nodes'</span>).addCommand(<span class="string">'Image/WriteAssert'</span>, <span class="keyword">lambda</span>: nuke.createNode(<span class="string">' WriteAssert'</span> ), <span class="string">'w'</span> )</div><div class="line">    为了让新的gizmo正常工作，在输出目录不存在时，要自动创建。代码如下：</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">createOutDirs</span><span class="params">()</span>:</span></div><div class="line">        trgDir = os.path.dirname( nuke.filename( nuke.thisNode() ) )</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.isdir( trgDir ):</div><div class="line">            os.makedirs( trgDir )</div><div class="line">    </div><div class="line">    想让这段代码运行有两个法子：放到write节点的beforeRender  knob里面 或者 全局回调函数，需要在menu.py里面添加如下语句：</div><div class="line">    nuke.addbeforeRender( assertManager.createOutDirs, nodeClass = <span class="string">'Write'</span> )</div><div class="line">    这让beforeRender的knob很干净，但是也有缺点，就是某些东西出错后，很难丢掉。</div><div class="line">    </div><div class="line">    想用write的beforeRender，只需放到menu.py里面就好了</div><div class="line">    nuke.knobDefault( <span class="string">'Write.beforeRender'</span>, <span class="string">'assertManager.createOutDirs() '</span> )</div><div class="line">    _images/assetMan_09.png</div><div class="line">这意味着很容易就能摆脱回调，这在出错时算是好事。</div><div class="line"></div><div class="line"><span class="comment">##### 自定义读节点</span></div><div class="line">现在来自定义Read节点，从数据库或者目录结构加载图像：</div><div class="line">为此目的，在Read节点上添加自定义knob：</div><div class="line"></div><div class="line">![](https://docs.thefoundry.co.uk/products/nuke/developers/<span class="number">100</span>/pythondevguide/_images/assetMan_10.png)</div><div class="line"></div><div class="line">首先需要一个函数来分析目录中渲染的各种版本图像。现实中这应该是一个数据库调用来获取所有发布的图像序列。同时也需要图像序列的发现。但是还得先分析目录，并获取所有子目录 getFileSeq函数获取在version knob的所有字符串序列：</div><div class="line">```python</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getVersions</span><span class="params">()</span>:</span></div><div class="line">    types = [<span class="string">'plates'</span>, <span class="string">'cg'</span>, <span class="string">'comp'</span>, <span class="string">'roto'</span> ]</div><div class="line">    versionDict = &#123;&#125;</div><div class="line">    shotDir = os.path.join( rootDir(), os.getenv(<span class="string">'SHOW'</span>), os.getenv(<span class="string">'SEQ'</span>), os.getenv(<span class="string">'SHOT'</span>) )</div><div class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> types:</div><div class="line">        versionDict[t] = []</div><div class="line">        typeDir = os.path.join( shotDir, t)</div><div class="line">        <span class="keyword">for</span> d <span class="keyword">in</span> os.listdir( typeDir ):</div><div class="line">            path = os.path.join( typeDir, d)</div><div class="line">            <span class="keyword">if</span> os.path.isdir( path):</div><div class="line">                versionDict[t].append( getFileSeq( path)) </div><div class="line">    <span class="keyword">return</span> versionDict</div></pre></td></tr></table></figure></p>
+<p>其中getFileSeq函数返回每个子目录的序列符号，注意这是简化版，实际中会用数据库调用取代。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getFileSeq</span><span class="params">( dirPath )</span>:</span></div><div class="line">    dirName = os.path.basename( dirPath )</div><div class="line">    files = glob( os.path.join( dirPath, <span class="string">'%s.*.*'</span> % dirName ) )</div><div class="line">    firstString = re.findall( <span class="string">r'\d+'</span>, files[<span class="number">0</span>] )[<span class="number">-1</span>]</div><div class="line">    padding = len(firstString )</div><div class="line">    paddingString = <span class="string">'%02s'</span> % padding</div><div class="line">    first  = int( firstString )</div><div class="line">    last = int( re.findall( <span class="string">r'\d+'</span>, files[<span class="number">-1</span>] )[<span class="number">-1</span>] )</div><div class="line">    ext = os.path.splitext( files[<span class="number">0</span>] )[<span class="number">-1</span>]</div><div class="line">    fileName = <span class="string">'%s.%%%sd%s %s-%s'</span> % ( dirName, str(padding).zfill(<span class="number">2</span>), ext, first, last)</div><div class="line">    <span class="keyword">return</span> os.path.join( dirPath, fileName)</div></pre></td></tr></table></figure></p>
+<p>有上面的代码，或者合适的数据库查询，我们能获取一个字典，包含所有版本信息。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">getVersions()</div></pre></td></tr></table></figure></p>
+<p>可以把上面的东西放入Read节点里面， 创建上图的user konb，创建一个函数更新version knob来显示硬盘上的东西（数据库）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">createVersionKnobs</span><span class="params">()</span>:</span></div><div class="line">    <span class="comment"># CREATE USER KNOBS</span></div><div class="line">    node = nuke.thisNode()</div><div class="line">    tabKnob = nuke.Tab_Knob( <span class="string">'DB'</span>, <span class="string">'DB'</span> )</div><div class="line">    typeKnob = nuke.Enumeration_Knob( <span class="string">'versionType'</span>, <span class="string">'type'</span>, [<span class="string">'plates'</span>, <span class="string">'cg'</span>, <span class="string">'roto'</span>] )</div><div class="line">    updateKnob = nuke.PyScript_Knob( <span class="string">'update'</span>, <span class="string">'update'</span> )</div><div class="line">    updateKnob.setValue( <span class="string">'assetManager.updateVersionKnob()'</span> )</div><div class="line">    versionKnob = nuke.Enumeration_Knob( <span class="string">'_version'</span>, <span class="string">'version'</span>, [] ) <span class="comment"># DO NOT USE "VERSION" AS THE KNOB NAME AS THE READ NODE ALREADY HAS A "VERSION" KNOB</span></div><div class="line">    loadKnob = nuke.PyScript_Knob( <span class="string">'load'</span>, <span class="string">'load'</span> )</div><div class="line"></div><div class="line">    <span class="comment"># ASSIGN PYTHON SCRIPT AS ONE LARGE STRING</span></div><div class="line">    loadScript = <span class="string">'''#THIS ASSUMES NO WHITE SPACES IN FILE PATH</span></div><div class="line">        node = nuke.thisNode()</div><div class="line">        path, range = node['_version'].value().split()</div><div class="line">        first, last = range.split('-')</div><div class="line">        node['file'].setValue( path )</div><div class="line">        node['first'].setValue( int(first) )</div><div class="line">        node['last'].setValue( int(last) )'''</div><div class="line"></div><div class="line">    loadKnob.setValue( loadScript )</div><div class="line"></div><div class="line">    <span class="comment"># ADD NEW KNOBS TO NODE</span></div><div class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> ( tabKnob, typeKnob, updateKnob, versionKnob, loadKnob ):</div><div class="line">        node.addKnob( k )</div><div class="line">    <span class="comment"># UPDATE THE VERSION KNOB SO IT SHOWS WHAT'S ON DISK / IN THE DATABASE</span></div><div class="line">    updateVersionKnob(）</div></pre></td></tr></table></figure>
+<p>updateVersionKnob函数如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateVersionKnob</span><span class="params">()</span>:</span></div><div class="line">    node = nuke.thisNode()</div><div class="line">    knob = nuke.thisKnob()</div><div class="line"></div><div class="line">    <span class="comment"># RUN ONLY IF THE TYPE KNOB CHANGES OR IF THE NODE PANEL IS OPENED</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> knob <span class="keyword">or</span> knob.name() <span class="keyword">in</span> [ <span class="string">'versionType'</span>, <span class="string">'showPanel'</span> ]:</div><div class="line">        <span class="comment"># GET THE VERSION DICTIONARY</span></div><div class="line">        versionDict = getVersions()</div><div class="line">        <span class="comment"># POPULATE THE VERSION KNOB WITH THE VERSIONS REQUESTED THROUGH THE TYPE KNOB</span></div><div class="line">        node[<span class="string">'_version'</span>].setValues( versionDict[ node[<span class="string">'versionType'</span>].value() ] )</div><div class="line">        <span class="comment"># SET THE A VALUE TO THE FIRST ITEM IN THE LIST</span></div><div class="line">        node[<span class="string">'_version'</span>].setValue(<span class="number">0</span>)</div><div class="line">```        </div><div class="line">因为createVersionKnobs和updateVersionKnob是回调函数，可以用nuke.thiNode() nuke.thisKnob()来引用对应的节点和knob。</div><div class="line"></div><div class="line">在menu.py菜单中，当Read 节点创建时自动运行createVersionKnobs</div><div class="line">```python</div><div class="line">nuke.addOnUserCreate( assertManager.createVersionKnobs, nodeClass = <span class="string">'Read'</span> )</div></pre></td></tr></table></figure></p>
+<p>同时添加回调更新version knob：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.addKnobChanged( assertManger.updateVersionKnob, nodeClass = <span class="string">'Read'</span>)</div></pre></td></tr></table></figure></p>
+<p>最后重写 热键r 来创建空的Read节点，并且附带新的DB，这样制作人员就可以快速选择一个版本<br>并点击laod，而不是一个个来浏览了。把这个mini函数添加到menu.py里面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def customRead():</div><div class="line">    n = nuke.creatNode(&apos;Read&apos;)</div><div class="line">    n[&apos;DB&apos;].setFlag( 0 )</div><div class="line">```    </div><div class="line">这将其赋给菜单项和热键：</div></pre></td></tr></table></figure></p>
+<p>nuke.menu(‘Nodes’).addCommand( ‘Image/Read’, customRead, ‘r’ )<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div></pre></td><td class="code"><pre><div class="line">下面是整个assertManager模块代码：</div><div class="line">```python</div><div class="line">import nukescripts</div><div class="line">import nuke</div><div class="line">import re</div><div class="line">import os</div><div class="line">from glob import glob</div><div class="line"></div><div class="line"># SET UP EXAMPLE ENVIRONMENT</div><div class="line">os.environ[&apos;SHOW&apos;] = &apos;showA&apos;</div><div class="line">os.environ[&apos;SEQ&apos;] = &apos;seq1&apos;</div><div class="line">os.environ[&apos;SHOT&apos;] = &apos;shot2&apos;</div><div class="line"></div><div class="line"># DEFINE FACILITY ROOT</div><div class="line">def rootDir():</div><div class="line">    return &apos;/Users/frank/Desktop/shows&apos;</div><div class="line"></div><div class="line"># DEFINE SHOT&apos;S NUKE DIR</div><div class="line">def nukeDir():</div><div class="line">    nkDir = os.path.join( rootDir(), os.getenv(&apos;SHOW&apos;), os.getenv(&apos;SEQ&apos;), os.getenv(&apos;SHOT&apos;), &apos;nuke&apos; )</div><div class="line">    if not os.path.isdir( nkDir ):</div><div class="line">        raise ValueError, &apos;Nuke directory does not exist&apos;</div><div class="line">    return nkDir</div><div class="line"></div><div class="line">def easySave():</div><div class="line">    nkDir = nukeDir()</div><div class="line">    # GET DESCRIPTION FROM USER BUT STRIP ALL WHITE SPACES</div><div class="line">    description = nuke.getInput( &apos;script description&apos;, &apos;bashComp&apos; ).replace( &apos; &apos;, &apos;&apos; )</div><div class="line"></div><div class="line">    fileSaved = False</div><div class="line">    version = 1</div><div class="line">    while not fileSaved:</div><div class="line">        # CONSTRUCT FILE NAME</div><div class="line">        nkName = &apos;%s_%s_%s_%s_v%02d.nk&apos; % ( os.getenv( &apos;SHOW&apos;), os.getenv( &apos;SEQ&apos;), os.getenv( &apos;SHOT&apos;), description, version )</div><div class="line">        # JOIN DIRECTORY AND NAME TO FORM FULL FILE PATH</div><div class="line">        nkPath = os.path.join( nkDir, nkName )</div><div class="line">        # IF FILE EXISTS VERSION UP        </div><div class="line">        if os.path.isfile( nkPath ):</div><div class="line">            version += 1</div><div class="line">            continue</div><div class="line">        # SAVE NUKE SCRIPT</div><div class="line">        nuke.scriptSaveAs( nkPath )</div><div class="line">        fileSaved = True</div><div class="line">    return nkPath</div><div class="line"></div><div class="line"># CHECK FOR VERSION IN SCRIPT NAME</div><div class="line">def checkScriptName():</div><div class="line">    if not re.search( r&apos;[vV]\d+&apos;, nuke.root().name() ):</div><div class="line">        raise NameError, &apos;Please include a version number and save script again.&apos;</div><div class="line"></div><div class="line"></div><div class="line"># GET ALL NUKE SCRIPTS FOR CURRENT SHOT</div><div class="line">def getNukeScripts():</div><div class="line">    nukeDir = os.path.join( rootDir(), os.getenv(&apos;SHOW&apos;), os.getenv(&apos;SEQ&apos;), os.getenv(&apos;SHOT&apos;), &apos;nuke&apos; )</div><div class="line">    nkFiles = glob( os.path.join( nukeDir, &apos;*.nk&apos;  ) )</div><div class="line">    return nkFiles</div><div class="line"></div><div class="line"></div><div class="line"># PARSE &quot;DATABASE&quot; FOR AVAILABLE IMAGE SEQUENCES</div><div class="line">def getVersions():</div><div class="line">    &apos;&apos;&apos;Return a dictionary of rendered versions per type&apos;&apos;&apos;</div><div class="line">    # DEFINE THE DIRECTORIES YOU WANT TO INCLUDE</div><div class="line">    types = [ &apos;plates&apos;, &apos;cg&apos;, &apos;comp&apos;, &apos;roto&apos; ]</div><div class="line">    # INITIALISE THE DICTIONARY WE WILL RETURN AT THE END OF THE FUNCTION</div><div class="line">    versionDict = &#123;&#125;</div><div class="line">    # GET THE DIRECTORY BASED ON THE CURRENT SHOT ENVIRONMENT</div><div class="line">    shotDir = os.path.join( rootDir(), os.getenv(&apos;SHOW&apos;), os.getenv(&apos;SEQ&apos;), os.getenv(&apos;SHOT&apos;) )</div><div class="line">    # LOOP THROUGH THE FOLDERS INSIDE THE SHOT DIRECTORY AND COLLECT THE IMAGE SEQUENCES THEY CONTAIN</div><div class="line">    for t in types:</div><div class="line">        versionDict[t] = [] # THIS WILL HOLD THE FOUND SEQUENCES</div><div class="line">        typeDir = os.path.join( shotDir, t ) # GET THE CURRENT DIRECTORY PATH</div><div class="line">        for d in os.listdir( typeDir ): # LOOP THROUGH IT&apos;S CONTENTS</div><div class="line">            path = os.path.join( typeDir, d)</div><div class="line">            if os.path.isdir( path ): # LOOP THROUGH SUB DIRECTORIES</div><div class="line">                versionDict[t].append( getFileSeq( path ) ) # RUN THE getFileSeq() FUNCTION AND APPEND IT&apos;S OUTPUT TO THE LIST</div><div class="line"></div><div class="line">    return versionDict</div><div class="line"></div><div class="line"># ONUSERCREATE CALLBACK FOR READ NODE</div><div class="line">def createVersionKnobs():</div><div class="line">    &apos;&apos;&apos;</div><div class="line">    Add as callback to add user knobs in Read nodes.</div><div class="line">    In menu.py or init.py:</div><div class="line">       nuke.addOnUserCreate( assetManager.createVersionKnobs, nodeClass=&apos;Read&apos; )        </div><div class="line">    &apos;&apos;&apos;</div><div class="line">    # CREATE USER KNOBS</div><div class="line">    node = nuke.thisNode()</div><div class="line">    tabKnob = nuke.Tab_Knob( &apos;DB&apos;, &apos;DB&apos; )</div><div class="line">    typeKnob = nuke.Enumeration_Knob( &apos;versionType&apos;, &apos;type&apos;, [&apos;plates&apos;, &apos;cg&apos;, &apos;roto&apos;] )</div><div class="line">    updateKnob = nuke.PyScript_Knob( &apos;update&apos;, &apos;update&apos; )</div><div class="line">    updateKnob.setValue( &apos;assetManager.updateVersionKnob()&apos; )</div><div class="line">    versionKnob = nuke.Enumeration_Knob( &apos;_version&apos;, &apos;version&apos;, [] ) # DO NOT USE &quot;VERSION&quot; AS THE KNOB NAME AS THE READ NODE ALREADY HAS A &quot;VERSION&quot; KNOB</div><div class="line">    loadKnob = nuke.PyScript_Knob( &apos;load&apos;, &apos;load&apos; )</div><div class="line">    </div><div class="line">    # ASSIGN PYTHON SCRIPT AS ONE LARGE STRING</div><div class="line">    loadScript = &apos;&apos;&apos;#THIS ASSUMES NO WHITE SPACES IN FILE PATH</div><div class="line">node = nuke.thisNode()</div><div class="line">path, range = node[&apos;_version&apos;].value().split()</div><div class="line">first, last = range.split(&apos;-&apos;)</div><div class="line">node[&apos;file&apos;].setValue( path )</div><div class="line">node[&apos;first&apos;].setValue( int(first) )</div><div class="line">node[&apos;last&apos;].setValue( int(last) )&apos;&apos;&apos;</div><div class="line"></div><div class="line">    loadKnob.setValue( loadScript )</div><div class="line">    </div><div class="line">    # ADD NEW KNOBS TO NODE</div><div class="line">    for k in ( tabKnob, typeKnob, updateKnob, versionKnob, loadKnob ):</div><div class="line">        node.addKnob( k )</div><div class="line">    # UPDATE THE VERSION KNOB SO IT SHOWS WHAT&apos;S ON DISK / IN THE DATABASE</div><div class="line">    updateVersionKnob()</div><div class="line">       </div><div class="line"># KNOBCHANGED CALLBACK FOR CUSTOMISED READ NODE</div><div class="line">def updateVersionKnob():</div><div class="line">    &apos;&apos;&apos;</div><div class="line">    Add as callback to list versions per type in Read node&apos;s user knob</div><div class="line">    In menu.py or init.py:</div><div class="line">       nuke.addKnobChanged( assetManager.updateVersionKnob, nodeClass=&apos;Read&apos; )  </div><div class="line">    &apos;&apos;&apos;</div><div class="line">    node = nuke.thisNode()</div><div class="line">    knob = nuke.thisKnob()</div><div class="line"></div><div class="line">    # RUN ONLY IF THE TYPE KNOB CHANGES OR IF THE NODE PANEL IS OPENED.</div><div class="line">    if not knob or knob.name() in [ &apos;versionType&apos;, &apos;showPanel&apos; ]:</div><div class="line">        # GET THE VERSION DICTIONARY</div><div class="line">        versionDict = getVersions()</div><div class="line">        # POPULATE THE VERSION KNOB WITH THE VERSIONS REQUESTED THROUGH THE TYPE KNOB</div><div class="line">        node[&apos;_version&apos;].setValues( versionDict[ node[&apos;versionType&apos;].value() ] )</div><div class="line">        # SET THE A VALUE TO THE FIRST ITEM IN THE LIST</div><div class="line">        node[&apos;_version&apos;].setValue(0)</div><div class="line"></div><div class="line"># BEFORERENDER CALLBACK FOR WRITE ASSET GIZMO</div><div class="line">def createOutDirs():</div><div class="line">    &apos;&apos;&apos;</div><div class="line">    Create output directory if it doesn&apos;t exist.</div><div class="line">    Add as callback to Write node&apos;s.    </div><div class="line">    In menu.py or init.py:</div><div class="line">       # CALLBACK VIA KNOB DEFAULT</div><div class="line">       nuke.knobDefault( &apos;Write.beforeRender&apos;, &apos;assetManager.createOutDirs()&apos;)</div><div class="line">    OR:</div><div class="line">       nuke.addBeforeRender( assetManager.createOutDirs, nodeClass=&apos;Write&apos; )</div><div class="line">    &apos;&apos;&apos;</div><div class="line">    trgDir = os.path.dirname( nuke.filename( nuke.thisNode() ) )</div><div class="line">    if not os.path.isdir( trgDir ):</div><div class="line">        os.makedirs( trgDir )               </div><div class="line"></div><div class="line">def getFileSeq( dirPath ):</div><div class="line">    &apos;&apos;&apos;Return file sequence with same name as the parent directory. Very loose example!!&apos;&apos;&apos;</div><div class="line">    dirName = os.path.basename( dirPath )</div><div class="line">    # COLLECT ALL FILES IN THE DIRECTORY THAT HVE THE SAME NAME AS THE DIRECTORY</div><div class="line">    files = glob( os.path.join( dirPath, &apos;%s.*.*&apos; % dirName ) )</div><div class="line">    # GRAB THE RIGHT MOST DIGIT IN THE FIRST FRAME&apos;S FILE NAME</div><div class="line">    firstString = re.findall( r&apos;\d+&apos;, files[0] )[-1]</div><div class="line">    # GET THE PADDING FROM THE AMOUNT OF DIGITS</div><div class="line">    padding = len( firstString )</div><div class="line">    # CREATE PADDING STRING FRO SEQUENCE NOTATION</div><div class="line">    paddingString = &apos;%02s&apos; % padding</div><div class="line">    # CONVERT TO INTEGER</div><div class="line">    first = int( firstString )</div><div class="line">    # GET LAST FRAME</div><div class="line">    last = int( re.findall( r&apos;\d+&apos;, files[-1] )[-1] )</div><div class="line">    # GET EXTENSION</div><div class="line">    ext = os.path.splitext( files[0] )[-1]</div><div class="line">    # BUILD SEQUENCE NOTATION</div><div class="line">    fileName = &apos;%s.%%%sd%s %s-%s&apos; % ( dirName, str(padding).zfill(2), ext, first, last )</div><div class="line">    # RETURN FULL PATH AS SEQUENCE NOTATION</div><div class="line">    return os.path.join( dirPath, fileName )</div><div class="line"></div><div class="line"># PANEL TO SHOW NUKE SCRIPS FOR CURRENT SHOT</div><div class="line">class NkPanel( nukescripts.PythonPanel ):</div><div class="line">    def __init__( self, nkScripts ):</div><div class="line">        nukescripts.PythonPanel.__init__( self, &apos;Open Nuke Script&apos; )</div><div class="line">        self.checkboxes = []</div><div class="line">        self.nkScripts = nkScripts</div><div class="line">        self.selectedScript = &apos;&apos;</div><div class="line">        </div><div class="line">        for i, n in enumerate( self.nkScripts ):</div><div class="line">            # PUT INDEX INTO KNOB NAMES SO WE CAN IDENTIFY THEM LATER</div><div class="line">            k = nuke.Boolean_Knob( &apos;nk_%s&apos; % i, os.path.basename( n ) )</div><div class="line">            self.addKnob( k )</div><div class="line">            k.setFlag( nuke.STARTLINE )</div><div class="line">            self.checkboxes.append( k )</div><div class="line"> </div><div class="line">    def knobChanged( self, knob ):</div><div class="line">        if knob in self.checkboxes:</div><div class="line">            # MAKE SURE ONLY ONE KNOB IS CHECKED</div><div class="line">            for cb in self.checkboxes:</div><div class="line">                if knob == cb:</div><div class="line">                    # EXTRACT THE INDEX FORM THE NAME AGAIN</div><div class="line">                    index = int( knob.name().split(&apos;_&apos;)[-1] )</div><div class="line">                    self.selectedScript = self.nkScripts[ index ]</div><div class="line">                    continue</div><div class="line">                cb.setValue( False )</div></pre></td></tr></table></figure></p>
+<p>此部分中menu.py的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> assetManager</div><div class="line"></div><div class="line"><span class="comment"># CREATE A READ NODE AND OPEN THE "DB" TAB</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">customRead</span><span class="params">()</span>:</span></div><div class="line">        n = nuke.createNode( <span class="string">'Read'</span> )</div><div class="line">        n[<span class="string">'DB'</span>].setFlag( <span class="number">0</span> )</div><div class="line"></div><div class="line"><span class="comment"># ADD CUSTOM READ AND WRITE TO TOOLBAR</span></div><div class="line">nuke.menu( <span class="string">'Nodes'</span> ).addCommand( <span class="string">'Image/WriteAsset'</span>, <span class="keyword">lambda</span>: nuke.createNode( <span class="string">'WriteAsset'</span> ), <span class="string">'w'</span> )</div><div class="line">nuke.menu( <span class="string">'Nodes'</span> ).addCommand( <span class="string">'Image/Read'</span>, customRead, <span class="string">'r'</span> )</div><div class="line"></div><div class="line"><span class="comment"># ADD EASY SAVE TO SHOT MENU</span></div><div class="line">shotMenu = <span class="string">'%s - %s'</span> % ( os.getenv( <span class="string">'SEQ'</span> ), os.getenv(<span class="string">'SHOT'</span>) )</div><div class="line">nuke.menu( <span class="string">'Nuke'</span> ).addCommand( shotMenu+<span class="string">'/Easy Save'</span>, assetManager.easySave )</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># SET FILE BROWSER FAVORITES</span></div><div class="line">nuke.addFavoriteDir(</div><div class="line">    name = <span class="string">'NUKE SCRIPTS'</span>,</div><div class="line">    directory = assetManager.nukeDir(),</div><div class="line">    type = nuke.SCRIPT)</div><div class="line"></div><div class="line"><span class="comment"># HELPER FUNCTION FOR NUKE SCRIPT PANEL</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">nkPanelHelper</span><span class="params">()</span>:</span></div><div class="line">        <span class="comment"># GET ALL NUKE SCRIPTS FOR CURRENT SHOT</span></div><div class="line">        nkScripts = assetManager.getNukeScripts()</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> nkScripts:</div><div class="line">                <span class="comment"># IF THERE ARE NONE DON'T DO ANYTHING</span></div><div class="line">                <span class="keyword">return</span></div><div class="line">        <span class="comment"># CREATE PANEL</span></div><div class="line">        p = assetManager.NkPanel( nkScripts )</div><div class="line">        <span class="comment"># ADJUST SIZE</span></div><div class="line">        p.setMinimumSize( <span class="number">200</span>, <span class="number">200</span> )</div><div class="line"></div><div class="line">        <span class="comment"># IF PANEL WAS CONFIRMED AND A NUKE SCRIPT WAS SELECTED, OPEN IT</span></div><div class="line">        <span class="keyword">if</span> p.showModalDialog():</div><div class="line">                <span class="keyword">if</span> p.selectedScript:</div><div class="line">                        nuke.scriptOpen( p.selectedScript )</div><div class="line"></div><div class="line"><span class="comment"># ADD CALLBACKS</span></div><div class="line">nuke.addOnScriptSave( assetManager.checkScriptName )</div><div class="line">nuke.addOnUserCreate( nkPanelHelper, nodeClass=<span class="string">'Root'</span>)</div><div class="line">nuke.addOnUserCreate( assetManager.createVersionKnobs, nodeClass=<span class="string">'Read'</span> )</div><div class="line">nuke.addKnobChanged( assetManager.updateVersionKnob, nodeClass=<span class="string">'Read'</span> )</div><div class="line"><span class="comment">#nuke.addBeforeRender( assetManager.createOutDirs, nodeClass='Write' )</span></div><div class="line">nuke.knobDefault( <span class="string">'Write.beforeRender'</span>, <span class="string">'assetManager.createOutDirs()'</span>)</div></pre></td></tr></table></figure>
+<h5 id="自定义UDIM分析函数"><a href="#自定义UDIM分析函数" class="headerlink" title="自定义UDIM分析函数"></a>自定义UDIM分析函数</h5><p>UDIM import用的是标准分析转换。被UDIM import使用的分析函数可以重定义，使其支持其他文件名转换。想用个人UMIM分析那就运行下面代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nukescripts.udim_import( myParsingFunc, <span class="string">"UV"</span> )</div></pre></td></tr></table></figure></p>
+<p>第一个参数是分析函数名。第二个参数是导入对话框中的列名，来确认标题坐标。<br>通过唯一值可以确定纹理（UDIM）或者数值对（u，v或者s，t）。UDIM import python脚本两者都支持。重定义的分析函数需要解码文件名字符串并返回UDIM或者u，v分块纹理或者一个元组整形数值。如果如法确认，它将返回None</p>
+<p>下面是一个分析函数的列子， 会解码文件名： filename.1003.v10.tif:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">myParsingFunc</span><span class="params">( f )</span>:</span></div><div class="line">    sequences = re.split(<span class="string">"[._]+"</span>, f )</div><div class="line">    udim = <span class="keyword">None</span></div><div class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> sequences:</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            udim = int(s)</div><div class="line">        <span class="keyword">except</span> ValueError:</div><div class="line">            udim = <span class="keyword">None</span></div><div class="line">        <span class="keyword">if</span> udim&gt;<span class="number">1000</span> <span class="keyword">and</span> udim &lt;<span class="number">2000</span>:</div><div class="line">            <span class="keyword">break</span></div><div class="line">    <span class="keyword">if</span> udim == <span class="keyword">None</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line">    <span class="keyword">return</span> udim</div></pre></td></tr></table></figure></p>
+<p>这是一个分析 filename._u00_v00.tif:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">myParsingFunc</span><span class="params">(f)</span>:</span></div><div class="line">        sequences = re.split(<span class="string">"[._]+"</span>, f)</div><div class="line">        u = <span class="keyword">None</span></div><div class="line">        v = <span class="keyword">None</span></div><div class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> sequences:</div><div class="line">            <span class="keyword">try</span>:</div><div class="line">                head = s[<span class="number">0</span>]</div><div class="line">                tail = s[<span class="number">1</span>: len(s) ]</div><div class="line">                <span class="keyword">if</span> head == <span class="string">'u'</span>:</div><div class="line">                        u = int(tail)</div><div class="line">                <span class="keyword">if</span> head == <span class="string">'v'</span>:</div><div class="line">                        v = int(tail)</div><div class="line">            <span class="keyword">except</span> ValueError:</div><div class="line">                    u = <span class="keyword">None</span></div><div class="line">                    v = <span class="keyword">None</span></div><div class="line">        <span class="keyword">if</span> u ==<span class="keyword">None</span> <span class="keyword">or</span> v ==<span class="keyword">None</span>:</div><div class="line">                <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line">        <span class="keyword">return</span> u,v</div><div class="line">```        </div><div class="line"></div><div class="line">下面是分析filename_s04t00_00_v019.tif的例子：</div><div class="line"></div><div class="line">```python    </div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">myParsingFunc</span><span class="params">( f)</span>:</span></div><div class="line">        sequences = f.split(<span class="string">"_"</span>)</div><div class="line">        s_value = <span class="keyword">None</span></div><div class="line">        t_value = <span class="keyword">None</span></div><div class="line">        </div><div class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> sequences:</div><div class="line">                <span class="keyword">if</span> len(s) != <span class="number">6</span>:</div><div class="line">                    <span class="keyword">continue</span></div><div class="line">                 <span class="keyword">if</span> s[<span class="number">0</span>] != <span class="string">'s'</span> <span class="keyword">or</span> s[<span class="number">3</span>] !=<span class="string">'t'</span>:</div><div class="line">                    <span class="keyword">continue</span></div><div class="line">                <span class="keyword">try</span>:</div><div class="line">                    s_value = int( s[<span class="number">1</span>:<span class="number">3</span>] )</div><div class="line">                    t_value = int( s[<span class="number">4</span>:<span class="number">6</span>] )   </div><div class="line">                <span class="keyword">except</span> ValueError:</div><div class="line">                    s_value = <span class="keyword">None</span></div><div class="line">                    t_value = <span class="keyword">None</span></div><div class="line">        <span class="keyword">if</span> s_value == <span class="keyword">None</span> <span class="keyword">or</span> t_value ==<span class="keyword">None</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line">        <span class="keyword">return</span> s_value, t_value</div></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/09/12/nuke-python-19/" data-title="Nuke Python 与资产管理系统和生产线集成 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/12/nuke-python-20/" title="Nuke Python 线程">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 线程</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/12/nuke-python-18/"  title="Nuke Python 数学">
+ <strong>下一篇：</strong><br/> 
+ <span>Nuke Python 数学
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/12/nuke-python-19/" data-title="Nuke Python 与资产管理系统和生产线集成" data-url="http://cgcoder.com/2016/09/12/nuke-python-19/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#保存工作流的自定义脚本"><span class="toc-number">1.</span> <span class="toc-text">保存工作流的自定义脚本</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#自定义脚本加载流程"><span class="toc-number">2.</span> <span class="toc-text">自定义脚本加载流程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#自定义UDIM分析函数"><span class="toc-number">3.</span> <span class="toc-text">自定义UDIM分析函数</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

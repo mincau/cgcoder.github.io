@@ -1,0 +1,587 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python 用PyQt扩展Nuke | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="使用PyQtQt扩展Nuke">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python 用PyQt扩展Nuke">
+<meta property="og:url" content="http://cgcoder.com/2016/09/12/nuke-python-11/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="使用PyQtQt扩展Nuke">
+<meta property="og:updated_time" content="2016-09-12T13:50:00.842Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python 用PyQt扩展Nuke">
+<meta name="twitter:description" content="使用PyQtQt扩展Nuke">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/12/nuke-python-11/" title="Nuke Python 用PyQt扩展Nuke" itemprop="url">Nuke Python 用PyQt扩展Nuke</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-12T13:50:00.842Z" itemprop="datePublished"> 发表于 2016-09-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#Mac-OSX"><span class="toc-number">1.</span> <span class="toc-text">Mac OSX</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Linux"><span class="toc-number">2.</span> <span class="toc-text">Linux</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Window"><span class="toc-number">3.</span> <span class="toc-text">Window</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Enviroment-Setup"><span class="toc-number">4.</span> <span class="toc-text">Enviroment Setup</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#第一个-PyQt-窗口"><span class="toc-number">5.</span> <span class="toc-text">第一个 PyQt 窗口</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Pyside和-PyQt-knobs"><span class="toc-number">6.</span> <span class="toc-text">Pyside和 PyQt knobs</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#从Qt程序迁移-nuke6-2"><span class="toc-number">7.</span> <span class="toc-text">从Qt程序迁移 nuke6.2</span></a></li></ol>
+		
+		</div>
+		
+		<p>虽然nuke内置了pyside，但是想用pyqt还是可以的。<br>配置pyqt需要几个步骤，当然Python26也要安装。<br>要在nuke里面用qt，先下载Qt 4.6.2 然后运行build.py 参数 release 64，编译pyqt需要链接的所有库。</p>
+<p>编译完成后，将可执行程序的路径加入环境变量。<qtbuilddir>/bin/<br>后面是各个平台的具体操作步骤：</qtbuilddir></p>
+<h5 id="Mac-OSX"><a href="#Mac-OSX" class="headerlink" title="Mac OSX"></a>Mac OSX</h5><ul>
+<li>下载sip，并解压</li>
+<li><p>运行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">configure.py</div><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
+</li>
+<li><p>下载pyqt4的源码，并解压</p>
+</li>
+<li><p>到解压目录下面运行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">configure.py</div><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
+</li>
+<li><p>PyQt库配置来指向nuke的qt库，运行soFileFixForMacPyQt.py,其和qt的源码绑在一起。</p>
+</li>
+</ul>
+<p>最后根据 Environment setup来设置环境。</p>
+<h5 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h5><ul>
+<li><p>下载sip，解压，编译：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">configure.py</div><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
+</li>
+<li><p>下载pyqt4，解压编译：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">configure.py</div><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>最后看 环境设置部分</p>
+<h5 id="Window"><a href="#Window" class="headerlink" title="Window"></a>Window</h5><p>和linux操作差不多，不再赘述。</p>
+<h5 id="Enviroment-Setup"><a href="#Enviroment-Setup" class="headerlink" title="Enviroment Setup"></a>Enviroment Setup</h5><p>编译好的sip和pyqt应该在python的site-packages目录。推荐做法：拷贝sip和pyqt到一个单独目录，然后添加到python path里面<br>例如： 给nuke的pyqt创建一个目录<pyqtbuilddir>，并拷贝文件到目录下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## files and dirs to copy</span></div><div class="line">PyQt4/</div><div class="line">sip.so</div><div class="line">sipconfig.py</div><div class="line">sipdistutils.py</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">## final directory tree looks like</span></div><div class="line"></div><div class="line">&lt;pyqtbuilddir&gt;/PyQt4/*</div><div class="line">&lt;pyqtbuilddir&gt;/sip.so</div><div class="line">&lt;pyqtbuilddir&gt;/sipconfig.py</div><div class="line">&lt;pyqtbuilddir&gt;/sipdistutils.py</div></pre></td></tr></table></figure></pyqtbuilddir></p>
+<p>将pyqt添加到python，你就可以从nuke里面使用pyqt了。</p>
+<pre><code>export PYTHONPATH=&lt;pyqtbuilddir&gt;
+</code></pre><p>或者在nuke的 <strong>menu.py</strong>里面加入：</p>
+<pre><code>sys.path.append (&quot;&lt;pyqtbuilddir&gt;&quot;)
+</code></pre><h5 id="第一个-PyQt-窗口"><a href="#第一个-PyQt-窗口" class="headerlink" title="第一个 PyQt 窗口"></a>第一个 PyQt 窗口</h5><p>启动NUKe，打开脚本编辑器，填入下列命令：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> PyQt4 <span class="keyword">import</span> QtGui</div><div class="line">label = QtGui.QLabel(<span class="string">"Hello World"</span>)</div><div class="line">label.show()</div></pre></td></tr></table></figure></p>
+<p>hello world窗口就会显示</p>
+<h5 id="Pyside和-PyQt-knobs"><a href="#Pyside和-PyQt-knobs" class="headerlink" title="Pyside和 PyQt knobs"></a>Pyside和 PyQt knobs</h5><p>可以把PyQt的widget插入nuke的python panel，并像<br>nuke的panel一样停靠。<br>想要PyQt的widget可停靠，就需要用一个wrapper knob来创建<br>其可以被PyCustom_Knob.<br>wrapper knob 要有 makeUI（）函数来返回widget。<br>作为例子，可以看nukescript/pyQtExamples目录下的webBrowser.py<br>测试例子，在脚本编辑器输入：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nukescripts.pyQtExamples.webBrowser</div></pre></td></tr></table></figure></p>
+<p>现在pane菜单就有一个web browser了。</p>
+<p>也可以使用panels.registerWidgetAsPanel 的wrapper函数来 wrap一个PyQt的widget，而不是创建一个自定义knob，同样适用于pyside。<br>更多信息请查看Dockable Pyside widget。</p>
+<h5 id="从Qt程序迁移-nuke6-2"><a href="#从Qt程序迁移-nuke6-2" class="headerlink" title="从Qt程序迁移 nuke6.2"></a>从Qt程序迁移 nuke6.2</h5><p>以前的nuke，需要在另外的线程里面运行pyqt，并且用executeInMainthread来调用nuke。<br>这在nuke6.3或者以后版本就不适用了。<br>为了后向兼容，pyQtappUtiles.py可以让以前的函数继续使用，但是推荐更新代码，使用qt标准的show函数。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/09/12/nuke-python-11/" data-title="Nuke Python 用PyQt扩展Nuke | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/12/nuke-python-12/" title="Nuke Python 自定义UI">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 自定义UI</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/12/nuke-python-10/"  title="Nuke Python 用PySide扩展Nuke">
+ <strong>下一篇：</strong><br/> 
+ <span>Nuke Python 用PySide扩展Nuke
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/12/nuke-python-11/" data-title="Nuke Python 用PyQt扩展Nuke" data-url="http://cgcoder.com/2016/09/12/nuke-python-11/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#Mac-OSX"><span class="toc-number">1.</span> <span class="toc-text">Mac OSX</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Linux"><span class="toc-number">2.</span> <span class="toc-text">Linux</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Window"><span class="toc-number">3.</span> <span class="toc-text">Window</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Enviroment-Setup"><span class="toc-number">4.</span> <span class="toc-text">Enviroment Setup</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#第一个-PyQt-窗口"><span class="toc-number">5.</span> <span class="toc-text">第一个 PyQt 窗口</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Pyside和-PyQt-knobs"><span class="toc-number">6.</span> <span class="toc-text">Pyside和 PyQt knobs</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#从Qt程序迁移-nuke6-2"><span class="toc-number">7.</span> <span class="toc-text">从Qt程序迁移 nuke6.2</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

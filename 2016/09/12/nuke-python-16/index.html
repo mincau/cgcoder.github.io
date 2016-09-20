@@ -1,0 +1,583 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python 控制节点图 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="控制Nuke中的节点图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python 控制节点图">
+<meta property="og:url" content="http://cgcoder.com/2016/09/12/nuke-python-16/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="控制Nuke中的节点图">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_02.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_03.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_04.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_05.png">
+<meta property="og:updated_time" content="2016-09-12T13:50:00.851Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python 控制节点图">
+<meta name="twitter:description" content="控制Nuke中的节点图">
+<meta name="twitter:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_01.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/12/nuke-python-16/" title="Nuke Python 控制节点图" itemprop="url">Nuke Python 控制节点图</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-12T13:50:00.851Z" itemprop="datePublished"> 发表于 2016-09-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#读取、设置节点位置"><span class="toc-number">1.</span> <span class="toc-text">读取、设置节点位置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#控制节点图的缩放"><span class="toc-number">2.</span> <span class="toc-text">控制节点图的缩放</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例子"><span class="toc-number">3.</span> <span class="toc-text">例子</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#用Dot节点做的圈圈"><span class="toc-number">3.1.</span> <span class="toc-text">用Dot节点做的圈圈</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#螺旋"><span class="toc-number">3.2.</span> <span class="toc-text">螺旋</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#控制节点间距"><span class="toc-number">3.3.</span> <span class="toc-text">控制节点间距</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>使用python你可以干下面的事：</p>
+<ul>
+<li>读取、设置节点位置的属性</li>
+<li>控制节点图的推拉</li>
+</ul>
+<p>在Nukepedia上有一个视频教程</p>
+<h5 id="读取、设置节点位置"><a href="#读取、设置节点位置" class="headerlink" title="读取、设置节点位置"></a>读取、设置节点位置</h5><p>通过其knob可以存取节点的x y位置<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node = nuke.createNode( <span class="string">'NoOp'</span> )</div><div class="line"><span class="keyword">print</span> node[<span class="string">'xpos'</span>].value()</div></pre></td></tr></table></figure></p>
+<p>使用常用的knob方法设置新位置：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node[<span class="string">'xpos'</span>].setValue(<span class="number">100</span>)</div><div class="line"><span class="keyword">print</span> <span class="string">'new position is'</span>, node[<span class="string">'xpos'</span>].value()</div></pre></td></tr></table></figure></p>
+<p>获取位置的其他方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">node.setXpos( <span class="number">111</span> )</div><div class="line">node.setYpos( <span class="number">222</span> )</div><div class="line"></div><div class="line">xPos = node.xpos()</div><div class="line">yPos = node.ypos()</div><div class="line"><span class="keyword">print</span> <span class="string">'new x position is '</span> , xPos</div><div class="line"><span class="keyword">print</span> <span class="string">'new y position is'</span>, yPos</div></pre></td></tr></table></figure></p>
+<p>同时设置x y<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node.setXYpos( 123, 234 )</div></pre></td></tr></table></figure></p>
+<p>在缩放1的情况下获取节点像素的宽，高<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">nodeWidth = node.screenWidth()</div><div class="line">nodeHeight = node.screenHeight()</div><div class="line"></div><div class="line"><span class="keyword">print</span> <span class="string">"node dimensions are %s x %s"</span> %( nodeWidth, nodeHeight )</div></pre></td></tr></table></figure></p>
+<p>自动安排节点，不重叠：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> n <span class="keyword">in</span> nuke.allNodes():</div><div class="line">    n.autoplace()</div></pre></td></tr></table></figure></p>
+<p>将节点吸附到最近的节点：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> n <span class="keyword">in</span> nuke.allNodes():</div><div class="line">        nuke.autoplaceSnap( n )</div></pre></td></tr></table></figure></p>
+<h5 id="控制节点图的缩放"><a href="#控制节点图的缩放" class="headerlink" title="控制节点图的缩放"></a>控制节点图的缩放</h5><p>为了缩放，缩放节点图，用nuke.zoom()<br>当没有参数时，这将返回当前缩放值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.zoom()</div></pre></td></tr></table></figure></p>
+<p>大于0的参数，节点图就放大到相应倍数。例如，将视口重新设置为1：1：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.zoom( 1 )</div></pre></td></tr></table></figure></p>
+<p>也可以指定缩放的中心，缩放到指定节点：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node = nuke.selectedNode()</div><div class="line">nuke.zoom( <span class="number">3</span>, [node.xpos(), node.ypos() ])</div></pre></td></tr></table></figure></p>
+<p>上面的例子缩放到节点的左上方。缩放到节点中间<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">node = nuke.selectedNode()</div><div class="line">xC = node.xpos() + node.screenWidth()/<span class="number">2</span></div><div class="line">yC = node.ypos() + node.screenHeight()/<span class="number">2</span></div><div class="line">nuke.zoom( <span class="number">3</span>, [xC, yC] )</div></pre></td></tr></table></figure></p>
+<h5 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h5><h6 id="用Dot节点做的圈圈"><a href="#用Dot节点做的圈圈" class="headerlink" title="用Dot节点做的圈圈"></a>用Dot节点做的圈圈</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> math</div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">        n = nuke.node.Dot( xpos = math.sin(x)*<span class="number">100</span>, ypos = math.cos(x)*<span class="number">100</span> )</div><div class="line">        n[<span class="string">'hide_input'</span>].setValue(<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_01.png" alt=""></p>
+<h6 id="螺旋"><a href="#螺旋" class="headerlink" title="螺旋"></a>螺旋</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> math</div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">1000</span>):</div><div class="line">    n = nuke.nodes.Dot( xpos = math.sin(x)*x/<span class="number">10</span>, ypos =math.cos(x).x/<span class="number">10</span>)</div><div class="line">    n[<span class="string">'hide_input'</span>] .setValue(<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_02.png" alt=""></p>
+<h6 id="控制节点间距"><a href="#控制节点间距" class="headerlink" title="控制节点间距"></a>控制节点间距</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">scaleNodes</span><span class="params">( scale )</span>:</span></div><div class="line">    nodes = nuke.selectedNodes()</div><div class="line">    amount  = len( nodes)</div><div class="line">    <span class="keyword">if</span> amount ==<span class="number">0</span>:</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line">    allX = sum([n.xpos() + n.screenWidth()/<span class="number">2</span> <span class="keyword">for</span> n <span class="keyword">in</span> nodes]</div><div class="line">    allY = sum( [n.ypos() + n.screenHeight()/<span class="number">2</span> <span class="keyword">for</span> n <span class="keyword">in</span> nodes]</div><div class="line"></div><div class="line">    centreX = allX / amount</div><div class="line">    centreY = allY / amount</div><div class="line"></div><div class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> nodes:</div><div class="line">        n.setXpos( centreX + (n.xpos() - centreX )*scale )</div><div class="line">        n.setYpos( centreY +(n.ypos() - centreY) * scale )</div></pre></td></tr></table></figure>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_03.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scaleNodes( 3)</div></pre></td></tr></table></figure>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_04.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scaleNodes( .7 )</div></pre></td></tr></table></figure>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/dag_05.png" alt=""></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/09/12/nuke-python-16/" data-title="Nuke Python 控制节点图 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/12/nuke-python-2/" title="Nuke Python 作为包使用">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 作为包使用</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/12/nuke-python-15/"  title="Nuke Python 控制通道和层">
+ <strong>下一篇：</strong><br/> 
+ <span>Nuke Python 控制通道和层
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/12/nuke-python-16/" data-title="Nuke Python 控制节点图" data-url="http://cgcoder.com/2016/09/12/nuke-python-16/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#读取、设置节点位置"><span class="toc-number">1.</span> <span class="toc-text">读取、设置节点位置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#控制节点图的缩放"><span class="toc-number">2.</span> <span class="toc-text">控制节点图的缩放</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例子"><span class="toc-number">3.</span> <span class="toc-text">例子</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#用Dot节点做的圈圈"><span class="toc-number">3.1.</span> <span class="toc-text">用Dot节点做的圈圈</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#螺旋"><span class="toc-number">3.2.</span> <span class="toc-text">螺旋</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#控制节点间距"><span class="toc-number">3.3.</span> <span class="toc-text">控制节点间距</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

@@ -1,0 +1,651 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python roto | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="roto和画笔">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python roto">
+<meta property="og:url" content="http://cgcoder.com/2016/08/22/nuke-python-7/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="roto和画笔">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/rotoPaintPrimer_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/paintTrajectory_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackShape_04.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackShape_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/animPath_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/animPath_02.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/animPath_03.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackCV_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackCV_02.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapeAndCVPanel_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackCV_03.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackCV_04.png">
+<meta property="og:updated_time" content="2016-08-22T02:51:58.217Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python roto">
+<meta name="twitter:description" content="roto和画笔">
+<meta name="twitter:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/rotoPaintPrimer_01.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/08/22/nuke-python-7/" title="Nuke Python roto" itemprop="url">Nuke Python roto</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-08-22T01:46:28.522Z" itemprop="datePublished"> 发表于 2016-08-22</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#例子："><span class="toc-number">1.</span> <span class="toc-text">例子：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#paintTrajectory"><span class="toc-number">1.1.</span> <span class="toc-text">paintTrajectory</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#路径控制"><span class="toc-number">1.2.</span> <span class="toc-text">路径控制</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#trackCV"><span class="toc-number">1.3.</span> <span class="toc-text">trackCV</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>怎么创建roto 图形和 画笔<br>当获取或者设置roto，rotopaint节点时，需要读取节点的<strong>curves</strong> knob<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rpNode = nuke.toNode(<span class="string">'RotoPaint1'</span>)</div><div class="line">cKnob = rpNode[<span class="string">'curves'</span>]</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/rotoPaintPrimer_01.png" alt="_images/rotoPaintPrimer_01.png"></p>
+<p>读取root层：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">root = cKnob.rootLayer</div></pre></td></tr></table></figure></p>
+<p>每层中<strong>curves</strong> 的knob是一个迭代对象，其产生每层的成员：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for shape in root:</div><div class="line">    print shape.name</div></pre></td></tr></table></figure></p>
+<p>使用曲线的knob的toElement方法，通过名字读取层。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">for shape in cKnob.toElement(&apos;Layer1&apos;):</div><div class="line">    print shape.name</div><div class="line"></div><div class="line"># Result:</div><div class="line">Layer1</div><div class="line">Brush2</div><div class="line">Bezier1</div></pre></td></tr></table></figure></p>
+<p>用同样的方法来读取图形中的控制点和画笔：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">for p in cKnob.toElement(&apos;Layer1/Brush1&apos;):</div><div class="line">    print p</div><div class="line"></div><div class="line"># Result:</div><div class="line">Brush1</div><div class="line">Bezier2</div></pre></td></tr></table></figure></p>
+<p>curve knob有三种类型的对象：</p>
+<ul>
+<li>shapes 描述Beziers 和B样条</li>
+<li>strokes 描述画笔</li>
+<li>layers 描述不同的层<br>想创建新的画笔和层，需要导入RotoPaint的api，使用别名来简化使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import nuke.rotopaint as rp</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>类 Shape，Stroke，Layer，ShapeControlPoint，AnimControlPoints，还有更多需要使用python来创建RotoPaint元素的。</p>
+<h5 id="例子："><a href="#例子：" class="headerlink" title="例子："></a>例子：</h5><h6 id="paintTrajectory"><a href="#paintTrajectory" class="headerlink" title="paintTrajectory"></a>paintTrajectory</h6><p>这段代码 沿着Array_knob的动画轨迹来绘制画笔，将其可视化。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/paintTrajectory_01.png" alt="_images/paintTrajectory_01.png"></p>
+<p>准备阶段，Transform节点的translate knob设置一些关键帧，它就可以沿着屏幕运动。在脚本编辑器中，给knob赋值，并赋值一个帧范<br>围（比如1-100）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">knob = nuke.toNode(&apos;Transform1&apos;)[&apos;translate&apos;]</div><div class="line">frameRange = nuke.FrameRange(&apos;1-100&apos;)</div></pre></td></tr></table></figure></p>
+<p>使用的knob至少有两个域，可以提供x，y。因此快速检测下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">if knob.arraySize() != 2:</div><div class="line">    raise TypeError, &apos;knob must have array size of 2&apos;</div></pre></td></tr></table></figure></p>
+<p>如果knob有效，就抓取其父节点，创建RotoPaint节点，引用其curves knob：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">parentNode = knob.node()</div><div class="line">paintNode = nuke.createNode(&apos;RotoPaint&apos;)</div><div class="line">curvesKnob = paintNode[&apos;curves&apos;]</div></pre></td></tr></table></figure></p>
+<p>需要使用到nuke.rotopaint模块：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import nuke.rotopaint as rp</div></pre></td></tr></table></figure></p>
+<p>使用Stroke类创建一个画笔：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">stroke = rp.Stroke(curvesKnob)</div></pre></td></tr></table></figure></p>
+<p>下一步，遍历所有帧，抓取knob的值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for f in frameRange:</div><div class="line">    pos = knob.valueAt(f)</div></pre></td></tr></table></figure></p>
+<p>如果knob的父节点有center knob，或许要偏移下这个值，保证stroke落在轨迹上，获取这个偏移量吧：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">try:</div><div class="line">    offset = parentNode[&apos;center&apos;].valueAt(f)</div><div class="line">except NameError:</div><div class="line">    offset = (0, 0)</div></pre></td></tr></table></figure></p>
+<p>给新控制点计算stroke的x，y<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">finalPos = [sum(p) for p in zip(pos, offset) ]</div></pre></td></tr></table></figure></p>
+<p>用RotoPaint模块的AnimControlPoint创建新的控制点，并计算x，y位置。然后新控制点添加给stroke：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">stroke.append( rp.AnimControlPoint(*finalPos))</div></pre></td></tr></table></figure></p>
+<p>给stroke个新名字，可以在curves的knob里面显示，最后，将其添加到root层：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">stroke.name = &apos;trajectory for %s.%s&apos; %(parentNode.name(), knob.name() )</div><div class="line">curvesKnob.rootLayer.append(stroke)</div></pre></td></tr></table></figure></p>
+<p>目前所有的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">import nuke.rotopaint as rp</div><div class="line"></div><div class="line">knob = nuke.toNode(&apos;Transform1&apos;)[&apos;translate&apos;]</div><div class="line">frameRange = nuke.FrameRange(&apos;1-100&apos;)</div><div class="line"></div><div class="line">if knob.arraySize() != 2:</div><div class="line">    raise TypeError, &apos;knob must have array size of 2&apos;</div><div class="line"></div><div class="line">parentNode = knob.node()</div><div class="line">paintNode = nuke.createNode(&apos;RotoPaint&apos;)</div><div class="line">curvesKnob = paintNode[&apos;curves&apos;]</div><div class="line"></div><div class="line">stroke = rp.Stroke(curvesKnob)</div><div class="line"></div><div class="line">for f in frameRange:</div><div class="line">    pos = knob.valueAt(f)</div><div class="line">    try :</div><div class="line">        # IF PARENT NODE HAS &quot;CENTER&quot; KNOB ADD THE OFFSET TO LINE UP STROKE PROPERLY</div><div class="line">        offset = parentNode[&apos;center&apos;].valueAt(f)</div><div class="line">    except NameError:</div><div class="line">        # OTHERWISE NO OFFSET IS APPLIED</div><div class="line">        offset =(0, 0)</div><div class="line">    finalPos = [ sum(p) for p in zip(pos, offset) ]</div><div class="line">    stroke.append(rp.AnimControlPoint(*finalPos))</div><div class="line"></div><div class="line"></div><div class="line">stroke.name = &apos;trajectory for %s.%s&apos; %(parentNode.name(), knob.name())</div><div class="line">curvesKnob.rootLayer.append(stroke)</div></pre></td></tr></table></figure></p>
+<p>调用这段代码的好地方应该是animation menu，这样就可以从对应knob的动画菜单直接调用。将代码包装成函数，并接收knob和<br>frame range作为参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">def paintTrajectory(knob, frameRange):</div><div class="line">    if knob.arraySize() != 2:</div><div class="line">        raise TypeError, &apos;knob must have array size of 2&apos;</div><div class="line"></div><div class="line">    parentNode = knob.node()</div><div class="line">    paintNode = nuke.createNode(&apos;RotoPaint&apos;)</div><div class="line">    curvesKnob = paintNode[&apos;curves&apos;]</div><div class="line"></div><div class="line">    stroke = rp.Stroke(curvesKnob)</div><div class="line">    ctrlPoints = []</div><div class="line">    for f in frameRange:</div><div class="line">        pos = knob.valueAt(f)</div><div class="line">        try :</div><div class="line">            # IF PARENT NODE HAS &quot;CENTER&quot; KNOB ADD THE OFFSET TO LINE UP STROKE PROPERLY</div><div class="line">            offset = parentNode[&apos;center&apos;].valueAt(f)</div><div class="line">        except NameError:</div><div class="line">            # OTHERWISE NO OFFSET IS APPLIED</div><div class="line">            offset =(0, 0)</div><div class="line">        finalPos = [ sum(p) for p in zip(pos, offset) ]</div><div class="line">        stroke.append(rp.AnimControlPoint(*finalPos))</div><div class="line"></div><div class="line">    stroke.name = &apos;trajectory for %s.%s&apos; %(parentNode.name(), knob.name())</div><div class="line">    curvesKnob.rootLayer.append(stroke)</div></pre></td></tr></table></figure>
+<p>现在创建一个辅助函数，从knob获取帧范围，这样，用户就不用自己输入了。我们这样做的，遍历knob的动画曲线，获取其帧范围。<br>首先，初始化FrameRanges对象，保存所有knob的帧范围：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def getKnobRange(knob):</div><div class="line">        allRanges = nuke.FrameRanges()</div></pre></td></tr></table></figure></p>
+<p>下一步，遍历curves，创建帧范围。如果没有找到关键帧，那么曲线可能是表达式定义的，那么就利用脚本的范围。一旦有了第一帧和<br>最后一帧，创建帧对象，并添加到帧范围里面：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> anim <span class="keyword">in</span> knob.animations():</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> anim.keys():</div><div class="line">        first = nuke.root().firstFrame()</div><div class="line">        last = nuke.root().lastFrame()</div><div class="line">        allRanges.add(nuke.FrameRange(first, last))</div><div class="line">    allKeys  = anim.keys()</div><div class="line">    allRanges.add(nuke.FrameRange( allKeys[<span class="number">0</span>].x, allKeys[<span class="number">-1</span>].x, <span class="number">1</span>))</div></pre></td></tr></table></figure></p>
+<p>所有范围收集完成后，使用FrameRanges.minFrame(), FrameRanges.maxFrame()获取最小，最大帧。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return nuke.FrameRange( allRanges.minFrame(), allRanges.maxFrame(), 1)</div></pre></td></tr></table></figure></p>
+<p>所有代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="keyword">import</span> nuke.rotopaint <span class="keyword">as</span> rp</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getKnobRange</span><span class="params">( knob )</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    Return a frame range object of the knob's animation range.</div><div class="line">    If the knob has no keyframes the script range is returned</div><div class="line">    args:</div><div class="line">       knob - animated knob</div><div class="line">    '''</div><div class="line">    allRanges = nuke.FrameRanges()</div><div class="line">    <span class="keyword">for</span> anim <span class="keyword">in</span> knob.animations():</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> anim.keys():</div><div class="line">            <span class="comment">#KNOB ONLY HAS EXPRESSION WITHOUT KEYS SO USE SCRIPT RANGE</span></div><div class="line">            first = nuke.root().firstFrame()</div><div class="line">            last = nuke.root().lastFrame()</div><div class="line">            allRanges.add( nuke.FrameRange( first, last ) )</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="comment"># GET FIRST FRAME</span></div><div class="line">            allKeys = anim.keys()</div><div class="line">            allRanges.add( nuke.FrameRange(  allKeys[<span class="number">0</span>].x, allKeys[<span class="number">-1</span>].x, <span class="number">1</span> ) )</div><div class="line"></div><div class="line">    <span class="keyword">return</span> nuke.FrameRange( allRanges.minFrame(), allRanges.maxFrame(), <span class="number">1</span> )</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">paintTrajectory</span><span class="params">( knob, frameRange )</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    Create a paint stroke that visualises a knob's animation path</div><div class="line">    args:</div><div class="line">        knob - Array knob with 2 fields. Presumably this is a XY_Knob but can be any</div><div class="line">        frameRange - Range for which to draw the trajectory.</div><div class="line">                     This is an iterable object containing the requested frames.</div><div class="line">                     Default is current script range</div><div class="line">    '''</div><div class="line">    <span class="keyword">if</span> knob.arraySize() != <span class="number">2</span>:</div><div class="line">        <span class="keyword">raise</span> TypeError, <span class="string">'knob must have array size of 2'</span></div><div class="line"></div><div class="line">    parentNode = knob.node()</div><div class="line">    paintNode = nuke.createNode(<span class="string">'RotoPaint'</span>)</div><div class="line">    curvesKnob = paintNode[<span class="string">'curves'</span>]</div><div class="line"></div><div class="line">    stroke = rp.Stroke( curvesKnob )</div><div class="line">    ctrlPoints = []</div><div class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> frameRange:</div><div class="line">        pos = knob.valueAt( f )</div><div class="line">        <span class="keyword">try</span> :</div><div class="line">            <span class="comment"># IF PARENT NODE HAS "CENTER" KNOB ADD THE OFFSET TO LINE UP STROKE PROPERLY</span></div><div class="line">            offset = parentNode[<span class="string">'center'</span>].valueAt( f )</div><div class="line">        <span class="keyword">except</span> NameError:</div><div class="line">            <span class="comment"># OTHERWISE NO OFFSET IS APPLIED</span></div><div class="line">            offset = ( <span class="number">0</span>, <span class="number">0</span> )</div><div class="line">        finalPos = [ sum(p) <span class="keyword">for</span> p <span class="keyword">in</span> zip( pos, offset ) ]</div><div class="line">        stroke.append( rp.AnimControlPoint( *finalPos ) )</div><div class="line"></div><div class="line">    stroke.name = <span class="string">'trajectory for %s.%s'</span> % ( parentNode.name(), knob.name() )</div><div class="line">    curvesKnob.rootLayer.append( stroke )</div></pre></td></tr></table></figure></p>
+<p>两个函数准备好了，现在就可运行来绘制动画路径了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">knob = nuke.toNode(&apos;Transform1&apos;)[&apos;translate&apos;]</div><div class="line">paintTrajectory(knob,getKnobRange(knob))</div></pre></td></tr></table></figure></p>
+<p>就像上面提到的，使用这段代码的最好地方是在动画菜单里面 nuke.thisKnob()<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import examples</div><div class="line">nuke.menu(&apos;Animation&apos;).addCommand(&apos;Paint Trajectory&apos;, lambda: examples.paintTrajectory(nuke.thisKnob(),</div><div class="line">examples.getKnobRange(nuke.thisKnob())))</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackShape_04.png" alt="_images/paintTrajectory_02.png"><br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackShape_01.png" alt="trackShape_01"></p>
+<h6 id="路径控制"><a href="#路径控制" class="headerlink" title="路径控制"></a>路径控制</h6><p>这个基本上是在线版的trackShape，其使用python代码将Transform节点的<strong>translate</strong> knob链接到给定的图元。那么用户的knob就可以<br>沿着路径给transform定位了。</p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/animPath_01.png" alt="animPath_01"><br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/animPath_02.png" alt="animPath_02"></p>
+<p><strong>path</strong>控制着<strong>Transform</strong>沿着RotoPaint节点中的<strong>Brush1</strong>移动的比例。需要将python代码放入<strong>translate</strong>的knob来实现：<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/animPath_03.png" alt="animPath_03"></p>
+<p>在<strong>x</strong> 表达式中代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>:</div><div class="line">   shape = nuke.toNode(<span class="string">'RotoPaint1'</span>)[<span class="string">'curves'</span>].toElement(<span class="string">'Brush1'</span>).evaluate(nuke.frame())</div><div class="line"><span class="keyword">except</span>:</div><div class="line">   <span class="keyword">pass</span></div><div class="line">ret = shape.getPoint(nuke.thisNode()[<span class="string">'path'</span>].value()).x</div></pre></td></tr></table></figure></p>
+<p><strong>y</strong>中代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>:</div><div class="line">   shape = nuke.toNode(<span class="string">'RotoPaint1'</span>)[<span class="string">'curves'</span>].toElement(<span class="string">'Brush1'</span>).evaluate(nuke.frame())</div><div class="line"><span class="keyword">except</span>:</div><div class="line">   <span class="keyword">pass</span></div><div class="line">ret = shape.getPoint(nuke.thisNode()[<span class="string">'path'</span>].value()).y</div></pre></td></tr></table></figure></p>
+<p>曲线是三次曲线，图形请看上图。<br>nuke脚本<a href="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_downloads/pathAnimation.nk" target="_blank" rel="external">nuke script</a></p>
+<h6 id="trackCV"><a href="#trackCV" class="headerlink" title="trackCV"></a>trackCV</h6><p>下面代码给图形的控制点创建了个<strong>Tracker</strong>节点。首先创建Roto节点，在其中画一条贝塞尔曲线，并K动画。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackCV_01.png" alt="trackCV_01"></p>
+<p>确保viewer中的<strong>label points</strong>勾选了，这就能看到CV点的标号了，这能帮助识别你想创建Tracker的那个。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackCV_02.png" alt="trackCV_02"></p>
+<p>确认选中了节点图中的Roto节点，通过抓取选中节点启动脚本。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node = nuke.selectedNode()</div></pre></td></tr></table></figure></p>
+<p>选定你要跟踪的帧范围，图元的名字，点编号。下面是硬编码，后续可以做一个界面：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fRange = nuke.FrameRange(<span class="string">'1-100'</span>)</div><div class="line">shapeName = <span class="string">'Bezier1'</span></div><div class="line">cv = <span class="number">0</span></div></pre></td></tr></table></figure></p>
+<p>脚本运行时，想看到tracker的创建，那么就需要在另一个线程里面做这个工作了。这个函数是<strong>cvTracker</strong>其参数如下：</p>
+<ul>
+<li>node Roto节点</li>
+<li>shapeName 包含控制点的图元</li>
+<li>cvID 要跟踪的控制点序号</li>
+<li>fRange 跟踪的帧范围</li>
+</ul>
+<p>下面代码启动另一个线程调用此函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">threading.Thread(None, _cvTracker, args=(node, shapeName, cv, fRange)).start()</div></pre></td></tr></table></figure></p>
+<p>到现在为止，代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke.rotopaint <span class="keyword">as</span> rp</div><div class="line"></div><div class="line">node = nuke.selectedNode()</div><div class="line">fRange = nuke.FrameRange(<span class="string">'1-100'</span>)</div><div class="line">shapeName = <span class="string">'Bezier1'</span></div><div class="line">cv = <span class="number">0</span></div><div class="line"></div><div class="line">threading.Thread(<span class="keyword">None</span>, _cvTracker, args=(node, shapeName, cv, fRange)).start()</div></pre></td></tr></table></figure></p>
+<p>显示实现这个函数：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_cvTracker</span><span class="params">(node, shapeName, cvID, fRange)</span>:</span></div><div class="line">    shape = node[<span class="string">'curves'</span>].toElement(shapeName)</div></pre></td></tr></table></figure></p>
+<p>使用<strong>toElement</strong>方法，能通过名字获取图元并能定位我们索引的点，例子中，点编号为0：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">shapePoint = shape[cvID]</div></pre></td></tr></table></figure></p>
+<p>添加点错误处理，防止索引的点不存在：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>:</div><div class="line">    shapePoint = shape[cvID]</div><div class="line"><span class="keyword">except</span> IndexError:</div><div class="line">    nuke.message(<span class="string">'Index %s not found in %s.%s'</span> %())</div><div class="line">    <span class="keyword">return</span></div></pre></td></tr></table></figure></p>
+<p>变量<strong>shapePoint</strong>中保存的<strong>ShapeControlPoint</strong>保存了所有的属性，main和feature曲线的邻接关系，中心点。我们仅想跟踪<br>main 曲线的中心点，获取代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">animPoint = shapePoint.center</div></pre></td></tr></table></figure></p>
+<p><strong>animPoint</strong>提供了x，y坐标，创建一个Tracker节点来保存动画：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tracker = nuke.createNode(&apos;Tracker3&apos;)</div></pre></td></tr></table></figure></p>
+<p>给一个提示标签，让<strong>track1</strong>的knob接收动画：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tracker[<span class="string">'label'</span>].setValue(<span class="string">'tracking cv#%s in %s.%s'</span> %(cvID, node.name(), shape.name))</div><div class="line">trackerKnob = tracker[<span class="string">'track1'</span>]</div><div class="line">trackerKnob.setAnimated()</div></pre></td></tr></table></figure></p>
+<p>在做跟踪前，设置一个进度条，允许用户取消进度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">task = nuke.ProgressTask(&apos;CV Tracker&apos;)</div><div class="line">task.setMessage(&apos;tracking CV&apos;</div></pre></td></tr></table></figure></p>
+<p>现在遍历请求的帧。循环中我们会检测用户是否点击了进度条上的<strong>Cancle</strong>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> f <span class="keyword">in</span> fRange:</div><div class="line">    <span class="keyword">if</span> task.isCancelled():</div><div class="line">        nuke.executeInMainThread(nuke.message, args=(<span class="string">"CV Track Cancelled"</span>))</div><div class="line">        <span class="keyword">break</span></div></pre></td></tr></table></figure></p>
+<p>下一步设置处理的进度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">task.setProgress(int(float(f)/fRange.last() * 100))</div></pre></td></tr></table></figure></p>
+<p>现在可以做具体的跟踪工作了。获取循环中对应帧的<strong>AnimationControlPoint</strong>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pos = animPoint.getPosition(f)</div></pre></td></tr></table></figure></p>
+<p>最后，给trackerknob设置新位置。我们在主线程中做这个，脚本运行时能看到关键帧的生成：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.executeInMainThreadWithResult(trackerKnob.setValueAt, args=(pos.x, f, <span class="number">0</span>)) <span class="comment"># SET X VALUE</span></div><div class="line">nuke.executeInMainThreadWithResult(trackerKnob.setValueAt, args=(pos.y, f, <span class="number">1</span>)) <span class="comment"># SET Y VALUE</span></div></pre></td></tr></table></figure></p>
+<p>整个函数如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_cvTracker</span><span class="params">(node, shapeName, cvID, fRange)</span>:</span></div><div class="line">    shape = node[<span class="string">'curves'</span>].toElement(shapeName)</div><div class="line"></div><div class="line">    <span class="comment"># SHAPE CONTROL POINT</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        shapePoint = shape[cvID]</div><div class="line">    <span class="keyword">except</span> IndexError:</div><div class="line">        nuke.message(<span class="string">'Index %s not found in %s.%s'</span> %())</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line">    <span class="comment"># ANIM CONTROL POINT</span></div><div class="line">    animPoint = shapePoint.center</div><div class="line"></div><div class="line">    <span class="comment"># CREATE A TRACKER NODE TO HOLD THE DATA</span></div><div class="line">    tracker = nuke.createNode(<span class="string">'Tracker3'</span>)</div><div class="line">    tracker[<span class="string">'label'</span>].setValue(<span class="string">'tracking cv#%s in %s.%s'</span> %(cvID, node.name(), shape.name))</div><div class="line">    trackerKnob = tracker[<span class="string">'track1'</span>]</div><div class="line">    trackerKnob.setAnimated()</div><div class="line"></div><div class="line">    <span class="comment"># SET UP PROGRESS BAR</span></div><div class="line">    task = nuke.ProgressTask(<span class="string">'CV Tracker'</span>)</div><div class="line">    task.setMessage(<span class="string">'tracking CV'</span>)</div><div class="line"></div><div class="line">        <span class="comment"># DO THE WORK</span></div><div class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> fRange:</div><div class="line">        <span class="keyword">if</span> task.isCancelled():</div><div class="line">            nuke.executeInMainThread(nuke.message, args=(<span class="string">"CV Track Cancelled"</span>))</div><div class="line">            <span class="keyword">break</span></div><div class="line">        task.setProgress(int(float(f)/fRange.last() * <span class="number">100</span>))</div><div class="line"></div><div class="line">                <span class="comment"># GET POSITION</span></div><div class="line">        pos = animPoint.getPosition(f)</div><div class="line">        nuke.executeInMainThreadWithResult(trackerKnob.setValueAt, args=(pos.x, f, <span class="number">0</span>))</div><div class="line">        nuke.executeInMainThreadWithResult(trackerKnob.setValueAt, args=(pos.y, f, <span class="number">1</span>))</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意： 不要在主线程中运行此函数，因为<strong> nuke.executeInMainThreadWithResult</strong>会让Nuke卡死。</p>
+</blockquote>
+<p>为了让程序交互性更好，做一个python的小面板，提供图元名字，点编号，帧范围。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapeAndCVPanel_01.png" alt="shapeAndCVPanel_01"></p>
+<p>怎么做小面板请看<a href="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/custom_panels.html#shapeandcvpanel-ref-label" target="_blank" rel="external">ShapeAndCVPanel</a><br>记得导入小面板代码，修改其参数，就不用上面硬编码了：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> examples</div><div class="line"></div><div class="line">node = nuke.selectedNode()</div><div class="line">p = examples.ShapeAndCVPanel(node)</div><div class="line"><span class="keyword">if</span> p.showModalDialog():</div><div class="line">    fRange = nuke.FrameRange(p.fRange.value())</div><div class="line">    shapeName = p.shape.value()</div><div class="line">    cv = p.cv.value()</div><div class="line">    threading.Thread(<span class="keyword">None</span>, _cvTracker, args=(node, shapeName, cv, fRange)).start()</div></pre></td></tr></table></figure></p>
+<p>将代码封装一下，供<strong>Properties </strong>属性菜单上的右键使用。同样会添加错误处理代码保证选取的节点时Roto或者RotoPaint：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">trackCV</span><span class="params">()</span>:</span></div><div class="line">    node = nuke.selectedNode()</div><div class="line"></div><div class="line">    <span class="comment"># BAIL OUT IF THE NODE IS NOT WHAT WE NEED</span></div><div class="line">    <span class="keyword">if</span> node.Class() <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">'Roto'</span>, <span class="string">'RotoPaint'</span>):</div><div class="line">        nuke.message(<span class="string">'Unsupported node type. Node must be of class Roto or RotoPaint'</span>)</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line">    p = examples.ShapeAndCVPanel(node)</div><div class="line">    <span class="keyword">if</span> p.showModalDialog():</div><div class="line">        fRange = nuke.FrameRange(p.fRange.value())</div><div class="line">        shapeName = p.shape.value()</div><div class="line">        cv = p.cv.value()</div><div class="line">        threading.Thread(<span class="keyword">None</span>, _cvTracker, args=(node, shapeName, cv, fRange)).start()</div></pre></td></tr></table></figure></p>
+<p>最终代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> examples</div><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="keyword">import</span> nukescripts</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_cvTracker</span><span class="params">( node, shapeName, cvID, fRange )</span>:</span></div><div class="line">    shape = node[<span class="string">'curves'</span>].toElement( shapeName )</div><div class="line"></div><div class="line">    <span class="comment"># SHAPE CONTROL POINT</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        shapePoint = shape[cvID]</div><div class="line">    <span class="keyword">except</span> IndexError:</div><div class="line">        nuke.message( <span class="string">'Index %s not found in %s.%s'</span> % (  ) )</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line">    <span class="comment"># ANIM CONTROL POINT</span></div><div class="line">    animPoint = shapePoint.center</div><div class="line"></div><div class="line">    <span class="comment"># CREATE A TRACKER NODE TO HOLD THE DATA</span></div><div class="line">    tracker = nuke.createNode( <span class="string">'Tracker3'</span> )</div><div class="line">    tracker[<span class="string">'label'</span>].setValue( <span class="string">'tracking cv#%s in %s.%s'</span> % ( cvID, node.name(), shape.name ) )</div><div class="line">    trackerKnob = tracker[<span class="string">'track1'</span>]</div><div class="line">    trackerKnob.setAnimated()</div><div class="line"></div><div class="line">    <span class="comment"># SET UP PROGRESS BAR</span></div><div class="line">    task = nuke.ProgressTask( <span class="string">'CV Tracker'</span> )</div><div class="line">    task.setMessage( <span class="string">'tracking CV'</span> )</div><div class="line"></div><div class="line">    <span class="comment"># DO THE WORK</span></div><div class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> fRange:</div><div class="line">        <span class="keyword">if</span> task.isCancelled():</div><div class="line">            nuke.executeInMainThread( nuke.message, args=( <span class="string">"CV Track Cancelled"</span> ) )</div><div class="line">            <span class="keyword">break</span></div><div class="line">        task.setProgress( int( float(f)/fRange.last() * <span class="number">100</span> ) )</div><div class="line"></div><div class="line">        <span class="comment"># GET POSITION</span></div><div class="line">        pos = animPoint.getPosition( f )</div><div class="line">        nuke.executeInMainThreadWithResult( trackerKnob.setValueAt, args=( pos.x, f, <span class="number">0</span> ) ) <span class="comment"># SET X VALUE</span></div><div class="line">        nuke.executeInMainThreadWithResult( trackerKnob.setValueAt, args=( pos.y, f, <span class="number">1</span> ) ) <span class="comment"># SET Y VALUE</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">trackCV</span><span class="params">()</span>:</span></div><div class="line">    <span class="comment"># GET THE SELECTED NODE. SINCE WE PLAN ON CALLING THIS FROM THE PROPERTIES MENU</span></div><div class="line">    <span class="comment"># WE CAN BE SURE THAT THE SELECTED NODE IS ALWAYS THE ONE THE USER CLICKED IN</span></div><div class="line">    node = nuke.selectedNode()</div><div class="line"></div><div class="line">    <span class="comment"># BAIL OUT IF THE NODE IS NOT WHAT WE NEED</span></div><div class="line">    <span class="keyword">if</span> node.Class() <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">'Roto'</span>, <span class="string">'RotoPaint'</span>):</div><div class="line">        nuke.message( <span class="string">'Unsupported node type. Node must be of class Roto or RotoPaint'</span> )</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line">    p = examples.ShapeAndCVPanel( node )</div><div class="line">    <span class="keyword">if</span> p.showModalDialog():</div><div class="line">        fRange = nuke.FrameRange( p.fRange.value() )</div><div class="line">        shapeName = p.shape.value()</div><div class="line">        cv = p.cv.value()</div><div class="line">        threading.Thread( <span class="keyword">None</span>, _cvTracker, args=(node, shapeName, cv, fRange) ).start()</div></pre></td></tr></table></figure>
+<p>添加到<strong>Properties</strong>右键菜单的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.menu(&apos;Properties&apos;).addCommand(&apos;Track CV&apos;, examples.trackCV)</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackCV_03.png" alt="trackCV_03"><br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/trackCV_04.png" alt="trackCV_04"></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/08/22/nuke-python-7/" data-title="Nuke Python roto | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/08/23/nuke-python-8/" title="Nuke Python 获取图像数据">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 获取图像数据</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/08/17/nuke-python-6/"  title="Nuke Python 立体">
+ <strong>下一篇：</strong><br/> 
+ <span>Nuke Python 立体
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/08/22/nuke-python-7/" data-title="Nuke Python roto" data-url="http://cgcoder.com/2016/08/22/nuke-python-7/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#例子："><span class="toc-number">1.</span> <span class="toc-text">例子：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#paintTrajectory"><span class="toc-number">1.1.</span> <span class="toc-text">paintTrajectory</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#路径控制"><span class="toc-number">1.2.</span> <span class="toc-text">路径控制</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#trackCV"><span class="toc-number">1.3.</span> <span class="toc-text">trackCV</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

@@ -1,0 +1,760 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python 回调函数 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="回调函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python 回调函数">
+<meta property="og:url" content="http://cgcoder.com/2016/09/12/nuke-python-5/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="回调函数">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks1.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks1.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks1.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks1.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/setUpMultiView_02.png">
+<meta property="og:updated_time" content="2016-09-12T13:50:00.995Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python 回调函数">
+<meta name="twitter:description" content="回调函数">
+<meta name="twitter:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/12/nuke-python-5/" title="Nuke Python 回调函数" itemprop="url">Nuke Python 回调函数</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-12T13:50:00.995Z" itemprop="datePublished"> 发表于 2016-09-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#OnUserCreate"><span class="toc-number">1.</span> <span class="toc-text">OnUserCreate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onCreate"><span class="toc-number">2.</span> <span class="toc-text">onCreate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onScriptLoad"><span class="toc-number">3.</span> <span class="toc-text">onScriptLoad</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onScriptSave"><span class="toc-number">4.</span> <span class="toc-text">onScriptSave</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onScriptClose"><span class="toc-number">5.</span> <span class="toc-text">onScriptClose</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onDestroy"><span class="toc-number">6.</span> <span class="toc-text">onDestroy</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#knobChanged"><span class="toc-number">7.</span> <span class="toc-text">knobChanged</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#updateUI"><span class="toc-number">8.</span> <span class="toc-text">updateUI</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#autolabel"><span class="toc-number">9.</span> <span class="toc-text">autolabel</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#beforeRender"><span class="toc-number">10.</span> <span class="toc-text">beforeRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#beforeFrameRender"><span class="toc-number">11.</span> <span class="toc-text">beforeFrameRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#afterFrameRender"><span class="toc-number">12.</span> <span class="toc-text">afterFrameRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#afterRender"><span class="toc-number">13.</span> <span class="toc-text">afterRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#afterBackgroundRender"><span class="toc-number">14.</span> <span class="toc-text">afterBackgroundRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#afterBackgroundFrameRender"><span class="toc-number">15.</span> <span class="toc-text">afterBackgroundFrameRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#filenameFilter"><span class="toc-number">16.</span> <span class="toc-text">filenameFilter</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#validateFilename"><span class="toc-number">17.</span> <span class="toc-text">validateFilename</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#autoSaveFilter"><span class="toc-number">18.</span> <span class="toc-text">autoSaveFilter</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#autoSaveRestoreFilter"><span class="toc-number">19.</span> <span class="toc-text">autoSaveRestoreFilter</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#autoSaveDeleteFilter"><span class="toc-number">20.</span> <span class="toc-text">autoSaveDeleteFilter</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用autosave的回调完成autosave回滚操作"><span class="toc-number">21.</span> <span class="toc-text">使用autosave的回调完成autosave回滚操作</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#在root上使用回调来添加双目设置"><span class="toc-number">22.</span> <span class="toc-text">在root上使用回调来添加双目设置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#默认色彩空间"><span class="toc-number">23.</span> <span class="toc-text">默认色彩空间</span></a></li></ol>
+		
+		</div>
+		
+		<p>使用下文描述的nuke.add…()函数，当有变量事件（比如，创建节点，加载脚本）时就自动调用python函数。</p>
+<p>在init.py，menu.py里面可以随便用nuke.add…(). 这代码会被当作nuke环境的一部分，不跟着脚本变。</p>
+<p>所有nuke.add…()函数的参数都一样， 例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.addOnCreate( callable, args=(), kwargs=&#123;&#125;, nodeClass=<span class="string">'*'</span> )</div></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li><p>callable 是python调用，比如函数名之类</p>
+</li>
+<li><p>args 是参数列表，有圆括号包括着。比如：</p>
+<p>  nuke.addOnCreate( nuke.tprint, ( ‘what to print’ ))</p>
+</li>
+<li><p>kwargs是用k-v形式给的参数，比如：</p>
+<p>  nuke.addOnCreate( nuke.tprint, (‘a’, ‘b’), {‘sep’:’,’ } )</p>
+</li>
+<li><p>nodeClass 仅在nuke.thisNode().nodeClass() 等于这个字符串时才调用，比如：</p>
+<p>  nuke.addOnCreate( nuke.tprint, (‘Creating Write’), nodeClass=’Write’)</p>
+</li>
+</ul>
+<p>默认的*意味着可以被任何节点调用。</p>
+<p>在callback中，有个context节点，使用nuke.thisNode()时需要检验。knobChanged，有一个可以利用nuke.thisKonb()获取的内容knob。</p>
+<p>对于众多的nuke.add…() 函数，比如 onCreate,也有同名的knob，其分成两类：</p>
+<ul>
+<li><p>可见knob– 就是制作人员想编辑的knob。可以在属性panel的python面板看到。可见konb包括： onScriptLoad, onScriptSave, onScriptClose, beforeRender, beforeFrameRender, afterRender, afterFrameRender.</p>
+</li>
+<li><p>隐藏knob 在属性面板看不到他们，但可以用python来设置。允许定义gizmo的行为。制作人员不应该设置这些knob，因为用户设置会覆盖gizmo设置。隐藏knob包括： onCreate, onDestroy, knobChanged, updateUI, autolabel.</p>
+</li>
+</ul>
+<p>如果很多注册的回调，附加到knob上的代码总是优先于nuke.add…()（ 例如，放入到onCreate knob的代码，要比nuke.addOnCreate()先调用）大多数情况下，nuke.add…()函数都会按顺序跟着一个对应的nodeClass。最后，带* 的，也是添加的顺序。注意addAutolabel()和addFilenameFilter()函数是例外，他们按照添加时候的逆序调用。</p>
+<p>所有的回调函数都有对应的移除函数</p>
+<p><br></p>
+<h5 id="OnUserCreate"><a href="#OnUserCreate" class="headerlink" title="OnUserCreate"></a>OnUserCreate</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.addOnUserCreate( function )</div><div class="line">nuke.removeOnUserCreate( function )</div></pre></td></tr></table></figure>
+<p>当用户在GUI模式下创建节点时就执行。启动时在root和viewer节点上也会调用。但是加载现有脚本，粘贴节点，undo delete时，不会执行。</p>
+<p>可以用这个代码改变knob的默认值，添加user knob，执行其他行为。<br><strong>nuke.addOnUserCreate</strong> 在默认值改变后立即运行。要在onCreate前面。如果没有使用nuke.addOnUserCreate()，那就会调用nuke.tcl(“OnCreate” )后向兼容。</p>
+<p><br></p>
+<h5 id="onCreate"><a href="#onCreate" class="headerlink" title="onCreate"></a>onCreate</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">node.knob(<span class="string">"onCreate"</span> ）</div><div class="line">nuke.addOnCreate(function)</div><div class="line">nuke.removeCreate(function)</div></pre></td></tr></table></figure>
+<p>当node创建时就执行，例如，当加载脚本，粘贴节点，选择菜单选项，撤销删除等。注意，如果onCreate在脚本加载前就定义了，会为每个节点执行。这是因为节点<br>创建出来后，脚本也已经加载了。 创建group时（包括root节点，包含很多内部节点），内部节点先调用onCreate，group节点后调用onCreate。root节点任何脚本<br>加载时都会执行（查看onScriptLoad） 或 菜单中File》New被选择时也会执行。 预设和python knob panel创建时也会执行。</p>
+<p>例如，下面的代码让每个节点创建时在终端输出OnCreate。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">nuke.addOnCreate( <span class="keyword">lambda</span>: nuke.tprint(<span class="string">" OnCreate called for "</span> + nuke.thisNode().name() ))</div><div class="line">onScriptLoad</div><div class="line">root.knob(<span class="string">'onScriptLoad'</span>), nuke.addOnScriptLoad( function), nuke.removeOnScriptLoad(function)</div></pre></td></tr></table></figure></p>
+<p><br></p>
+<h5 id="onScriptLoad"><a href="#onScriptLoad" class="headerlink" title="onScriptLoad"></a>onScriptLoad</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">root.knob(<span class="string">'onScriptLoad'</span>)</div><div class="line">nuke.addOnScriptLoad( function )</div><div class="line">nuke.removeOnScriptLoad( function )</div></pre></td></tr></table></figure>
+<p>当脚本加载时就执行，在root的onCreate创建后立即执行。注意，其不为新脚本执行。<br>在Project Setting》Python 标签可以看到 onScriptLoad的knob</p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks.png" alt="image"></p>
+<p><br></p>
+<h5 id="onScriptSave"><a href="#onScriptSave" class="headerlink" title="onScriptSave"></a>onScriptSave</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">root.knob(<span class="string">' onSrciptSave'</span>)</div><div class="line">nuke.addOnScriptSave( function)</div><div class="line">nuke.removeOnScriptSave( function )</div></pre></td></tr></table></figure>
+<p>当用户保存脚本时运行。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks.png" alt="image"></p>
+<p><br></p>
+<h5 id="onScriptClose"><a href="#onScriptClose" class="headerlink" title="onScriptClose"></a>onScriptClose</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">root.knob(&apos;onScriptClose&apos;)</div><div class="line">nuke.addOnScriptClose( function )</div><div class="line">nuke.removeOnScriptClose( function )</div></pre></td></tr></table></figure>
+<p>当用户退出nuke或者关闭脚本，scriptClear()函数<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks.png" alt="image"></p>
+<p><br></p>
+<h5 id="onDestroy"><a href="#onDestroy" class="headerlink" title="onDestroy"></a>onDestroy</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">node.knob(&apos;onDestroy&apos;)</div><div class="line">nuke.addOnDestroy( function )</div><div class="line">nuke.removeOnDestroy( function )</div></pre></td></tr></table></figure>
+<p>节点删除时会执行此函数，包括撤销节点的创建。root节点关闭后也会调用，用户退出nuke，nuke崩溃后不会为Preferences。<br>对于group和root 此函数比所有孩子都要先运行。</p>
+<p><br></p>
+<h5 id="knobChanged"><a href="#knobChanged" class="headerlink" title="knobChanged"></a>knobChanged</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">node.knob(&apos;knobChanged&apos;)</div><div class="line">nuke.addKnobChanged( function )</div><div class="line">nuke.removeKnobChanged( function )</div></pre></td></tr></table></figure>
+<p>panel打开时，任何对knob数值的修改都能执行回调，不会递归调用。使用<strong>nuke.thisKnob()</strong>来查看哪个knob被改变了。<br>knobChanged可以制作带有knob的gizmos，knob有enabling，disabling，presettin等。nuke.thisKnob()能获取变动的那个knob。</p>
+<blockquote>
+<p>注意：knobChanged是用来刷新panel控制面板。不能用来跟踪knobs（例如，用数据库的数据来更新所有的knobs）。因为当<strong>Properties</strong>面板关闭时，就不调用了。想跟踪knobs，用下面的<strong>updateUI</strong></p>
+</blockquote>
+<p>用户打开、关闭<strong>properties</strong>面板时，panel打开状态下，变动了input的连接，就可以使用<strong>knobChanged</strong>中的<strong>showPanel</strong>、<strong>inputChange</strong> 这两个knobs。否则on change回调更改了knob的值，就要响应<strong>showPanel</strong>来设置正确的状态了。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># if slider is zero, disable the checkmark:</span></div><div class="line">n = nuke.thisNode()</div><div class="line">k = nuke.thisKnob()</div><div class="line"><span class="keyword">if</span> k.name()==<span class="string">"slider"</span> <span class="keyword">or</span> k.name()==<span class="string">"showPanel"</span>:</div><div class="line">  n[<span class="string">'checkmark'</span>].setEnable(n[<span class="string">'slider'</span>].getValue()!=<span class="number">0</span>)</div></pre></td></tr></table></figure>
+<p>用<strong>nuke.addKnobChanged</strong> 可以一次获取ColorCorrect节点的gain和gamma 滑动条，用户更改了其中一个滑动条，另一个会自动变为同样的值。获取滑动条的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gangGammaGainSliders</span><span class="params">()</span>:</span></div><div class="line"> n = nuke.thisNode()</div><div class="line"> k = nuke.thisKnob()</div><div class="line"> <span class="keyword">if</span> k.name() == <span class="string">"gamma"</span>:</div><div class="line">   n[<span class="string">'gain'</span>].setValue(k.value())</div><div class="line"> <span class="keyword">elif</span> k.name() == <span class="string">"gain"</span>:</div><div class="line">   n[<span class="string">'gamma'</span>].setValue(k.value())</div><div class="line">nuke.addKnobChanged(gangGammaGainSliders, nodeClass=<span class="string">"ColorCorrect"</span>)</div></pre></td></tr></table></figure>
+<p><br></p>
+<h5 id="updateUI"><a href="#updateUI" class="headerlink" title="updateUI"></a>updateUI</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">node.knob( &apos;updateUI&apos;)</div><div class="line">nuke.addUpdateUI( function )</div><div class="line">nuke.removeUpdateUI( function )</div></pre></td></tr></table></figure>
+<p>脚本变动后，每个节点都运行此回调。这个是作为空闲时间执行的低优先级进程来实现的。很可能Nuke都开始给view渲染计算了，updateUI还没执行呢。因此<strong>updateUI</strong>不能执行更改图像的脚本（否则，viewer就要重启了）。</p>
+<p><strong>updateUI</strong>在<strong>autolabel</strong>之前<strong>knobChanged</strong>之后运行。想不让它在每个节点运行，Nuke检查<strong>updateUI</strong>看上去像啥（比如，帧，view数量）来决定是否运行它。 如果函数推测不出来帧和view数量，Nuke仅在这个node上knob变动时调用一次，frame或view变动不会调用。</p>
+<p><br></p>
+<h5 id="autolabel"><a href="#autolabel" class="headerlink" title="autolabel"></a>autolabel</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">node.knob(&apos;autolabel&apos;)</div><div class="line">nuke.addAutolabel( function )</div><div class="line">nuke.removeAutolabel( function )</div></pre></td></tr></table></figure>
+<p>updateUI后立马运行上面脚本，并返回绘制节点的绘制字符串。如果autolabel不是空的，或返回任何非空，返回值就显示在节点上。否则，<strong>nuke.addAutolabel()</strong>会被逆序调用，使用第一个返回非None的。如果都返回None，那就用<strong>nuke.thisNode().name()</strong>.</p>
+<p>为了后向兼容，Nuke调用启动时调用<strong>addAutolabel(<strong>main</strong>.autolabel)</strong></p>
+<p><br></p>
+<h5 id="beforeRender"><a href="#beforeRender" class="headerlink" title="beforeRender"></a>beforeRender</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">write.knob(&apos;beforeRender&apos;)</div><div class="line">nuke.addBeforeRender( function )</div></pre></td></tr></table></figure>
+<p>这个在execute（）开始渲染之前就运行了。抛出异常，就不进行后续渲染了。可以用这个特性来创建目标输出文件夹或者和农场通信，例如，<strong>beforeRender</strong> knob（GUI上是before render）就在write节点的<strong>Render</strong>页面上。</p>
+<blockquote>
+<p>提示：默认情况下，NUKE渲染时不创建文件夹。如果Write节点的输出路径所在文件夹不存在，渲染会失败。但是，能通过<strong>nuke.addBeforeRender()</strong>注册回调函数渲染之前创建文件夹来改变nuke的默认行为。 下面是一个例子：</p>
+</blockquote>
+<ol>
+<li>插件目录中创建 init.py 如果不存在</li>
+<li>文件中添加如下代码：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">def createWriteDir():</div><div class="line">    import nuke, os, errno</div><div class="line">    file = nuke.filename( nuke.thisNode() )</div><div class="line">    dir = os.path.dirname( file )</div><div class="line">    osdir = nuke.callbacks.filenameFilter( dir )</div><div class="line">    try:</div><div class="line">    os.makedirs( osdir )</div><div class="line">    except OSError, e:</div><div class="line">    if e.errno != errno.EEXIST:</div><div class="line">    raise</div><div class="line">    nuke.addBeforeRender( createWriteDir )</div></pre></td></tr></table></figure>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks1.png" alt="image"></p>
+<p><br></p>
+<h5 id="beforeFrameRender"><a href="#beforeFrameRender" class="headerlink" title="beforeFrameRender"></a>beforeFrameRender</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">write.knob(&apos;beforeFrameRender&apos;)</div><div class="line">nuke.addBeforeFrameRender( function )</div><div class="line">nuke.removeBeforeFrameRender(function )</div></pre></td></tr></table></figure>
+<p>每帧开始渲染前执行。如果抛出了错误，渲染就终止。 这个对渲染完拷贝到数字视频录像机（DVR）或跟渲染农场通信很有用。例如，<strong>beforeFrameRender</strong> knob （GUI上的 after render）就在输出节点的Render页面下。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks1.png" alt="image"></p>
+<p><br></p>
+<h5 id="afterFrameRender"><a href="#afterFrameRender" class="headerlink" title="afterFrameRender"></a>afterFrameRender</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">write.knob(&apos;afterFrameRender&apos;)</div><div class="line">nuke.addAfterFrameRender( function)</div><div class="line">nuke.removeAfterFrameRender( function )</div></pre></td></tr></table></figure>
+<p>每帧渲染完成后执行。如果抛出了错误，渲染就终止。 这个对渲染完拷贝到数字视频录像机（DVR）或跟渲染农场通信很有用。例如，<strong>afterFrameRender</strong> knob （GUI上的 after render）就在输出节点的Render页面下。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks1.png" alt="image"></p>
+<p><br></p>
+<h5 id="afterRender"><a href="#afterRender" class="headerlink" title="afterRender"></a>afterRender</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">write.knob(&apos;afterRender&apos;)</div><div class="line">nuke.addAfterRender( function )</div><div class="line">nuke.removeAfterRender( function )</div></pre></td></tr></table></figure>
+<p>所有帧渲染完成后运行。如果抛出了错误，渲染就终止。 这个对渲染完拷贝到数字视频录像机（DVR）或跟渲染农场通信很有用。例如，<strong>afterRender</strong> knob （GUI上的 after render）就在输出节点的Render页面下。</p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/pythonCallbacks1.png" alt="image"></p>
+<p><br></p>
+<h5 id="afterBackgroundRender"><a href="#afterBackgroundRender" class="headerlink" title="afterBackgroundRender"></a>afterBackgroundRender</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.addAfterBackgroundRender( function )</div><div class="line">nuke.removeAfterBackgroundRender( function )</div></pre></td></tr></table></figure>
+<p>后台渲染后执行，调用形式必须这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def foo( context ):</div><div class="line">    pass</div></pre></td></tr></table></figure>
+<p>context是一个包含下面元素的字典：</p>
+<ul>
+<li>id – 完成task的标识</li>
+</ul>
+<p>请注意当前NUKE上下文对回调无效，例如，<strong>nuke.thisNode</strong>会随机返回一个节点。</p>
+<p><br></p>
+<h5 id="afterBackgroundFrameRender"><a href="#afterBackgroundFrameRender" class="headerlink" title="afterBackgroundFrameRender"></a>afterBackgroundFrameRender</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.addBackgroundFrameRender( function )</div><div class="line">nuke.removeAfterBackgroundFrameRender( function )</div></pre></td></tr></table></figure>
+<p>调用形式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def foo( context ):</div><div class="line">    pass</div></pre></td></tr></table></figure>
+<p>context是一个包含下面元素的字典：</p>
+<ul>
+<li>id – 完成task的标识</li>
+<li>frame – 当前渲染的帧号</li>
+<li>numFrames – 要渲染的总帧数</li>
+<li>framgeProgress – 已经渲染了多少帧</li>
+</ul>
+<p>请注意当前NUKE上下文对回调无效，例如，<strong>nuke.thisNode</strong>会随机返回一个节点。</p>
+<p><br></p>
+<h5 id="filenameFilter"><a href="#filenameFilter" class="headerlink" title="filenameFilter"></a>filenameFilter</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.addFilenameFilter( function )</div><div class="line">nuke.removeFilenameFilter( function )</div></pre></td></tr></table></figure>
+<p>在脚本传输给系统前，给过程添加一个过滤函数来处理文件名。<br>为了后向兼容，如果没有添加函数，nuke运行mian.filenameFix(s). 默认版本调用nuke.tcl(‘filename_fix’,s)<br>使用这个来进行路径转换，从windows到linux的转换：</p>
+<p>添加了一个filter在Nuke脚本传输到操作系统前处理所有的文件名。这些filter能消除操作系统间的差异，也能插入需要的路径。回调函数的参数必须是一个字符串，返回值可以是字符串也可以是None（这个返回没改动的字符串是一样的）。文件名并不是一个特殊的节点，比如插件名，此函数调用<strong>nuke.thisNode()</strong>设置root节点。所有传给<strong>nuke.addFilenameFilter</strong>的函数逆序调用。</p>
+<p>为了后向兼容，如果没有添加函数，nuke运行<strong>main.filenameFix(s)</strong> 。默认版本调用<strong>nuke.tcl(‘filename_fix’,s)</strong></p>
+<p>下面的例子使用filename filter来处理win和linux混合环境下的路径问题。例如，工作站是win系统，访问共享的驱动器‘Y：’，在linux对应的挂载点是‘/mnt/y/’：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">myFilenameFilter</span><span class="params">(filename)</span>:</span></div><div class="line">    <span class="keyword">if</span> nuke.env[<span class="string">'LINUX'</span>]:</div><div class="line">        filename = filename.replace( <span class="string">'y:'</span>, <span class="string">'/mnt/y'</span> )</div><div class="line">        filename = filename.replace( <span class="string">'x:'</span>, <span class="string">'/mnt/x'</span> )</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        filename = filename.replace( <span class="string">'/mnt/y'</span>, <span class="string">'y:'</span> )</div><div class="line">        filename = filename.replace( <span class="string">'/mnt/x'</span>, <span class="string">'x:'</span> )</div><div class="line"></div><div class="line">    <span class="keyword">return</span> filename</div><div class="line"></div><div class="line">nuke.addFilenameFilter(myFilenameFilter)</div></pre></td></tr></table></figure>
+<p><br></p>
+<h5 id="validateFilename"><a href="#validateFilename" class="headerlink" title="validateFilename"></a>validateFilename</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.addValidateFilename( function )</div><div class="line">nuke.removeValidateFilename( function )</div></pre></td></tr></table></figure>
+<p>验证write node中的文件名。第一个参数是文件名，返回布尔值，说明文件名是否有效。如果提供了回调函数，Write node中的<strong>Render</strong>按钮，WriteGeo节点中的<strong>Excute</strong>按钮可用与否就受回调函数结果影响。</p>
+<p><br></p>
+<h5 id="autoSaveFilter"><a href="#autoSaveFilter" class="headerlink" title="autoSaveFilter"></a>autoSaveFilter</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.addAutoSaveFilter( function )</div><div class="line">nuke.removeAutosaveFilter( function )</div></pre></td></tr></table></figure>
+<p>在nuke自动保存文件文件前，对autosave进行修改。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def myAutoSaveFilter( filename ):</div><div class="line">return filename</div></pre></td></tr></table></figure>
+<p>第一个参数为当前autosave文件名，返回的是要保存的aotusave文件名，木有就返回None。</p>
+<p>更多请看 <a href="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/callbacks.html#callbacksautosave-ref-label" target="_blank" rel="external">使用AutoSave回调实现AutoSave回滚</a></p>
+<p><br></p>
+<h5 id="autoSaveRestoreFilter"><a href="#autoSaveRestoreFilter" class="headerlink" title="autoSaveRestoreFilter"></a>autoSaveRestoreFilter</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.addAutoSaveRestoreFilter( function )</div><div class="line">nuke.removeAutoSaveRestore( function )</div></pre></td></tr></table></figure>
+<p>Nuke恢复aotosave文件时修改autosave获取的文件名</p>
+<p>函数格式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def myAutoSaveRestoreFilter( filename ):</div><div class="line">    return filename</div></pre></td></tr></table></figure></p>
+<p>第一个参数为当前autosave 文件名，函数返回要加载的autosave文件名，没有返回None。如果aotosave恢复filter返回None这也压制了Nuke对话框询问用户是否加载一个找到的autosave。</p>
+<p>更多请看 <a href="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/callbacks.html#callbacksautosave-ref-label" target="_blank" rel="external">使用AutoSave回调实现AutoSave回滚</a></p>
+<p><br></p>
+<h5 id="autoSaveDeleteFilter"><a href="#autoSaveDeleteFilter" class="headerlink" title="autoSaveDeleteFilter"></a>autoSaveDeleteFilter</h5><p>在nuke删除自动保存文件时修改autosave 的文件名</p>
+<p>filter函数形式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def myAutoSaveDeleteFilter( filename ):</div><div class="line">    return filename</div></pre></td></tr></table></figure>
+<p>第一个参数就是autosave的文件名。返回要删除的文件名，没有可删除的就返回None。</p>
+<p>更多请看 <a href="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/callbacks.html#callbacksautosave-ref-label" target="_blank" rel="external">使用AutoSave回调实现AutoSave回滚</a></p>
+<p><br></p>
+<h5 id="使用autosave的回调完成autosave回滚操作"><a href="#使用autosave的回调完成autosave回滚操作" class="headerlink" title="使用autosave的回调完成autosave回滚操作"></a>使用autosave的回调完成autosave回滚操作</h5><p>使用三个autosave回调来完成回滚。每次调用autosave，就创建一个新的autosave，数组从1-9.例如：autosave, autosave1, autosave2….autosave9</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="keyword">import</span> glob</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment">### Example that implements a rolling autosave using the autoSaveFilter callbacks</span></div><div class="line"><span class="comment">###</span></div><div class="line"><span class="comment">## autosaves roll from 0-9 eg myfile.autosave, myfile.autosave1, myfile.autosave2...</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment">## To use just add 'import nukescripts.autosave' in your init.py</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">onAutoSave</span><span class="params">(filename)</span>:</span></div><div class="line"></div><div class="line">  <span class="comment">## ignore untiled autosave</span></div><div class="line">  <span class="keyword">if</span> nuke.root().name() == <span class="string">'Root'</span>:</div><div class="line">    <span class="keyword">return</span> filename</div><div class="line"></div><div class="line">  fileNo = <span class="number">0</span></div><div class="line">  files = getAutoSaveFiles(filename)</div><div class="line"></div><div class="line">  <span class="keyword">if</span> len(files) &gt; <span class="number">0</span> :</div><div class="line">    lastFile = files[<span class="number">-1</span>]</div><div class="line">    <span class="comment"># get the last file number</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> len(lastFile) &gt; <span class="number">0</span>:</div><div class="line">      <span class="keyword">try</span>:</div><div class="line">        fileNo = int(lastFile[<span class="number">-1</span>:])</div><div class="line">      <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">      fileNo = fileNo + <span class="number">1</span></div><div class="line"></div><div class="line">  <span class="keyword">if</span> ( fileNo &gt; <span class="number">9</span> ):</div><div class="line">    fileNo = <span class="number">0</span></div><div class="line"></div><div class="line">  <span class="keyword">if</span> ( fileNo != <span class="number">0</span> ):</div><div class="line">    filename = filename + str(fileNo)</div><div class="line"></div><div class="line">  <span class="keyword">return</span> filename</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">onAutoSaveRestore</span><span class="params">(filename)</span>:</span></div><div class="line"></div><div class="line">  files = getAutoSaveFiles(filename)</div><div class="line"></div><div class="line">  <span class="keyword">if</span> len(files) &gt; <span class="number">0</span>:</div><div class="line">    filename = files[<span class="number">-1</span>]</div><div class="line"></div><div class="line">  <span class="keyword">return</span> filename</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">onAutoSaveDelete</span><span class="params">(filename)</span>:</span></div><div class="line"></div><div class="line">  <span class="comment">## only delete untiled autosave</span></div><div class="line">  <span class="keyword">if</span> nuke.root().name() == <span class="string">'Root'</span>:</div><div class="line">    <span class="keyword">return</span> filename</div><div class="line"></div><div class="line">  <span class="comment"># return None here to not delete auto save file</span></div><div class="line">  <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getAutoSaveFiles</span><span class="params">(filename)</span>:</span></div><div class="line">  date_file_list = []</div><div class="line">  files = glob.glob(filename + <span class="string">'[1-9]'</span>)</div><div class="line">  files.extend( glob.glob(filename) )</div><div class="line"></div><div class="line">  <span class="keyword">for</span> file <span class="keyword">in</span> files:</div><div class="line">      <span class="comment"># retrieves the stats for the current file as a tuple</span></div><div class="line">      <span class="comment"># (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime)</span></div><div class="line">      <span class="comment"># the tuple element mtime at index 8 is the last-modified-date</span></div><div class="line">      stats = os.stat(file)</div><div class="line">      <span class="comment"># create tuple (year yyyy, month(1-12), day(1-31), hour(0-23), minute(0-59), second(0-59),</span></div><div class="line">      <span class="comment"># weekday(0-6, 0 is monday), Julian day(1-366), daylight flag(-1,0 or 1)) from seconds since epoch</span></div><div class="line">      <span class="comment"># note:  this tuple can be sorted properly by date and time</span></div><div class="line">      lastmod_date = time.localtime(stats[<span class="number">8</span>])</div><div class="line">      <span class="comment">#print image_file, lastmod_date   # test</span></div><div class="line">      <span class="comment"># create list of tuples ready for sorting by date</span></div><div class="line">      date_file_tuple = lastmod_date, file</div><div class="line">      date_file_list.append(date_file_tuple)</div><div class="line"></div><div class="line">  date_file_list.sort()</div><div class="line">  <span class="keyword">return</span> [ filename <span class="keyword">for</span> _, filename <span class="keyword">in</span> date_file_list ]</div><div class="line"></div><div class="line"></div><div class="line">nuke.addAutoSaveFilter( onAutoSave )</div><div class="line">nuke.addAutoSaveRestoreFilter( onAutoSaveRestore )</div><div class="line">nuke.addAutoSaveDeleteFilter( onAutoSaveDelete )</div><div class="line"></div><div class="line"><span class="comment">### As an example to remove the callbacks use this code</span></div><div class="line"><span class="comment">#nuke.removeAutoSaveFilter( onAutoSave )</span></div><div class="line"><span class="comment">#nuke.removeAutoSaveRestoreFilter( onAutoSaveRestore )</span></div><div class="line"><span class="comment">#nuke.removeAutoSaveDeleteFilter( onAutoSaveDelete )</span></div></pre></td></tr></table></figure>
+<p><br></p>
+<h5 id="在root上使用回调来添加双目设置"><a href="#在root上使用回调来添加双目设置" class="headerlink" title="在root上使用回调来添加双目设置"></a>在root上使用回调来添加双目设置</h5><p>添加一段脚本，将新项目设置成stereo/multi view项目，操作如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># if necessary import the module that holds the script you want to run on startup:</span></div><div class="line"><span class="keyword">import</span> examples</div><div class="line"><span class="comment"># prepping the argument for this particular script</span></div><div class="line">views = [(<span class="string">'L'</span>, (<span class="number">0</span>,<span class="number">.5</span>,<span class="number">0</span>)), (<span class="string">'R'</span>,(<span class="number">.5</span>,<span class="number">0</span>,<span class="number">0</span>)), (<span class="string">'M'</span>,(<span class="number">.5</span>,<span class="number">.5</span>,<span class="number">0</span>))]</div><div class="line"><span class="comment"># add script to the callback</span></div><div class="line">nuke.addOnUserCreate( examples.setUpMultiView, views, nodeClass=<span class="string">'Root'</span> )</div></pre></td></tr></table></figure>
+<p>更多setupMultiView脚本，请看Setting Up Stereo</p>
+<p>用户第一次创建某类节点时会触发<strong>onUserCreate</strong>（<strong>OnCreate</strong>是每个节点创建时都会调用，甚至复制，从磁盘加载也会）。既然root也是个节点，就能用<strong>nodeClass</strong>过滤下保证仅root节点创建时执行。</p>
+<p>上面的脚本加入<strong>menu.py</strong>或<strong>init.py</strong>后，新的nuke脚本有三个view了，L（绿色），R（红色）， M（黄色）。</p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/setUpMultiView_02.png" alt="image"></p>
+<h5 id="默认色彩空间"><a href="#默认色彩空间" class="headerlink" title="默认色彩空间"></a>默认色彩空间</h5><p><strong>Nuke10</strong>中可以动态替换Read和Write节点使用的色彩空间。</p>
+<p>默认色彩空间是特定文件的Reader和Writer对象在读取和写入文件时告诉Nuke最可能的那个色彩空间。有以下几种途径来获取：</p>
+<ul>
+<li><p>文件metadata或文件头中存了colorspace的名字，Reader没准会用这个名字来设置默认色彩空间。</p>
+</li>
+<li><p>文件包含特定数据类型，8bit，16bit，浮点数或者log空间，Nuke从项目设置中读取对应格式的色彩空间。</p>
+</li>
+<li><p>Reader、Writer 会通过<strong>ID</strong>请求内置的<strong>LUT</strong> ，例如REDlog， AlexaLog， ProTune，Gamma2.2（ 查看DDImage/LUT.h 中的DataType）</p>
+</li>
+</ul>
+<p>多亏<strong>OpenColorIO（OCIO）</strong>在Nuke中的配置，现在很容易支持Nuke搞不定的色彩空间。由于色彩空间匹配不上，就很容易获取Nuke的错误状态，尤其使用自定义OCIO配置时。下面的回调能处理这些自定义配置导致的错误。</p>
+<p>和其他回调一样，用下面的方法可以添加和删除回调：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.addDefaultColorspaceMapper(function)</div><div class="line">nuke.removeDefaultColorspaceMapper(function)</div></pre></td></tr></table></figure></p>
+<p>函数形式如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">myDefaultColorspaceMapper</span><span class="params">(colorspaceName, dataTypeHint)</span> :</span></div><div class="line">  <span class="comment"># ... map colorspace name to desired colorspace ...</span></div><div class="line">  <span class="keyword">return</span> colorspaceName</div></pre></td></tr></table></figure>
+<p>传递的对象如下：</p>
+<ul>
+<li>name – Reader、Writer当前请求的色彩空间，可能是Nuke默认的，或其他存在，不存在的，没准不是色彩空间。</li>
+<li>dataTypeHint – 如上，为下面三种情况之一<ul>
+<li>nuke.INVALID - 仅设置了色彩空间的名字</li>
+<li>链接到项目设置里面的一个值， 如下– 色彩空间会根据项目设置来定。注意，回调是链式调用，和项目设置中的色彩空间匹配这个不可靠，因为前面执行的回调可能改了它。</li>
+<li>内置LUT的ID – 色彩空间名字为下表中的第一个。</li>
+</ul>
+</li>
+</ul>
+<p>项目设置中data type hint的值：</p>
+<ul>
+<li>nuke.INT8 色彩空间会设置成项目设置中‘8-bit files’这个值</li>
+<li>nuke.INT16 色彩空间会设置成项目设置中‘16-bit files’这个值</li>
+<li>nuke.MONITOR 色彩空间会设置成项目设置中‘monitor’这个值， 用于显示，比如，viewers和 邮票</li>
+<li>nuke.FLOAT 色彩空间会设置成项目设置中‘float files’这个值</li>
+<li>nuke.LOG 色彩空间会设置成项目设置中‘log files’这个值</li>
+</ul>
+<p>DDImage/LUT.h中的其他data-type，后向兼容Reader和Writer：</p>
+<ul>
+<li>nuke.VIEWER - unused</li>
+<li>6 - equivalent to DD::Image::LUT::GAMMA1_8</li>
+<li>7 - equivalent to DD::Image::LUT::GAMMA2_2</li>
+<li>8 - equivalent to DD::Image::LUT::GAMMA2_4</li>
+<li>9 - equivalent to DD::Image::LUT::PANALOG</li>
+<li>10 - equivalent to DD::Image::LUT::REDLOG</li>
+<li>11 - equivalent to DD::Image::LUT::VIPERLOG</li>
+<li>12 - equivalent to DD::Image::LUT::ALEXAV3LOGC</li>
+<li>13 - equivalent to DD::Image::LUT::PLOGLIN</li>
+<li>14 - equivalent to DD::Image::LUT::SLOG</li>
+<li>15 - equivalent to DD::Image::LUT::SLOG1</li>
+<li>16 - equivalent to DD::Image::LUT::SLOG2</li>
+<li>17 - equivalent to DD::Image::LUT::SLOG3</li>
+<li>18 - equivalent to DD::Image::LUT::CLOG</li>
+<li>19 - equivalent to DD::Image::LUT::PROTUNE</li>
+</ul>
+<p>例如： 想支持ACES 1.0.1 预览设置，添加如下回调函数来保证R3D文件的修正函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">r3d_aces101_default_colorspace</span><span class="params">(name, dataTypeHint)</span> :</span></div><div class="line">  <span class="string">""" finds appropriate R3D colorspaces in the aces 101 config """</span></div><div class="line"></div><div class="line">  usePrefs = (dataTypeHint &gt;= <span class="number">0</span>) <span class="keyword">and</span> (dataTypeHint &lt;= nuke.FLOAT) <span class="comment">#  5 = LUT::FLOAT</span></div><div class="line">  <span class="keyword">if</span> usePrefs:</div><div class="line">    <span class="keyword">return</span> name</div><div class="line"></div><div class="line">  <span class="keyword">assert</span> <span class="string">"/"</span> <span class="keyword">not</span> <span class="keyword">in</span> name, <span class="string">"family name unexpectedly found in colorspace name"</span></div><div class="line">  allColorspaces = nuke.colorspaces.getColorspaceList( nuke.thisNode().knob(<span class="string">'colorspace'</span>) )[<span class="number">1</span>:]</div><div class="line">  exactMatch = name <span class="keyword">in</span> allColorspaces</div><div class="line">  <span class="keyword">if</span> exactMatch:</div><div class="line">    <span class="comment"># if there's an exact name-match in the config use that</span></div><div class="line">    <span class="keyword">return</span> name</div><div class="line"></div><div class="line">  nukeRedLog = (dataTypeHint == <span class="number">10</span>) <span class="comment"># LUT::REDLOG</span></div><div class="line">  <span class="keyword">if</span> nukeRedLog:</div><div class="line">    <span class="comment"># first use the Nuke-side data-type hint</span></div><div class="line">    aces101RedLog = <span class="string">"Input - RED - Curve - REDlogFilm"</span></div><div class="line">    <span class="keyword">if</span> aces101RedLog <span class="keyword">in</span> allColorspaces :</div><div class="line">      <span class="comment"># we have the aces101 specific RED-log space, return that</span></div><div class="line">      <span class="keyword">return</span> aces101RedLog</div><div class="line"></div><div class="line">  <span class="keyword">if</span> name == <span class="string">"rec709"</span>:</div><div class="line">    acesRec709 = <span class="string">"Output - Rec.709"</span></div><div class="line">    <span class="keyword">if</span> acesRec709 <span class="keyword">in</span> allColorspaces:</div><div class="line">      <span class="keyword">return</span> acesRec709</div><div class="line">  <span class="keyword">elif</span> name == <span class="string">"REDSpace"</span>:</div><div class="line">    acesRedSpace = <span class="string">"Input - RED - REDlogFilm - REDcolor4"</span></div><div class="line">    <span class="keyword">if</span> acesRedSpace <span class="keyword">in</span> allColorspaces:</div><div class="line">      <span class="keyword">return</span> acesRedSpace</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># add the mapper function to NUKE</span></div><div class="line">nuke.addDefaultColorspaceMapper( r3d_aces101_default_colorspace )</div></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/09/12/nuke-python-5/" data-title="Nuke Python 回调函数 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/12/nuke-python-6/" title="Nuke Python 立体">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 立体</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/12/nuke-python-4/"  title="Nuke Python 使用命令行">
+ <strong>下一篇：</strong><br/> 
+ <span>Nuke Python 使用命令行
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/12/nuke-python-5/" data-title="Nuke Python 回调函数" data-url="http://cgcoder.com/2016/09/12/nuke-python-5/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#OnUserCreate"><span class="toc-number">1.</span> <span class="toc-text">OnUserCreate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onCreate"><span class="toc-number">2.</span> <span class="toc-text">onCreate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onScriptLoad"><span class="toc-number">3.</span> <span class="toc-text">onScriptLoad</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onScriptSave"><span class="toc-number">4.</span> <span class="toc-text">onScriptSave</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onScriptClose"><span class="toc-number">5.</span> <span class="toc-text">onScriptClose</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onDestroy"><span class="toc-number">6.</span> <span class="toc-text">onDestroy</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#knobChanged"><span class="toc-number">7.</span> <span class="toc-text">knobChanged</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#updateUI"><span class="toc-number">8.</span> <span class="toc-text">updateUI</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#autolabel"><span class="toc-number">9.</span> <span class="toc-text">autolabel</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#beforeRender"><span class="toc-number">10.</span> <span class="toc-text">beforeRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#beforeFrameRender"><span class="toc-number">11.</span> <span class="toc-text">beforeFrameRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#afterFrameRender"><span class="toc-number">12.</span> <span class="toc-text">afterFrameRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#afterRender"><span class="toc-number">13.</span> <span class="toc-text">afterRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#afterBackgroundRender"><span class="toc-number">14.</span> <span class="toc-text">afterBackgroundRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#afterBackgroundFrameRender"><span class="toc-number">15.</span> <span class="toc-text">afterBackgroundFrameRender</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#filenameFilter"><span class="toc-number">16.</span> <span class="toc-text">filenameFilter</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#validateFilename"><span class="toc-number">17.</span> <span class="toc-text">validateFilename</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#autoSaveFilter"><span class="toc-number">18.</span> <span class="toc-text">autoSaveFilter</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#autoSaveRestoreFilter"><span class="toc-number">19.</span> <span class="toc-text">autoSaveRestoreFilter</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#autoSaveDeleteFilter"><span class="toc-number">20.</span> <span class="toc-text">autoSaveDeleteFilter</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用autosave的回调完成autosave回滚操作"><span class="toc-number">21.</span> <span class="toc-text">使用autosave的回调完成autosave回滚操作</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#在root上使用回调来添加双目设置"><span class="toc-number">22.</span> <span class="toc-text">在root上使用回调来添加双目设置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#默认色彩空间"><span class="toc-number">23.</span> <span class="toc-text">默认色彩空间</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

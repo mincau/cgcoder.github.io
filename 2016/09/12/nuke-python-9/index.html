@@ -1,0 +1,695 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python 自定义Panel | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="自定义Panel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python 自定义Panel">
+<meta property="og:url" content="http://cgcoder.com/2016/09/12/nuke-python-9/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="自定义Panel">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_09.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_02.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_03.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_04.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_05.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_06.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_07.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_08.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_10.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapePanel_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapePanel_02.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapePanel_03.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapePanel_04.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapePanel_05.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapeAndCVPanel_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapeAndCVPanel_02.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapeAndCVPanel_03.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/srPanel_01.png">
+<meta property="og:updated_time" content="2016-09-12T13:50:00.999Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python 自定义Panel">
+<meta name="twitter:description" content="自定义Panel">
+<meta name="twitter:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_01.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/12/nuke-python-9/" title="Nuke Python 自定义Panel" itemprop="url">Nuke Python 自定义Panel</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-12T13:50:00.999Z" itemprop="datePublished"> 发表于 2016-09-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#简单panel命令"><span class="toc-number">1.</span> <span class="toc-text">简单panel命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#简单panel对象"><span class="toc-number">2.</span> <span class="toc-text">简单panel对象</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#python-panel"><span class="toc-number">3.</span> <span class="toc-text">python panel</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#shapePanel"><span class="toc-number">3.1.</span> <span class="toc-text">shapePanel</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#ShapeAndCVPanel"><span class="toc-number">3.2.</span> <span class="toc-text">ShapeAndCVPanel</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#搜索和替换面板"><span class="toc-number">3.3.</span> <span class="toc-text">搜索和替换面板</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>在nuke中有好几种创建自定义panel的方法：</p>
+<ul>
+<li>简单的panel命令 – 常用任务，比如让用户确认或者获取文件名</li>
+<li>简单panel对象 – 定制某些扩展，创建简单。如果需要一个简单的定制panel，可以添加大量knob</li>
+<li>python panel – 创建更加复杂，提供node中所有的knob，callback，部分layout控制</li>
+</ul>
+<h5 id="简单panel命令"><a href="#简单panel命令" class="headerlink" title="简单panel命令"></a>简单panel命令</h5><p>nuke有大量的简单panel，不用繁琐的定制就能使用。</p>
+<ul>
+<li><p>消息框<br>  nuke.message(‘Just saying hi’)<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_01.png" alt="_images/panel_01.png"></p>
+</li>
+<li><p>用户查询 给用户一个“yes、no”选择：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">if nuke.ask(&apos;Are you sure you want to create  a Blur node? &apos;):</div><div class="line">        nuke.createNode(&apos;Blur&apos;)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_09.png" alt="_images/panel_09.png"></p>
+<ul>
+<li>显示窗口<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def showChannels():</div><div class="line">    return &apos;\n&apos;.join( nuke.thisNode().channels() )</div><div class="line"></div><div class="line">node = nuke.selectedNode()</div><div class="line">nuke.display(&apos;showChannels()&apos;, node, &apos;show channels for %s&apos; % node.name() )</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这是个非模式panel，运行showChannels，用其结果来填充窗口。node作为第二参数。</p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_02.png" alt="_images/panel_02.png"></p>
+<ul>
+<li>获取用户输入-从用户获取输入并赋给所选节点的label<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">txt = nuke.getInput(<span class="string">'Change label'</span>, <span class="string">'new label'</span>)</div><div class="line"><span class="keyword">if</span> txt:</div><div class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> nuke.selectedNodes():</div><div class="line">        n[<span class="string">'label'</span>].setValue(txt)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_03.png" alt="_images/panel_03.png"></p>
+<ul>
+<li>颜色选择：给选定节点赋予指定颜色<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">col = nuke.getColor()</div><div class="line"><span class="keyword">if</span> col:</div><div class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> nuke.selectedNodes():</div><div class="line">            n[<span class="string">'title_color'</span>].setValue(col)</div><div class="line">            n[<span class="string">'gl_color'</span>].setValue(col)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_04.png" alt="_images/panel_04.png"></p>
+<ul>
+<li>文件浏览，返回文件全路径：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">filePath = nuke.getFilename(<span class="string">'get file contents'</span>, <span class="string">'*.txt *.xml'</span>)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_05.png" alt="_images/panel_05.png"></p>
+<ul>
+<li>序列浏览器 列出图像序列<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">seqPath = nuke.getClipname(<span class="string">'get sequence'</span>)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_06.png" alt="_images/panel_06.png"></p>
+<ul>
+<li>获取帧范围，从用户那获取帧范围，如果是立体的，则附带在哪个view操作：<br>  ret = nuke.getFramesAndViews(‘get range’, ‘1-10’ )<br>返回值是字符串的list，和要求的view：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ret = nuke.getFramesAndViews(<span class="string">'get range'</span>, <span class="string">'1-10'</span>)</div><div class="line">range = ret[<span class="number">0</span>]</div><div class="line">views = ret[<span class="number">1</span>]</div><div class="line"><span class="keyword">print</span> <span class="string">'range is'</span>, range</div><div class="line"><span class="keyword">print</span> <span class="string">'views are'</span>, views</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_07.png" alt="_images/panel_07.png"></p>
+<p>多视图脚本：<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_08.png" alt="_images/panel_08.png"></p>
+<p><br></p>
+<h5 id="简单panel对象"><a href="#简单panel对象" class="headerlink" title="简单panel对象"></a>简单panel对象</h5><p>创建一个简单panel对象：<br>    p = nuke.Panel(‘my custom panel’)<br>检查哪些knob可用是个好主意：<br>    dir(p)</p>
+<p>添加knobs：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">p.addClipnameSearch(<span class="string">'clip path'</span>, <span class="string">'/tmp'</span>)</div><div class="line">p.addFilenameSearch(<span class="string">'file path'</span>, <span class="string">'/tmp'</span>)</div><div class="line">p.addTextFontPulldown(<span class="string">'font browser'</span>, <span class="string">'/myFonts/'</span>)</div><div class="line">p.addRGBColorChip(<span class="string">'some pretty color'</span>, <span class="string">''</span>)</div><div class="line">p.addExpressionInput(<span class="string">'enter an expression'</span>, <span class="string">'4*25'</span>)</div><div class="line">p.addBooleanCheckBox(<span class="string">'yes or no?'</span>, <span class="keyword">True</span>)</div><div class="line">p.addEnumerationPulldown(<span class="string">'my choices'</span>, <span class="string">'A B C'</span>)</div><div class="line">p.addScriptCommand(<span class="string">'tcl or python code'</span>, <span class="string">''</span>)</div><div class="line">p.addSingleLineInput(<span class="string">'just one line'</span>, <span class="string">'not much space'</span>)</div><div class="line">p.addMultilineTextInput(<span class="string">'multiple lines of user input text'</span>, <span class="string">'lineA\nlineB'</span>)</div><div class="line">p.addNotepad(<span class="string">'write something'</span>, <span class="string">'some very long text could go in here. For now this is just some random default value'</span>)</div><div class="line">p.addPasswordInput(<span class="string">'password'</span>, <span class="string">'donttellanyone'</span>)</div><div class="line">p.addButton(<span class="string">'push here'</span>)</div><div class="line">p.addButton(<span class="string">'or here'</span>)</div><div class="line">p.addButton(<span class="string">'or even here'</span>)</div></pre></td></tr></table></figure></p>
+<p>打开panel:<br>    ret = p.show()</p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/panel_10.png" alt="_images/panel_10.png"></p>
+<p>panel关闭后，获取某个值：<br>    print p.value(‘clip path’)<br>    pirnt p.value(‘file path’)<br><br></p>
+<h5 id="python-panel"><a href="#python-panel" class="headerlink" title="python panel"></a>python panel</h5><h6 id="shapePanel"><a href="#shapePanel" class="headerlink" title="shapePanel"></a>shapePanel</h6><p>有两个下拉菜单的panel，第一个knob控制第二个knob shape的显示</p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapePanel_01.png" alt="_images/shapePanel_01.png_images/shapePanel_02.png"><br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapePanel_02.png" alt=""></p>
+<p>开始，创建一个继承nukescripts.PythonPanels的类，运行其构造并传入一个标题<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShapePanel</span><span class="params">( nukescripts.PythonPanel)</span>:</span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">                nukescripts.PythonPanel.__init__(self, <span class="string">'RotoPaint Elements'</span>)</div></pre></td></tr></table></figure></p>
+<p>用参数传递我们想分析的节点，在<strong>init</strong>中的参数列表中，赋值给self.rpNode:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShapePanel</span><span class="params">( nukescripts.PythonPanel)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, node)</span>:</span></div><div class="line">        nukescripts.PythonPanel.__init__(self, <span class="string">'RotoPaint Elements'</span>)</div><div class="line">        self.rpNode = node</div></pre></td></tr></table></figure></p>
+<p>使用nuke.Enumeration_Knob创建下拉列表：<br>    self.typeKnob = nuke.Enumeration_Knob(‘element’, ‘element’, [‘Shape’, ‘Strokes’])</p>
+<p>再一次，在全局命名空间中引用这个knob的值，读取so easy。提供给knob的三个参数是：</p>
+<ul>
+<li>element knob的对象名字</li>
+<li>element knob的标签</li>
+<li>[‘Shapes’, ‘Strokes’] 下拉菜单中显示的选项</li>
+</ul>
+<p>创建第二个enumeration knob， 但其选项设置为空， 动态设置：<br>    self.elementKnob = nuke.Enumeration_Knob(‘curve’, ‘curve’, [])</p>
+<p>现在添加两个knob：<br>    for k in ( self,typeKnob, self.elementKnob):<br>        self.addKnob(k)</p>
+<p>目前的代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShapePanel</span><span class="params">( nukescripts.PythonPanel)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, node)</span>:</span></div><div class="line">        nukescripts.PythonPanel.__init__(self, <span class="string">'RotoPaint Elements'</span>)</div><div class="line">        self.rpNode = node</div><div class="line">        self.typeKnob = nuke.Enumeration_Knob(<span class="string">'element'</span>, <span class="string">'element'</span>, [<span class="string">'Shapes'</span>, <span class="string">'Strokes'</span>])</div><div class="line">        self.elementKnob = nuke.Enumeration_Knob(<span class="string">'curve'</span>, <span class="string">'curve'</span>, [])</div><div class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> (self.typeKnob, self.elementKnob):</div><div class="line">            self.addKnob(k)</div></pre></td></tr></table></figure></p>
+<p>如果你创建了这个类的例子，可以用showModalDialog()将其作为模式对话框打开。创建一个RotoPaint节点，名为RotoPaint1.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">node = nuke.toNode(<span class="string">'RotoPaint1'</span>)</div><div class="line">p = ShapePanel(node)</div><div class="line">p.showModalDialog()</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapePanel_03.png" alt="_images/shapePanel_03.png"></p>
+<p>注意showModalDialog给我了带ok，cancel按钮的对话框。下面将其美化下：</p>
+<p>默认情况下，enumeration knob从新一行开始，但是如果我们清除了这个标志位，就可以让两个knob在同一行：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShapePanel</span><span class="params">( nukescripts.PythonPanel)</span>:</span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, node)</span>:</span></div><div class="line">                nukescripts.PythonPanel.__init__(self, <span class="string">'RotoPaint Elements'</span>)</div><div class="line">                self.rpNode = node</div><div class="line"></div><div class="line">                self.typeKnob = nuke.Enumeration_Knob(<span class="string">'element'</span>, <span class="string">'element/shape'</span>, [<span class="string">'Shapes'</span>, <span class="string">'Strokes'</span>])</div><div class="line">                self.elementKnob = nuke.Enumeration_Knob(<span class="string">'curve'</span>, <span class="string">''</span>, [])</div><div class="line">                self.elementKnob.clearFlag(nuke.STARTLINE)</div><div class="line">                <span class="keyword">for</span> k <span class="keyword">in</span> (self.typeKnob, self.elementKnob):</div><div class="line">                        self.addKnob(k)</div></pre></td></tr></table></figure></p>
+<p>这也改变了标签上的第一个knob，并将第二个上的knob移除，这看上去更加简洁：<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapePanel_04.png" alt="_images/shapePanel_04.png"></p>
+<p>最后一件在构造时要做的事情就是 创建一个字典，按类型保存元素。在<strong>init</strong>函数最后面添加如下代码：<br>    self.curveDict = {}<br>实际上不真需要，可以<strong>init</strong>在全局范围内初始化变量, 用节点的shape和stroke来填充字典：<br>def getData( self):<br>        self.curveDict={‘Shapes’:[], ‘Strokes’:[] }<br>        rootLayer = self.rpNode[‘curves’].rootLayer</p>
+<pre><code>1. 用填充第一个enumeration knob的关键字来填充字典（shape，stroke）
+2. 抓取node的curve knob，其能列出Roto或者RotoPaint的所有元素，并获取其rootLayer
+</code></pre><p>rootLayer是个可迭代的对象，能产生curve knob中列出的所有元素。因此可以遍历获取其所有孩子元素。检查对应元素的类型，保存进<br>对应的字典：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> e <span class="keyword">in</span> rootLayer:</div><div class="line">    <span class="keyword">if</span> isinstance(e, nuke.rotopaint.Shape):</div><div class="line">        self.curveDict[<span class="string">'Shapes'</span>].append(e.name)</div><div class="line">    <span class="keyword">elif</span> isinstance( e, nuke.rotopaint.Stroke):</div><div class="line">        self.curveDict[<span class="string">'Stokes'</span>].append( e.name)</div></pre></td></tr></table></figure>
+<p>用感兴趣的数据填充字典，通过’shape’和‘stroke’保存。在<strong>init</strong>最后添加如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShapePanel</span><span class="params">(nukescripts.PythonPanel)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, node)</span>:</span></div><div class="line">    <span class="string">'''List all roto paint nodes and the name of their respective shapes and strokes'''</span></div><div class="line">    nukescripts.PythonPanel.__init__(self, <span class="string">'RotoPaint Elements'</span>)</div><div class="line">    self.rpNode = node</div><div class="line">    <span class="comment"># CREATE KNOBS</span></div><div class="line">    self.typeKnob = nuke.Enumeration_Knob(<span class="string">'element'</span>, <span class="string">'element / curve'</span>, [<span class="string">'Shapes'</span>, <span class="string">'Strokes'</span>])</div><div class="line">    self.elementKnob = nuke.Enumeration_Knob(<span class="string">'curve'</span>, <span class="string">''</span>, [])</div><div class="line">    self.elementKnob.clearFlag(nuke.STARTLINE)</div><div class="line">    <span class="comment"># ADD KNOBS</span></div><div class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> (self.typeKnob, self.elementKnob):</div><div class="line">        self.addKnob(k)</div><div class="line"></div><div class="line">    <span class="comment"># STORE DICTIONARY OF ELEMENTS PER TYPE</span></div><div class="line">    self.curveDict = &#123;&#125;</div><div class="line">    <span class="comment"># FILL DICTIONARY</span></div><div class="line">    self.getData()</div></pre></td></tr></table></figure>
+<p>最后，添加knobChanged方法，每次panel内的knob有变化就触发此函数。knobChanged方法接收一个额外的参数，将正在变化的knob传入<br>函数内。</p>
+<p>来看运行情况，或者调试。当你改变panel内容是，这是打印knob名字的好方法，并留意脚本编辑器的输出panel：<br>    def knobChanged( self, knob):<br>            print knob.name()<br>如果你在这步运行panel的代码，注意用knob的showPanel打开panel的触发器 knobChanged的回调函数。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapePanel_05.png" alt="_images/shapePanel_05.png"></p>
+<p>如果你换了第一个enumeration knob，你将看到它的名字会被打印到输出panel上。<br>现在，用它干点有用的事。我们已经有一个字典存储了所有的shape和stroke，因此我们要做的就是读取并赋予对应的值（基于第一个knob<br>的当前值）：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">knobChanged</span><span class="params">(self, knob)</span>:</span></div><div class="line">    self.elementKnob.setValues(self.curveDict[ self.typeKnob.value() ])</div></pre></td></tr></table></figure></p>
+<p>通过typeKnob里面找到的当前值可以从字典里面读取self.elementKnob的值。但是我们仅想panel打开或者typeKnob改变时才做：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">knobChanged</span><span class="params">(self, knob)</span>:</span></div><div class="line">    <span class="keyword">if</span> knob <span class="keyword">is</span> self.typeKnob <span class="keyword">or</span> knob.name()==<span class="string">'showPanel'</span>:</div><div class="line"></div><div class="line">        self.elementKnob.setValues(self.curveDict[ self.typeKnob.value() ])</div></pre></td></tr></table></figure></p>
+<p>现在可以把第一个enumeration knob从shape转换到stroke，并看到第二个konb自动更新自己的content<br>最终代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="keyword">import</span> nukescripts</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShapePanel</span><span class="params">( nukescripts.PythonPanel )</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">( self, node )</span>:</span></div><div class="line">        <span class="string">'''List all roto paint nodes and the name of their respective shapes and strokes'''</span></div><div class="line">        nukescripts.PythonPanel.__init__( self, <span class="string">'RotoPaint Elements'</span> )</div><div class="line">        self.rpNode = node</div><div class="line">        <span class="comment"># CREATE KNOBS</span></div><div class="line">        self.typeKnob = nuke.Enumeration_Knob( <span class="string">'element'</span>, <span class="string">'element / curve'</span>, [<span class="string">'Shapes'</span>, <span class="string">'Strokes'</span>] )</div><div class="line">        self.elementKnob = nuke.Enumeration_Knob( <span class="string">'curve'</span>, <span class="string">''</span>, [] )</div><div class="line">        self.elementKnob.clearFlag( nuke.STARTLINE )</div><div class="line">        <span class="comment"># ADD KNOBS</span></div><div class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> ( self.typeKnob, self.elementKnob ):</div><div class="line">            self.addKnob( k )</div><div class="line"></div><div class="line">        <span class="comment"># STORE DICTIONARY OF ELEMENTS PER TYPE</span></div><div class="line">        self.curveDict = &#123;&#125;</div><div class="line">        <span class="comment"># FILL DICTIONARY</span></div><div class="line">        self.getData()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getData</span><span class="params">( self )</span>:</span></div><div class="line">        <span class="string">'''return a nested dictionary of all shapes and strokes per node'''</span></div><div class="line">        self.curveDict=&#123; <span class="string">'Shapes'</span>:[], <span class="string">'Strokes'</span>:[] &#125;</div><div class="line">        rootLayer = self.rpNode[<span class="string">'curves'</span>].rootLayer</div><div class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> rootLayer:</div><div class="line">            <span class="keyword">if</span> isinstance( e, nuke.rotopaint.Shape ):</div><div class="line">                self.curveDict[ <span class="string">'Shapes'</span> ].append( e.name )</div><div class="line">            <span class="keyword">elif</span> isinstance( e, nuke.rotopaint.Stroke ):</div><div class="line">                self.curveDict[ <span class="string">'Strokes'</span> ].append( e.name )</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">knobChanged</span><span class="params">( self, knob )</span>:</span></div><div class="line">        <span class="keyword">if</span> knob <span class="keyword">is</span> self.typeKnob <span class="keyword">or</span> knob.name()==<span class="string">'showPanel'</span>:</div><div class="line">            self.elementKnob.setValues( self.curveDict[ self.typeKnob.value() ] )</div></pre></td></tr></table></figure></p>
+<p>通过showModalDialog模块来调用panel，我们知道用户的决定，任何事情发生前的确认或者取消。用户点ok就返回true，否则返回false。<br>在全局范围内引用knobs，在panel关闭后也可以读取knob的值。例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">node = nuke.toNode(&apos;RotoPaint1&apos;)</div><div class="line">p = ShapePanel(node)</div><div class="line">if p.showModalDialog():</div><div class="line">    print p.elementKnob.value()</div></pre></td></tr></table></figure></p>
+<p>当点击ok关闭panel时，就打印出值，否则啥也不发生。</p>
+<p><br></p>
+<h6 id="ShapeAndCVPanel"><a href="#ShapeAndCVPanel" class="headerlink" title="ShapeAndCVPanel"></a>ShapeAndCVPanel</h6><p>这个简单的面板扫描Roto或RotoPaint节点的shape，并将找到的所有shape的name放入下拉列表中。允许输入帧范围，指定CV编号。这是<br>用来<a href="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/rotopaint.html#trackcv-ref-label" target="_blank" rel="external">trackCV</a><br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapeAndCVPanel_01.png" alt=""></p>
+<p>从导入使用的包开始<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="keyword">import</span> nukescripts</div><div class="line"><span class="keyword">import</span> nuke.rotopaint <span class="keyword">as</span> rp</div></pre></td></tr></table></figure></p>
+<p>然后创建一个类继承<strong>nukescripts</strong>中的<strong>PythonPanel</strong>，接收一个名为<strong>node</strong>的参数。调用父类的构造函数给panle一个标题。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShapeAndCVPanel</span><span class="params">(nukescripts.PythonPanel)</span>:</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, node)</span>:</span></div><div class="line">        nukescripts.PythonPanel.__init__(self, <span class="string">'Get Shape and CV index'</span>)</div></pre></td></tr></table></figure>
+<p>在全局命名空间中引用传给panel的node，方便在其他地方使用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.rpNode = node</div></pre></td></tr></table></figure></p>
+<p>从node的<strong>curves</strong>knob中获取root 层。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">root = node[&apos;curves&apos;].rootLayer</div></pre></td></tr></table></figure></p>
+<p>使用列表生成来获取节点中的所有shape name：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">shapeNames = [c.name for c in root if isinstance(c, rp.Shape)]</div></pre></td></tr></table></figure></p>
+<p>添加快速检测：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">if not shapeNames:</div><div class="line">    nuke.message(&apos;No Shapes found in %s&apos; % node.name()</div><div class="line">    return</div></pre></td></tr></table></figure></p>
+<p>将knob添加到panel。字符串knob用来接收帧范围：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.fRange = nuke.String_Knob(&apos;fRange&apos;, &apos;Track Range&apos;)</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意 我们在panel的全局命名空间中引用knob（self.),因此后续可以在panle外访问</p>
+</blockquote>
+<p>String knob接收第三个可选参数，来提供默认值。 此处使用来设置默认值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.fRange = nuke.String_Knob(&apos;fRange&apos;, &apos;Track Range&apos;, &apos;%s-%s&apos; % (nuke.root().fristFrame(), nuke.root().lastFrame()))</div></pre></td></tr></table></figure></p>
+<p>接下来就是将名字添加到 enumeration knob中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.shape = nuke.Enumeration_Knob(&apos;shape&apos;, &apos;Shape&apos;, shapeNames)</div></pre></td></tr></table></figure></p>
+<p>添加一个整数knob让用户输入CV的编号：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.cv = nuke.Int_Knob(&apos;pointNumber&apos;, &apos;Point Number&apos;)</div></pre></td></tr></table></figure></p>
+<p>检查整数knob，如果有错，需要显示提示信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.warning = nuke.Text_Knob(&apos;warning&apos;, &apos;invalid index&apos;)</div></pre></td></tr></table></figure></p>
+<p>使用Html代码让提示更加醒目：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.warning = nuke.Text_Knob(&apos;warning&apos;, &apos;&lt;span style=&quot;color:red&quot;&gt;invalid index&lt;/span&gt;&apos;)</div></pre></td></tr></table></figure></p>
+<p>静态文本knob挨着pointNumber knob，在此加入一行来分割：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.warning.clearFlag(nuke.STARTLINE)</div></pre></td></tr></table></figure></p>
+<p>打开panle是需要隐藏警告提示的内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.warning.setVisible(False)</div></pre></td></tr></table></figure></p>
+<p>最后将四个knob添加到panel：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">self.addKnob(self.fRange)</div><div class="line">self.addKnob(self.shape)</div><div class="line">self.addKnob(self.cv)</div><div class="line">self.addKnob(self.warning)</div></pre></td></tr></table></figure></p>
+<p>想偷懒的可以这么做：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for k in (self.fRange, self.shape, self.cv, self.warning):</div><div class="line">        self.addKnob(k)</div></pre></td></tr></table></figure></p>
+<p>零碎代码整合起来后如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="keyword">import</span> nukescripts</div><div class="line"><span class="keyword">import</span> nuke.rotopaint <span class="keyword">as</span> rp</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShapeAndCVPanel</span><span class="params">(nukescripts.PythonPanel)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, node)</span>:</span></div><div class="line">        nukescripts.PythonPanel.__init__(self, <span class="string">'Get Shape and CV index'</span>)</div><div class="line">        self.rpNode  = node</div><div class="line">        <span class="comment"># GET THE NODES ROOT LAYER AND COLLECT ALL SHAPES IN IT</span></div><div class="line">        root = node[<span class="string">'curves'</span>].rootLayer</div><div class="line">        shapeNames = [ c.name <span class="keyword">for</span> c <span class="keyword">in</span> root <span class="keyword">if</span> isinstance(c, rp.Shape) ]</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> shapeNames:</div><div class="line">            nuke.message(<span class="string">'No Shapes found in %s'</span> % node.name())</div><div class="line">            <span class="keyword">return</span></div><div class="line">        <span class="comment"># CREATE KNOBS</span></div><div class="line">        self.fRange = nuke.String_Knob(<span class="string">'fRange'</span>, <span class="string">'Track Range'</span>, <span class="string">'%s-%s'</span> % (nuke.root().firstFrame(), nuke.root().lastFrame()))</div><div class="line">        self.shape = nuke.Enumeration_Knob(<span class="string">'shape'</span>, <span class="string">'Shape'</span>, shapeNames)</div><div class="line">        self.cv = nuke.Int_Knob(<span class="string">'pointNumber'</span>, <span class="string">'Point Number'</span>)</div><div class="line">        self.warning = nuke.Text_Knob(<span class="string">'warning'</span>, <span class="string">'invalid index'</span>)</div><div class="line">        self.warning.clearFlag(nuke.STARTLINE)</div><div class="line">        self.warning.setVisible(<span class="keyword">False</span>)</div><div class="line"></div><div class="line">        <span class="comment"># ADD KNOBS</span></div><div class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> (self.fRange, self.shape, self.cv, self.warning):</div><div class="line">            self.addKnob(k)</div></pre></td></tr></table></figure></p>
+<p>为了检测给定点编号是否正确，需要使用<strong>knobChanged</strong>方法，当knob改变时会自动运行。此方法需要<strong>knob</strong>参数，其提供了此<br>功能，并且knob触发了这个回调：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">def knobChanged(self, knob):</div></pre></td></tr></table></figure></p>
+<p>仅需要<strong>self.cv</strong>或<strong>self.shape</strong>索引的knob变动时调用此函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def knobChanged(self, knob):</div><div class="line">    if knob in(self.cv, self.shape):</div></pre></td></tr></table></figure></p>
+<p>如上发生，就要讲shape的knob设置如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">currentShape = self.rpNode[&apos;curves&apos;].toElement(self.shape.value())</div></pre></td></tr></table></figure></p>
+<p>我们仅想知道shape中有多少个点：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">size = len([pt for pt in currentShape])</div></pre></td></tr></table></figure></p>
+<p>现在检测pointNumber的值是否在合理范围内：<br>    validNumber = -1 &lt; knob.value() &lt; size</p>
+<p>如果点在合理范围内，上面的判别式返回true，否则返回false。取非来作为控制warnging knob显示的开关。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.warning.setVisible(not validNumber)</div></pre></td></tr></table></figure></p>
+<p>最终代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="keyword">import</span> nukescripts</div><div class="line"><span class="keyword">import</span> nuke.rotopaint <span class="keyword">as</span> rp</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShapeAndCVPanel</span><span class="params">( nukescripts.PythonPanel )</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">( self, node )</span>:</span></div><div class="line">        nukescripts.PythonPanel.__init__( self, <span class="string">'Get Shape and CV index'</span> )</div><div class="line">        self.rpNode  = node</div><div class="line">        <span class="comment"># GET THE NODES ROOT LAYER AND COLLECT ALL SHAPES IN IT</span></div><div class="line">        root = node[<span class="string">'curves'</span>].rootLayer</div><div class="line">        shapeNames = [ c.name <span class="keyword">for</span> c <span class="keyword">in</span> root <span class="keyword">if</span> isinstance( c, rp.Shape ) ]</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> shapeNames:</div><div class="line">            nuke.message( <span class="string">'No Shapes found in %s'</span> % node.name() )</div><div class="line">            <span class="keyword">return</span></div><div class="line">        <span class="comment"># CREATE KOBS</span></div><div class="line">        self.fRange = nuke.String_Knob( <span class="string">'fRange'</span>, <span class="string">'Track Range'</span>, <span class="string">'%s-%s'</span> % ( nuke.root().firstFrame(), nuke.root().lastFrame() ) )</div><div class="line">        self.shape = nuke.Enumeration_Knob( <span class="string">'shape'</span>, <span class="string">'Shape'</span>, shapeNames )</div><div class="line">        self.cv = nuke.Int_Knob( <span class="string">'pointNumber'</span>, <span class="string">'Point Number'</span> )</div><div class="line">        self.warning = nuke.Text_Knob( <span class="string">'warning'</span>, <span class="string">'&lt;span style="color:red"&gt;invalid index&lt;/span&gt;'</span> )</div><div class="line">        self.warning.clearFlag( nuke.STARTLINE )</div><div class="line">        self.warning.setVisible( <span class="keyword">False</span> )</div><div class="line"></div><div class="line">        <span class="comment"># ADD KOBS</span></div><div class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> ( self.fRange, self.shape, self.cv, self.warning ):</div><div class="line">            self.addKnob( k )</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">knobChanged</span><span class="params">( self, knob )</span>:</span></div><div class="line">        <span class="comment"># IF AN INVALID INDEX IS SHOWN DISPLAY THE WARNING TEXT</span></div><div class="line">        <span class="keyword">if</span> knob <span class="keyword">in</span>( self.cv, self.shape ):</div><div class="line">            currentShape = self.rpNode[<span class="string">'curves'</span>].toElement( self.shape.value() )</div><div class="line">            size = len( [pt <span class="keyword">for</span> pt <span class="keyword">in</span> currentShape] )</div><div class="line">            validNumber = <span class="number">-1</span> &lt; knob.value() &lt; size</div><div class="line">            self.warning.setVisible( <span class="keyword">not</span> validNumber )</div></pre></td></tr></table></figure></p>
+<p>测试panle，创建Roto或RotoPaint节点，新的shape，运行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ShapeAndCVPanel(nuke.selectedNode()).showModalDialog()</div></pre></td></tr></table></figure></p>
+<p>panel显示如下：<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapeAndCVPanel_02.png" alt=""></p>
+<p>如果点编号不合法显示如下：<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/shapeAndCVPanel_03.png" alt=""></p>
+<p>增加panel的宽度，显示完整的警告信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">p = ShapeAndCVPanel(nuke.selectedNode())</div><div class="line">p.setMinimumSize(400, 50)</div><div class="line">p.showModalDialog()</div></pre></td></tr></table></figure></p>
+<p><br></p>
+<h6 id="搜索和替换面板"><a href="#搜索和替换面板" class="headerlink" title="搜索和替换面板"></a>搜索和替换面板</h6><p>下面的代码创建了一个面板，在NUKE脚本中执行搜索和替换操作。其使用了帮助函数<strong>search</strong>来简化代码。视频教程在<a href="http://www.nukepedia.com/video-tutorials/37/video/" target="_blank" rel="external">Nukepedia</a>.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">search</span><span class="params">(searchstr, nodes)</span>:</span></div><div class="line">    <span class="string">""" Search in nodes with file knobs. """</span></div><div class="line">    fileKnobNodes = [i <span class="keyword">for</span> i <span class="keyword">in</span> nodes <span class="keyword">if</span> __NodeHasKnobWithName(i, <span class="string">'file'</span>)]</div><div class="line">    proxyKnobNodes = [i <span class="keyword">for</span> i <span class="keyword">in</span> nodes <span class="keyword">if</span> __NodeHasKnobWithName(i, <span class="string">'proxy'</span>)]</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> fileKnobNodes <span class="keyword">and</span> <span class="keyword">not</span> proxyKnobNodes: <span class="keyword">raise</span> ValueError, <span class="string">"No file nodes selected"</span></div><div class="line">    nodeMatches = []</div><div class="line">    knobMatches = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> fileKnobNodes:</div><div class="line">        <span class="keyword">if</span> __FindNode(searchstr, i[<span class="string">'file'</span>]):</div><div class="line">            nodeMatches.append(i)</div><div class="line">            knobMatches.append(i[<span class="string">'file'</span>])</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> proxyKnobNodes:</div><div class="line">        <span class="keyword">if</span> __FindNode(searchstr, i[<span class="string">'proxy'</span>]):</div><div class="line">            nodeMatches.append(i)</div><div class="line">            knobMatches.append(i[<span class="string">'proxy'</span>])</div><div class="line">    <span class="keyword">return</span> nodeMatches, knobMatches</div></pre></td></tr></table></figure></p>
+<p>URL是构造函数第二个参数，这能让面板保存或作为自定义布局的一部分再次唤醒：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SearchReplacePanel</span><span class="params">(nukescripts.PythonPanel)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        nukescripts.PythonPanel.__init__(self, <span class="string">'Search and Replace'</span>, <span class="string">'com.ohufx.SearchReplace'</span>)</div><div class="line">        <span class="comment"># CREATE KNOBS</span></div><div class="line">        self.nodesChoice = nuke.Enumeration_Knob(<span class="string">'nodes'</span>, <span class="string">'Source Nodes'</span>, [<span class="string">'all'</span>, <span class="string">'selected'</span>])</div><div class="line">        self.searchStr = nuke.String_Knob(<span class="string">'searchStr'</span>, <span class="string">'Search for:'</span>)</div><div class="line">        self.update = nuke.PyScript_Knob(<span class="string">'update'</span>, <span class="string">'Update'</span>)</div><div class="line">        self.info = nuke.Multiline_Eval_String_Knob(<span class="string">'info'</span>, <span class="string">'Found'</span>)</div><div class="line">        self.info.setEnabled(<span class="keyword">False</span>)</div><div class="line">        self.replaceStr = nuke.String_Knob(<span class="string">'replaceStr'</span>, <span class="string">'Replace with:'</span>)</div><div class="line">        self.replace = nuke.PyScript_Knob(<span class="string">'replace'</span>, <span class="string">'Replace'</span>)</div><div class="line">        <span class="comment"># ADD KNOBS</span></div><div class="line">        self.addKnob(self.nodesChoice)</div><div class="line">        self.addKnob(self.searchStr)</div><div class="line">        self.addKnob(self.update)</div><div class="line">        self.addKnob(self.info)</div><div class="line">        self.addKnob(self.replaceStr)</div><div class="line">        self.addKnob(self.replace)</div><div class="line"></div><div class="line">        self.matches = <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">search</span><span class="params">(self, nodes)</span>:</span></div><div class="line">        nodeMatches, knobMatches = search(self.searchStr.value(), nodes)</div><div class="line">        nodes = [n.name() <span class="keyword">for</span> n <span class="keyword">in</span> nodeMatches]</div><div class="line">        infoStr = <span class="string">'%s node(s) found:\n\t%s'</span> % (len(nodes), <span class="string">', '</span>.join(nodes))</div><div class="line">        self.info.setValue(infoStr)</div><div class="line">        <span class="keyword">return</span> knobMatches</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">knobChanged</span><span class="params">(self, knob)</span>:</span></div><div class="line">        <span class="keyword">if</span> knob <span class="keyword">in</span> (self.searchStr, self.update, self.nodesChoice):</div><div class="line">            srcNodes = &#123; <span class="string">'all'</span>: nuke.allNodes(), <span class="string">'selected'</span>: nuke.selectedNodes() &#125;</div><div class="line">            self.matches = self.search(srcNodes[self.nodesChoice.value()])</div><div class="line">        <span class="keyword">elif</span> knob <span class="keyword">is</span> self.replace <span class="keyword">and</span> self.matches <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> self.matches:</div><div class="line">                newStr = re.sub(self.searchStr.value(), self.replaceStr.value(), k.value())</div><div class="line">                k.setValue(newStr)</div></pre></td></tr></table></figure></p>
+<p>下面是将面板添加到<strong>Panel</strong>的默认方法（下面代码放入menu.py):<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">addSRPanel</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">global</span> srPanel</div><div class="line">    srPanel = SearchReplacePanel()</div><div class="line">    <span class="keyword">return</span> srPanel.addToPane()</div><div class="line"></div><div class="line">paneMenu = nuke.menu(<span class="string">'Pane'</span>)</div><div class="line">paneMenu.addCommand(<span class="string">'SearchReplace'</span>, addSRPanel)</div><div class="line">nukescripts.registerPanel(<span class="string">'com.ohufx.SearchReplace'</span>, addSRPanel)</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/srPanel_01.png" alt=""></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/09/12/nuke-python-9/" data-title="Nuke Python 自定义Panel | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/12/nuke-python-toc/" title="Nuke Python 帮助 目录">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 帮助 目录</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/12/nuke-python-8/"  title="Nuke Python 获取图像数据">
+ <strong>下一篇：</strong><br/> 
+ <span>Nuke Python 获取图像数据
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/12/nuke-python-9/" data-title="Nuke Python 自定义Panel" data-url="http://cgcoder.com/2016/09/12/nuke-python-9/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#简单panel命令"><span class="toc-number">1.</span> <span class="toc-text">简单panel命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#简单panel对象"><span class="toc-number">2.</span> <span class="toc-text">简单panel对象</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#python-panel"><span class="toc-number">3.</span> <span class="toc-text">python panel</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#shapePanel"><span class="toc-number">3.1.</span> <span class="toc-text">shapePanel</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#ShapeAndCVPanel"><span class="toc-number">3.2.</span> <span class="toc-text">ShapeAndCVPanel</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#搜索和替换面板"><span class="toc-number">3.3.</span> <span class="toc-text">搜索和替换面板</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

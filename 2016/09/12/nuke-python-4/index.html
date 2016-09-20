@@ -1,0 +1,581 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python 使用命令行 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="命令行使用Nuke">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python 使用命令行">
+<meta property="og:url" content="http://cgcoder.com/2016/09/12/nuke-python-4/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="命令行使用Nuke">
+<meta property="og:updated_time" content="2016-09-12T13:50:00.994Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python 使用命令行">
+<meta name="twitter:description" content="命令行使用Nuke">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/12/nuke-python-4/" title="Nuke Python 使用命令行" itemprop="url">Nuke Python 使用命令行</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-12T13:50:00.994Z" itemprop="datePublished"> 发表于 2016-09-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#在python模式下运行nuke"><span class="toc-number">1.</span> <span class="toc-text">在python模式下运行nuke</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用命令行参数"><span class="toc-number">2.</span> <span class="toc-text">使用命令行参数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#修改现有nuke脚本"><span class="toc-number">3.</span> <span class="toc-text">修改现有nuke脚本</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#执行帧序列"><span class="toc-number">4.</span> <span class="toc-text">执行帧序列</span></a></li></ol>
+		
+		</div>
+		
+		<p>nuke的命令行如何执行python脚本，请听详细分解</p>
+<h5 id="在python模式下运行nuke"><a href="#在python模式下运行nuke" class="headerlink" title="在python模式下运行nuke"></a>在python模式下运行nuke</h5><p>通过 -t 参数，可以在<strong>python</strong>解释器中运行<strong>nuke</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Application/Nuke6<span class="number">.3</span>v1/Nuke6<span class="number">.3</span>v1.app/Nuke6<span class="number">.3</span>v1 -t</div></pre></td></tr></table></figure>
+<p>可在 -t 后添加 启动脚本：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./nuke6<span class="number">.3</span>v1 -t &lt;mypythonscript.py&gt;</div></pre></td></tr></table></figure></p>
+<h5 id="使用命令行参数"><a href="#使用命令行参数" class="headerlink" title="使用命令行参数"></a>使用命令行参数</h5><p>nuke运行python脚本时，脚本参数通过sys.argv 传入，例如运行test.py：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys, nuke</div><div class="line"><span class="keyword">print</span> sys.argv</div></pre></td></tr></table></figure>
+<p>在命令行下运行此脚本，查看包含参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">./Nuke6.3v1 -t test.py hello wrold</div><div class="line"></div><div class="line"> [&apos;test.py&apos;, &apos;Hello&apos;, &apos;world&apos; ]</div></pre></td></tr></table></figure></p>
+<p>唯一的特例就是，参数以帧号结尾的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./nuke6.3v1 -t test.py hello world 1,20</div></pre></td></tr></table></figure></p>
+<p>此种情况，1，20被sys.args分开，被保存在了 nuke.tcl(‘frames all’)中查看所有参数：nuke.rawArgs</p>
+<p>例如，编辑test.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys, nuke</div><div class="line"><span class="keyword">print</span> nuke.rawArgs</div><div class="line"></div><div class="line">./nuke6<span class="number">.3</span>v1 -t test.py hello world <span class="number">1</span>,<span class="number">2</span></div></pre></td></tr></table></figure>
+<p>结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[&apos;/Application/Nuke6.3v1/nuke6.3v1.app/nuke6.3v1&apos;, &apos;-t&apos;, &apos;test.py&apos;, &apos;hello&apos;, &apos;world&apos;, &apos;1,2&apos; ]</div></pre></td></tr></table></figure></p>
+<p><br></p>
+<h5 id="修改现有nuke脚本"><a href="#修改现有nuke脚本" class="headerlink" title="修改现有nuke脚本"></a>修改现有nuke脚本</h5><pre><code>有时候修改nuke现有脚本也是有好处的，比如重写文件路径：
+在命令行打开nuke脚本，重写路径，保存。
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># save this file as replaceWritePaths.py</span></div><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">RecursiveFindNodes</span><span class="params">( nodeClass, startNode )</span>:</span></div><div class="line">        <span class="keyword">if</span> startNode.Class() == nodeClass:</div><div class="line">                <span class="keyword">yield</span> startNode</div><div class="line">        <span class="keyword">elif</span> instance( startNode, nuke.Group ):</div><div class="line">                <span class="keyword">for</span> child <span class="keyword">in</span> startNode.nodes():</div><div class="line">                    <span class="keyword">for</span> foundNode <span class="keyword">in</span> RecursiveFindNodes( nodeClass, child ):</div><div class="line">                            <span class="keyword">yield</span> foundNode</div><div class="line"></div><div class="line"><span class="keyword">if</span> len( sys.argv ) <span class="number">1</span>=<span class="number">5</span>:</div><div class="line">    <span class="keyword">print</span> <span class="string">'Usage: nuke replaceWritePaths.py &lt;nuke_script&gt; &lt;new_nuke_script&gt; &lt;in_file_pattern&gt; &lt;new file pattern&gt;'</span></div><div class="line">    sys.exit(<span class="number">-1</span>)</div><div class="line"></div><div class="line">inScript = sys.argv[<span class="number">1</span>]</div><div class="line">outScript = sys.argv[<span class="number">2</span>]</div><div class="line">inPattern = sys.argv[<span class="number">3</span>]</div><div class="line">outPattern = sys.argv[<span class="number">4</span>]</div><div class="line"></div><div class="line">nuke.scriptOpen( inScript )</div><div class="line"></div><div class="line">allWriteNodes = [ w <span class="keyword">for</span> w <span class="keyword">in</span> RecursiveFindNodes(<span class="string">'Write'</span>, nuke.root() )]</div><div class="line"></div><div class="line"><span class="keyword">for</span> write <span class="keyword">in</span> allWriteNodes:</div><div class="line">    path = write[<span class="string">'file'</span>].value()</div><div class="line">    path = path.replace( inPattern ,outPattern )</div><div class="line">    write[<span class="string">'file'</span>].setValue( path)</div><div class="line"></div><div class="line">nuke.scriptSave( outScript )</div></pre></td></tr></table></figure>
+<p>以上脚本运行语法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./Nuke6<span class="number">.3</span>v1 replaceWritePaths.py &lt;nuke_script&gt; &lt;new_nuke_script&gt;</div></pre></td></tr></table></figure>
+<ul>
+<li>&lt;<strong>in_file_pattern</strong>&gt; &lt;<strong>new_file_pattern</strong>&gt;</li>
+<li>&lt;<strong>nuke_script</strong>&gt; is the script to read in</li>
+<li>&lt;<strong>new_nuke_script</strong>&gt; is the name to save the modified script to</li>
+<li>&lt;<strong>in_file_pattern</strong>&gt; is string to search for in all the write file paths</li>
+<li>&lt;<strong>new_file_pattern</strong>&gt; is the string to replace &lt;<strong>in_file_pattern</strong>&gt; in all the write file paths</li>
+</ul>
+<h5 id="执行帧序列"><a href="#执行帧序列" class="headerlink" title="执行帧序列"></a>执行帧序列</h5><p>当在-t python模式下运行nuke时，其不会渲染和执行任何node<br>想渲染一个节点，就得这样来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.execute( nodeName, firstFrame, lastFrame )</div></pre></td></tr></table></figure>
+<p>当以-x 参数运行时，就切换到渲染帧序列模式，用python脚本，而不是nuke脚本（.nk)，nuke执行python脚本先，随后用给定的帧范围渲染所有的writes。例如运行 convert.py脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> nuke</div><div class="line">r = nuke.nodes.Read( file = sys.argv[<span class="number">1</span>] )</div><div class="line">w = nuke .nodes.Write( file = sys.argv[<span class="number">2</span>])</div><div class="line">w.setInput( <span class="number">0</span> ,r )</div></pre></td></tr></table></figure>
+<p>现在从命令行运行脚本，将5帧jpegs转换成tif</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke6<span class="number">.3</span>v1  -x  convert.py  myfiles.<span class="comment">###.jpg  myfiles.###.tif  1,5</span></div></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/09/12/nuke-python-4/" data-title="Nuke Python 使用命令行 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/12/nuke-python-5/" title="Nuke Python 回调函数">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 回调函数</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/12/nuke-python-3/"  title="Nuke Python 动画">
+ <strong>下一篇：</strong><br/> 
+ <span>Nuke Python 动画
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/12/nuke-python-4/" data-title="Nuke Python 使用命令行" data-url="http://cgcoder.com/2016/09/12/nuke-python-4/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#在python模式下运行nuke"><span class="toc-number">1.</span> <span class="toc-text">在python模式下运行nuke</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用命令行参数"><span class="toc-number">2.</span> <span class="toc-text">使用命令行参数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#修改现有nuke脚本"><span class="toc-number">3.</span> <span class="toc-text">修改现有nuke脚本</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#执行帧序列"><span class="toc-number">4.</span> <span class="toc-text">执行帧序列</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

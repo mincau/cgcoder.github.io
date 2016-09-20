@@ -1,0 +1,587 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>C4D python 创建物体修改属性 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="在C4D中利用python创建物体，并修改属性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C4D python 创建物体修改属性">
+<meta property="og:url" content="http://cgcoder.com/2016/08/15/c4d-python/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="在C4D中利用python创建物体，并修改属性">
+<meta property="og:updated_time" content="2016-08-15T05:49:58.269Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C4D python 创建物体修改属性">
+<meta name="twitter:description" content="在C4D中利用python创建物体，并修改属性">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/08/15/c4d-python/" title="C4D python 创建物体修改属性" itemprop="url">C4D python 创建物体修改属性</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-08-15T05:27:25.080Z" itemprop="datePublished"> 发表于 2016-08-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#修改物体属性"><span class="toc-number">1.</span> <span class="toc-text">修改物体属性</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-Accessing-the-BaseContainer-and-using-it’s-methods"><span class="toc-number">1.1.</span> <span class="toc-text">1. Accessing the BaseContainer and using it’s methods</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-Accessing-the-BaseContainer-and-using-subscripting"><span class="toc-number">1.2.</span> <span class="toc-text">2. Accessing the BaseContainer and using subscripting</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-Using-subscripting-directly-on-the-object"><span class="toc-number">1.3.</span> <span class="toc-text">3. Using subscripting directly on the object</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Creating-new-objects-in-Python"><span class="toc-number">2.</span> <span class="toc-text">Creating new objects in Python</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-Create-an-all-new-object-from-scratch-从头创建物体"><span class="toc-number">2.1.</span> <span class="toc-text">1. Create an all new object from scratch 从头创建物体</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-Cloning-an-existing-object-拷贝物体"><span class="toc-number">2.2.</span> <span class="toc-text">2. Cloning an existing object 拷贝物体</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>首先，这里会讨论c4d 对象管理器中的objects，以及编程语言中的实例。</p>
+<p>Object中的对象是c4d.BaseObject类中的实例，其是c4d.BaseList2D的子类，实现了层级组织的数据，你在c4d中常会看到（对象管理器，<br>层级通道，渲染选项）。子类中可以使用父类中的函数。baseobject可以使用baselist2d中的函数。</p>
+<p><br></p>
+<h5 id="修改物体属性"><a href="#修改物体属性" class="headerlink" title="修改物体属性"></a>修改物体属性</h5><p>c4d.BaseList2D有一个c4d.BaseContainer的引用。其有一个数组包含了属性管理器中所有的属性。</p>
+<p><br></p>
+<h6 id="1-Accessing-the-BaseContainer-and-using-it’s-methods"><a href="#1-Accessing-the-BaseContainer-and-using-it’s-methods" class="headerlink" title="1. Accessing the BaseContainer and using it’s methods"></a>1. Accessing the BaseContainer and using it’s methods</h6><p>修改对象的参数很简单。首先，我们获取c4d.BaseContainer实例，然后，找到想修改参数的id，然后就可以改了。</p>
+<p>运行脚本前确认cube对象被选中了<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">importc4d</div><div class="line">bc =op.GetDataInstance()</div><div class="line">bc.SetVector(c4d.PRIM_CUBE_LEN, c4d.Vector(<span class="number">500</span>, <span class="number">100</span>, <span class="number">20</span>))</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意，c4d.BaseContainer.GetDataInstance()返回最初的容器，不是拷贝。修改容器会直接修改容器的参数。如果想使用拷贝，使用c4d.BaseObject.GetData()</p>
+</blockquote>
+<p><br></p>
+<h6 id="2-Accessing-the-BaseContainer-and-using-subscripting"><a href="#2-Accessing-the-BaseContainer-and-using-subscripting" class="headerlink" title="2. Accessing the BaseContainer and using subscripting"></a>2. Accessing the BaseContainer and using subscripting</h6><p>有更简单的方法，替代方法就是SetVector,SetReal等。技巧就是使用索引下标法[]<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">importc4d</div><div class="line">bc =op.GetDataInstance()</div><div class="line">bc[c4d.PRIM_CUBE_LEN] =c4d.Vector(<span class="number">500</span>, <span class="number">100</span>, <span class="number">20</span>)</div></pre></td></tr></table></figure></p>
+<p><br></p>
+<h6 id="3-Using-subscripting-directly-on-the-object"><a href="#3-Using-subscripting-directly-on-the-object" class="headerlink" title="3. Using subscripting directly on the object"></a>3. Using subscripting directly on the object</h6><p>直接在物体上使用下标。 第三种也就是最后一种修改物体参数的饿方法就是直接在物体上使用下标<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> c4d</div><div class="line">op[c4d.PRIM_CUBE_LEN] =c4d.Vector(<span class="number">500</span>, <span class="number">100</span>, <span class="number">20</span>)</div></pre></td></tr></table></figure></p>
+<p>有更好的吗，基本上你会说“越不方便，效率越高”， 编程方面是对的。添加很多简便易用的接口就得包装更底层的接口。 可以这么说，<br>第一种方法最快，第二种和第三种是最慢的，但这是为什么呢</p>
+<p><br></p>
+<h5 id="Creating-new-objects-in-Python"><a href="#Creating-new-objects-in-Python" class="headerlink" title="Creating new objects in Python"></a>Creating new objects in Python</h5><p>python中穿件新物体，讨论了如何修改物体的参数，现在可以学怎么创建物体了。有好几种方法呢.</p>
+<p><br></p>
+<h6 id="1-Create-an-all-new-object-from-scratch-从头创建物体"><a href="#1-Create-an-all-new-object-from-scratch-从头创建物体" class="headerlink" title="1. Create an all new object from scratch 从头创建物体"></a>1. Create an all new object from scratch 从头创建物体</h6><p>如第一节所说，每个物体都是c4d.BaseObject的实例，为啥不直接创建这个类的实例呢？ 很简单，构造函数需要一个type来决定实例化那个类<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">importc4d</div><div class="line">op =c4d.BaseObject(c4d.Ocube)</div></pre></td></tr></table></figure></p>
+<p>现在就创建了一个物体。随后干啥呢。给document中添加物体有很多方法，可以使用当前文档或者其他物体来这么做。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> c4d</div><div class="line">op =c4d.BaseObject(c4d.Ocube)</div><div class="line">doc.InsertObject(op)</div><div class="line"><span class="comment"># .. or ..</span></div><div class="line">op.InsertBefore(doc.GetFirstObject())</div></pre></td></tr></table></figure></p>
+<p>两种方法结果一样，但第一种更有优势，如果doc.GetFirstObject()返回none，如果document中没有object，那么调用就会在<br>op.InsertBefore(None)停下来,并引发一个异常。</p>
+<p><br></p>
+<h6 id="2-Cloning-an-existing-object-拷贝物体"><a href="#2-Cloning-an-existing-object-拷贝物体" class="headerlink" title="2. Cloning an existing object 拷贝物体"></a>2. Cloning an existing object 拷贝物体</h6><p>如果不怕c4d崩溃，就测试下面的代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">op =doc.GetFirstObject()</div><div class="line">op.InsertUnder(op)</div></pre></td></tr></table></figure></p>
+<p>很简单，op就是内部实例的的第一个物体，将其插入自己下面，会导致死循环。<br>MyUniqueCube<br>MyUniqueCube<br>MyUniqueCube<br>[and so on … ]</p>
+<p><strong>永远不要插入一个已在别处存在的物体</strong><br>创建物体的拷贝就能避免这个<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">op =doc.GetFirstObject()</div><div class="line">op.InsertUnder(op.GetClone())</div></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/c4d/">c4d</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/c4d/">c4d</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/08/15/c4d-python/" data-title="C4D python 创建物体修改属性 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/08/17/nuke-python-6/" title="Nuke Python 立体">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 立体</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/08/12/Alembic-design-philosophy-section4/"  title="Alembic文件格式简介--设计思想和理念 4">
+ <strong>下一篇：</strong><br/> 
+ <span>Alembic文件格式简介--设计思想和理念 4
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/08/15/c4d-python/" data-title="C4D python 创建物体修改属性" data-url="http://cgcoder.com/2016/08/15/c4d-python/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#修改物体属性"><span class="toc-number">1.</span> <span class="toc-text">修改物体属性</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-Accessing-the-BaseContainer-and-using-it’s-methods"><span class="toc-number">1.1.</span> <span class="toc-text">1. Accessing the BaseContainer and using it’s methods</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-Accessing-the-BaseContainer-and-using-subscripting"><span class="toc-number">1.2.</span> <span class="toc-text">2. Accessing the BaseContainer and using subscripting</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-Using-subscripting-directly-on-the-object"><span class="toc-number">1.3.</span> <span class="toc-text">3. Using subscripting directly on the object</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Creating-new-objects-in-Python"><span class="toc-number">2.</span> <span class="toc-text">Creating new objects in Python</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-Create-an-all-new-object-from-scratch-从头创建物体"><span class="toc-number">2.1.</span> <span class="toc-text">1. Create an all new object from scratch 从头创建物体</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-Cloning-an-existing-object-拷贝物体"><span class="toc-number">2.2.</span> <span class="toc-text">2. Cloning an existing object 拷贝物体</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

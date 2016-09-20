@@ -1,0 +1,782 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python 入门 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="nuke的python开发文档入门">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python 入门">
+<meta property="og:url" content="http://cgcoder.com/2016/08/01/nuke-python-1/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="nuke的python开发文档入门">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/nuke/63/pythondevguide/_images/python_add_knob.jpg">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/nuke/63/pythondevguide/_images/python_add_knob_tooltip.jpg">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/nuke/63/pythondevguide/_images/merge_node.jpg">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/nuke/63/pythondevguide/_images/modal_dialog.jpg">
+<meta property="og:updated_time" content="2016-08-15T05:53:11.765Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python 入门">
+<meta name="twitter:description" content="nuke的python开发文档入门">
+<meta name="twitter:image" content="https://docs.thefoundry.co.uk/nuke/63/pythondevguide/_images/python_add_knob.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/08/01/nuke-python-1/" title="Nuke Python 入门" itemprop="url">Nuke Python 入门</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-08-01T04:43:24.922Z" itemprop="datePublished"> 发表于 2016-08-01</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#创建节点设置节点控制"><span class="toc-number">1.</span> <span class="toc-text">创建节点设置节点控制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#在用户界面创建节点"><span class="toc-number">1.1.</span> <span class="toc-text">在用户界面创建节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建脚本节点"><span class="toc-number">1.2.</span> <span class="toc-text">创建脚本节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建时添加控制"><span class="toc-number">1.3.</span> <span class="toc-text">创建时添加控制</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#赋值"><span class="toc-number">2.</span> <span class="toc-text">赋值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取已存在节点"><span class="toc-number">3.</span> <span class="toc-text">获取已存在节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取选中的节点"><span class="toc-number">4.</span> <span class="toc-text">获取选中的节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#添加控制"><span class="toc-number">5.</span> <span class="toc-text">添加控制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#隐藏、展示节点的属性panel"><span class="toc-number">6.</span> <span class="toc-text">隐藏、展示节点的属性panel</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#连接节点，设置输入"><span class="toc-number">7.</span> <span class="toc-text">连接节点，设置输入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置控制的默认值"><span class="toc-number">8.</span> <span class="toc-text">设置控制的默认值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#渲染时用Write节点"><span class="toc-number">9.</span> <span class="toc-text">渲染时用Write节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#外部程序序列化"><span class="toc-number">10.</span> <span class="toc-text">外部程序序列化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#列举节点的控制"><span class="toc-number">11.</span> <span class="toc-text">列举节点的控制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undo和redo"><span class="toc-number">12.</span> <span class="toc-text">undo和redo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#帧导航"><span class="toc-number">13.</span> <span class="toc-text">帧导航</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置帧范围"><span class="toc-number">14.</span> <span class="toc-text">设置帧范围</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文件名中标注帧号"><span class="toc-number">15.</span> <span class="toc-text">文件名中标注帧号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#节点间拷贝动画曲线"><span class="toc-number">16.</span> <span class="toc-text">节点间拷贝动画曲线</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重载某节点的创建"><span class="toc-number">17.</span> <span class="toc-text">重载某节点的创建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取正在运行的Nuke环境信息"><span class="toc-number">18.</span> <span class="toc-text">获取正在运行的Nuke环境信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取节点的Metadata"><span class="toc-number">19.</span> <span class="toc-text">获取节点的Metadata</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Dialog和Panel"><span class="toc-number">20.</span> <span class="toc-text">创建Dialog和Panel</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#创建模态对话框"><span class="toc-number">20.1.</span> <span class="toc-text">创建模态对话框</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Python对话框-例子"><span class="toc-number">20.2.</span> <span class="toc-text">Python对话框 例子</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建非模态对话框"><span class="toc-number">20.3.</span> <span class="toc-text">创建非模态对话框</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#非模态对话框例子"><span class="toc-number">20.4.</span> <span class="toc-text">非模态对话框例子</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建进度条dialog"><span class="toc-number">21.</span> <span class="toc-text">创建进度条dialog</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#清空当前Nuke-nk-脚本"><span class="toc-number">22.</span> <span class="toc-text">清空当前Nuke(.nk)脚本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#给立体项目创建View"><span class="toc-number">23.</span> <span class="toc-text">给立体项目创建View</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#调整立体项目中的控制值"><span class="toc-number">24.</span> <span class="toc-text">调整立体项目中的控制值</span></a></li></ol>
+		
+		</div>
+		
+		<p>本章的例子帮你初步了解<strong>Nuke Python API</strong>的使用。</p>
+<p>脚本<strong>大小写敏感</strong>，需要输入正确才能运行。拷贝时注意<strong>缩进</strong>，如报错请自己更正。</p>
+<h4 id="创建节点设置节点控制"><a href="#创建节点设置节点控制" class="headerlink" title="创建节点设置节点控制"></a>创建节点设置节点控制</h4><p>此部分演示如何创建节点，设置节点控制</p>
+<h5 id="在用户界面创建节点"><a href="#在用户界面创建节点" class="headerlink" title="在用户界面创建节点"></a>在用户界面创建节点</h5><p>在用户界面创建类似 menu toolbar的响应节点，使用下面语法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.createNode( <span class="string">"nodename"</span> )</div></pre></td></tr></table></figure>
+<p><strong>nodename</strong> 就是你要创建节点的名字.</p>
+<p>这句话在用户界面创建一个新的节点，会在节点图中挂接到用户选择的节点上，并打开节点的属性面板。另外，新节点上默认的knob也设置了。<br>    想创建blur节点，用这句话，输入：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.createNode(<span class="string">"Blur"</span>)</div></pre></td></tr></table></figure>
+<h5 id="创建脚本节点"><a href="#创建脚本节点" class="headerlink" title="创建脚本节点"></a>创建脚本节点</h5><p>为脚本，批渲染，某些后台程序使用而创建的节点，请使用下面的语法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.nodes.nodename(...)</div></pre></td></tr></table></figure>
+<p>其中nodename是节点的名字。<br>这创建一个新的node对象。在节点图中没有和其他节点相连，也没打开节点的属性面板，也不会设置默认knob。<br>例如，添加一个Blur节点，请输入：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.nodes.Blur()</div></pre></td></tr></table></figure>
+<p>和其他节点连接：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.nodes.Blur().setInput( <span class="number">0</span>, nuke.selectedNode() )</div></pre></td></tr></table></figure>
+<h5 id="创建时添加控制"><a href="#创建时添加控制" class="headerlink" title="创建时添加控制"></a>创建时添加控制</h5><p>创建节点时添加必要的控制属性，语法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.nodes.node( control = value )</div></pre></td></tr></table></figure>
+<p>例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.nodes.Blur( size = <span class="number">10</span> )</div></pre></td></tr></table></figure>
+<p>创建一个节点，并重命名：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.nodes.nodename( name=<span class="string">"newname"</span>)</div></pre></td></tr></table></figure>
+<p>创建一个名为Projection_Cam的摄像机：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.nodes.Camera( name=<span class="string">"Projection_Cam"</span> )</div></pre></td></tr></table></figure>
+<p>创建指向文件的读取节点：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.nodes.Read( file = <span class="string">" filePath/filename.txt"</span> )</div></pre></td></tr></table></figure>
+<h4 id="赋值"><a href="#赋值" class="headerlink" title="赋值"></a>赋值</h4><p>   既然在创建节点后想操纵它，那给其赋值就合情理。可以用变量来引用节点。<br>    添加一个节点，并赋值给变量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">variable = nuke.nodes.nodename()</div><div class="line">b = nuke.nodes.Blur()</div><div class="line">b[<span class="string">"size"</span>].setValue( <span class="number">10</span>)</div></pre></td></tr></table></figure>
+<h4 id="获取已存在节点"><a href="#获取已存在节点" class="headerlink" title="获取已存在节点"></a>获取已存在节点</h4><p>有时候需要读取节点图中已经有的节点。<br>通过名字去读节点：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.toNode(<span class="string">"dagnodename"</span>)</div></pre></td></tr></table></figure>
+<p>如果节点图里面有个叫 Blur1 的节点，使用下面的语句来读取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">myblurNode = nuke.toNode(<span class="string">'Blur1'</span>)</div></pre></td></tr></table></figure>
+<h4 id="获取选中的节点"><a href="#获取选中的节点" class="headerlink" title="获取选中的节点"></a>获取选中的节点</h4><p>获取当前选择的节点：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">selectNode = nuke.selectedNode()</div></pre></td></tr></table></figure>
+<p>如果选了多个节点，nuke返回最底部的节点。想读取所有的节点，请使用返回选择的列表：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">selectNodes = nuke.selectNodes()</div></pre></td></tr></table></figure>
+<h4 id="添加控制"><a href="#添加控制" class="headerlink" title="添加控制"></a>添加控制</h4><p>  现在我们看看如何给已经存在的节点设置属性。如果你想添加一个新的控制呢？ 你要使用下面的句子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">b = nuke.nodes.nodename(...)</div><div class="line">k = nuke.Array_Knob( <span class="string">"name"</span>, <span class="string">"label"</span>)</div><div class="line">b.addKnob(k)</div></pre></td></tr></table></figure>
+<p>假设你输入了下面语句：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">b = nuke.nodes.Blur()</div><div class="line">k = nuke.Array_Knob(<span class="string">"myctrl"</span>, <span class="string">"My Control"</span> )</div><div class="line">b.addKnob(k)</div></pre></td></tr></table></figure>
+<p><img src="https://docs.thefoundry.co.uk/nuke/63/pythondevguide/_images/python_add_knob.jpg" alt="image"></p>
+<p>如果你想创建滑动控制，而不是输入框，请用下面的句子（ 把Array_Knob替换成 WH_Knob)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">b = nuke.nodes.Blur()</div><div class="line">k = nuke.WH_Knob(<span class="string">"myctrl"</span>, <span class="string">"My Control"</span> )</div><div class="line">b.addKnob(k)</div></pre></td></tr></table></figure>
+<p>下面的句子，会添加一个checkbox：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">b = nuke.nodes.Blur()</div><div class="line">k = nuke.Boolean_Knob(<span class="string">"myctrl"</span>, <span class="string">"My Control"</span> )</div><div class="line">b.addKnob(k)</div></pre></td></tr></table></figure>
+<p>现在有了控制，但没有提示，咱添一个，给tool tip添加提示 My tooltip：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">k.setTooltip(<span class="string">'My tooltip'</span> )</div></pre></td></tr></table></figure>
+<p><img src="https://docs.thefoundry.co.uk/nuke/63/pythondevguide/_images/python_add_knob_tooltip.jpg" alt="image"></p>
+<h4 id="隐藏、展示节点的属性panel"><a href="#隐藏、展示节点的属性panel" class="headerlink" title="隐藏、展示节点的属性panel"></a>隐藏、展示节点的属性panel</h4><p>使用showControlPanel() hideControlPanel()函数来设置一个节点的属性面板的打开与关闭。例如，展示新节点Blur的属性面板：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">n = nuke.toNode(<span class="string">"Blur1"</span>)</div><div class="line">n.showControlPanel()</div></pre></td></tr></table></figure>
+<p>默认情况下，当在用户界面nuke.createNode(…)创建节点，属性面板是打开的。不想属性面板在创建时打开，请给createNode()传入inPanel，并设置为false。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.createNode( <span class="string">"Blur"</span>, inPanel = <span class="keyword">False</span> )</div></pre></td></tr></table></figure>
+<h4 id="连接节点，设置输入"><a href="#连接节点，设置输入" class="headerlink" title="连接节点，设置输入"></a>连接节点，设置输入</h4><p>可以用脚本来设置节点的输入。假设你想添加Read和Merge节点（ 这个例子，是over节点）并将Read节点连接到over节点的A和B输入（数字1和0）.</p>
+<p><img src="https://docs.thefoundry.co.uk/nuke/63/pythondevguide/_images/merge_node.jpg" alt="image"></p>
+<p>添加Read节点和over节点，并说明over节点输入的使用，例如，下面的语句：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">r1 = nuke.nodes.Read( file=<span class="string">"filepath/filename.ext"</span> )</div><div class="line">r2 = nuke.nodes.Read( file =<span class="string">"filePaht/filename.ext"</span>)</div><div class="line">m = nuke.nodes.Merge( inputs=[r2, r1] )</div></pre></td></tr></table></figure>
+<h4 id="设置控制的默认值"><a href="#设置控制的默认值" class="headerlink" title="设置控制的默认值"></a>设置控制的默认值</h4><p>可以给属于同一个类的节点设置控制的默认值。当默认值设置后，所有名字相同的控制都会是这个值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.knobDefault()</div></pre></td></tr></table></figure>
+<p>例如，想设置所有Blur节点的size 控制为20：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.knobDefault( <span class="string">"Blur.size"</span>, <span class="string">"20"</span> )</div></pre></td></tr></table></figure>
+<p>把项目设置中frame范围的最后frame设置为200：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.knobDefault( <span class="string">"Root.last_frame"</span>, <span class="string">"200"</span> )</div></pre></td></tr></table></figure>
+<p>注意，节点类的首字母必须大写。<br>knobDefault也可以设置 file-format-specific控制。但文件名变化时，这些控制被加入了 Read， Write， 其他file-format-独立节点。说明file-format-specific默认值，使用class名字，后跟文件扩展名 和 控制名字，请有.来区分，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nuke.knobDefault( <span class="string">"Read.exr.compression"</span>, <span class="string">"2"</span>)</div><div class="line">nuke.knobDefault( <span class="string">"Read.exr.disable_mmap"</span>, <span class="string">"True"</span>)</div></pre></td></tr></table></figure>
+<h4 id="渲染时用Write节点"><a href="#渲染时用Write节点" class="headerlink" title="渲染时用Write节点"></a>渲染时用Write节点</h4><p>用脚本添加了Write节点，现在要渲染1-35帧。<br>渲染一个单独的节点：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.execute(<span class="string">" name"</span>, start, end, incr )</div></pre></td></tr></table></figure>
+<p>在我们的例子里：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.execute(<span class="string">" Write1"</span>, <span class="number">1</span>, <span class="number">35</span>, <span class="number">2</span>) <span class="keyword">or</span> nuke.execute(<span class="string">"Write1, start=1, end=35,incr=2)</span></div></pre></td></tr></table></figure>
+<p>也可以使用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.render( name, start, end, incr )</div></pre></td></tr></table></figure>
+<p>渲染多个Write 节点和范围，请输入：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.executeMultiple( (variable,), ([start, end, incr], ) ) varible--Write nodes</div></pre></td></tr></table></figure>
+<h4 id="外部程序序列化"><a href="#外部程序序列化" class="headerlink" title="外部程序序列化"></a>外部程序序列化</h4><p>FrameCycler是nuke给flipbooking的默认程序，你也可以用别的程序。像这样就得用python写。例子就是基于RV来实现，位于pyQtExample目录下面，如下操作：</p>
+<pre><code>1.  找到filpbookingExample.py 文件，根据自己配置修改环境变量
+2.  将其保存到你的 .nuke目录，命名为 myflipbook.py
+3.  在自己的 init.py( or menu.py )文件中，添加：
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> myflipbook <span class="keyword">import</span> *</div></pre></td></tr></table></figure>
+<p>更多信息请查看python文档</p>
+<h4 id="列举节点的控制"><a href="#列举节点的控制" class="headerlink" title="列举节点的控制"></a>列举节点的控制</h4><p>如果需要nuke可以列出节点所有的控制，操作如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range( getNumKnobs() ):</div><div class="line">            <span class="keyword">print</span> knob(i).name()</div></pre></td></tr></table></figure>
+<p>列出Blur节点的控制，前面创建的并赋值给了b：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range( b.getNumKnobs() ):</div><div class="line">            <span class="keyword">print</span> b.knob(i).name</div></pre></td></tr></table></figure>
+<h4 id="undo和redo"><a href="#undo和redo" class="headerlink" title="undo和redo"></a>undo和redo</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.undo  nuke.redo</div></pre></td></tr></table></figure>
+<h4 id="帧导航"><a href="#帧导航" class="headerlink" title="帧导航"></a>帧导航</h4><p>使用活动窗口的 frame navigation按钮，输入命令：</p>
+<pre><code>nuke.activeViewer().frameControl(i)
+其中i是一个整型，表示了想要执行的导航按钮，可以用下面的值替换：
+</code></pre><ul>
+<li>-6 to go to the first frame.</li>
+<li>-5 to play the sequence backward.</li>
+<li>-4 to go to the previous keyframe.</li>
+<li>-3 to step back by increment.</li>
+<li>-2 to go back to the previous keyframe or increment, whichever is * closer.</li>
+<li>-1 to step back one frame.</li>
+<li>0 to stop playback.</li>
+<li>+1 to step forward one frame.</li>
+<li>+2 to go to the next keyframe or increment, whichever is closer.</li>
+<li>+3 to step forward by increment.</li>
+<li>+4 to go to the next keyframe.</li>
+<li>+5 to play the sequence forward.</li>
+<li>+6 to go to the last frame.<br>也可以将其赋值给快捷键。例如，将 播放 按钮连接到 向上箭头：</li>
+</ul>
+<ol>
+<li>在你的插件目录 创建 menu.py ，</li>
+<li>添加如下代码：</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">play</span><span class="params">()</span>:</span></div><div class="line">    v = nuke.activeViewer()</div><div class="line">    <span class="keyword">if</span> v:</div><div class="line">        v.play( <span class="number">1</span> )</div><div class="line">menubar = nuke.menu(<span class="string">"Nuke"</span>)</div><div class="line">m = menubar.addMenu(<span class="string">"&amp;File"</span>)</div><div class="line">m.addCommand(<span class="string">"@;Play"</span>, <span class="string">"play()"</span>, <span class="string">"Up"</span>)</div></pre></td></tr></table></figure>
+<h4 id="设置帧范围"><a href="#设置帧范围" class="headerlink" title="设置帧范围"></a>设置帧范围</h4><p> 设置单个的帧范围：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.FrameRange()</div></pre></td></tr></table></figure>
+<p>只能设置一种</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">frange = nuke.FrameRange(<span class="string">" 1-100 x 2"</span>)</div></pre></td></tr></table></figure>
+<p>要迭代上面range的frame，使用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> f <span class="keyword">in</span> frange:</div><div class="line">        <span class="keyword">print</span> f</div></pre></td></tr></table></figure>
+<p>也可以使用下面方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">frange.setFirst( int )</div><div class="line">frange.setLast( int )</div><div class="line">frange.setIncrement( int )</div><div class="line">frange.first()</div><div class="line">frange.last()</div><div class="line">frange.increment()</div><div class="line">frange.frames()</div><div class="line">frange.getFrame( int )</div><div class="line">frange.isInRange( int )</div><div class="line">frange.minFrame()</div><div class="line">frange.maxFrame()</div><div class="line">frange.stepFrame()</div></pre></td></tr></table></figure>
+<p>存储多个帧范围：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.FrameRanges()</div></pre></td></tr></table></figure>
+<p>当使用这个函数时，可以按下面方式定义帧范围：</p>
+<ul>
+<li>列出所有帧</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">frange = nuke.FrameRange( [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>,<span class="number">6</span>, <span class="number">7</span>])</div></pre></td></tr></table></figure>
+<ul>
+<li>使用一个字符串</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">franges = nuke.FrameRanges( <span class="string">"1-100 2-300X2"</span> )</div></pre></td></tr></table></figure>
+<ul>
+<li>使用多个字符串</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">franges = nuke.FrameRanges( [<span class="string">"1-10X1"</span>, <span class="string">"15-18X1 30-40X2"</span> ] )</div></pre></td></tr></table></figure>
+<ul>
+<li>使用多个nuke.FrameRange() :</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">franges = nuke.FrameRanges( [nuke.FrameRange(<span class="number">1</span>, <span class="number">100</span>, <span class="number">5</span>), nuke.FrameRange(<span class="number">200</span>, <span class="number">250</span>,<span class="number">30</span>] )</div></pre></td></tr></table></figure>
+<p>迭代遍历所有帧ranges（这个例子中，使用franges变量）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> r <span class="keyword">in</span> franges:</div><div class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> r:</div><div class="line">        <span class="keyword">print</span> f</div></pre></td></tr></table></figure>
+<p>也可以使用下面的函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">franges.size()</div><div class="line">franges.add()</div><div class="line">franges.minFrame()</div><div class="line">franges.maxFrame()</div><div class="line">franges.clear()</div><div class="line">franges.toFrameList()</div><div class="line">franges.getRange()</div><div class="line">franges.compact()</div></pre></td></tr></table></figure>
+<p>优化frame range表达的方式。其会移除复制的frame ranges，用更紧凑的方式表达，下面有两个例子:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">franges1 = nuke.FrameRanges("10-7x-1 1-5x1 3-7x1)</div><div class="line">franges1.compact()</div><div class="line">print "Ranges1: " +franges</div></pre></td></tr></table></figure>
+<p>返回 Ranges1: 1-10x1<br>例子2：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">franges2 = nuke.FrameRanges(<span class="string">" 10-7x-1 6-8x1 1-4x1 2-3x1"</span>)</div><div class="line">franges2.compact()</div><div class="line"><span class="keyword">print</span> <span class="string">"Ranges2: "</span> + franges2</div></pre></td></tr></table></figure>
+<p>返回： Ranges2: 1-4x1 6-10x1</p>
+<h4 id="文件名中标注帧号"><a href="#文件名中标注帧号" class="headerlink" title="文件名中标注帧号"></a>文件名中标注帧号</h4><p>nuke中，文件名里可以通过#或者表达式 %04d 来表示帧。这你就会发现 nukescripts.replaceHashes()好用。这让帧号码替换极为容易：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">filename = nukescripts.replaceHashes( node[<span class="string">'file'</span>].value() ) % nuke.frame()</div></pre></td></tr></table></figure>
+<h4 id="节点间拷贝动画曲线"><a href="#节点间拷贝动画曲线" class="headerlink" title="节点间拷贝动画曲线"></a>节点间拷贝动画曲线</h4><p>动画曲线从 Blur1 拷贝到 Blur2：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">b1= nuke.nodes.Blur()</div><div class="line">b2= nuke.nodes.Blur()</div><div class="line">k1 = b1[<span class="string">'size'</span>]</div><div class="line">k1.setAnimated()</div><div class="line">k1.setValue( <span class="number">10</span>, time=<span class="number">30</span>)</div><div class="line">k1.setValue( <span class="number">20</span>, time=<span class="number">40</span>)</div><div class="line">k2=b2[<span class="string">'size'</span>]</div><div class="line">k2.copyAnimations( k1.animations() )</div></pre></td></tr></table></figure>
+<h4 id="重载某节点的创建"><a href="#重载某节点的创建" class="headerlink" title="重载某节点的创建"></a>重载某节点的创建</h4><p>例如，nuke包含两种merge节点： Merge Merge2. 默认Merge2是从工具栏上选择才能使用的。如果你更喜欢Merge，就可以重载创建，让其成为默认创建类型。按下面步骤：</p>
+<ul>
+<li>创建menu.py</li>
+<li>添加如下代码</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">class MyCustomNodes():</div><div class="line">    def __getattr__(self, args):</div><div class="line">        if args == &quot;Merge2&quot; : args = &quot;Merge&quot;</div><div class="line">            return nuke.NodeConstructor(args)</div><div class="line">nuke.nodes = MyCustomNodes()</div></pre></td></tr></table></figure>
+<p>用nuke.createNode也能完成同样的功能，那么就用下面的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def createMyCustomNodes( node, knobs=&quot;&quot;, inpanel = True):</div><div class="line">            if node ==&quot;Merge2&quot; : node = &quot;Merge&quot;</div><div class="line">            return nukeOriginalCreateNode( node=node, knobs=knobs, inpanel = inpanel)</div><div class="line">nuke.createNode = createMyCustomNodes</div></pre></td></tr></table></figure>
+<h4 id="获取正在运行的Nuke环境信息"><a href="#获取正在运行的Nuke环境信息" class="headerlink" title="获取正在运行的Nuke环境信息"></a>获取正在运行的<strong>Nuke</strong>环境信息</h4><p>nuke模块中，有个env对象，给出了nuke运行的环境变量。读取方式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">nuke.env[<span class="string">"key"</span>]</div><div class="line">nuke.env[<span class="string">"PluginExtension"</span>]</div><div class="line">NukeVersionMajor</div><div class="line">NukeVersionMinor</div><div class="line">NukeVersionRelease</div><div class="line">NukeversionPhase</div><div class="line">NukeVersionPhaseNumber</div><div class="line">NukeVersionDate</div><div class="line">NukeVersionString</div><div class="line">threads</div><div class="line">numCPUs</div><div class="line">gui</div><div class="line">ExecutablePath</div><div class="line">ple</div><div class="line">WIN32</div><div class="line">MACOS</div><div class="line">LINUX</div><div class="line"><span class="number">64</span>bit</div></pre></td></tr></table></figure>
+<p>打印环境变量： nuke.env</p>
+<h4 id="获取节点的Metadata"><a href="#获取节点的Metadata" class="headerlink" title="获取节点的Metadata"></a>获取节点的Metadata</h4><p>获取节点的元数据，并存在字典里：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.toNode(<span class="string">"Read1"</span>).metadata()</div></pre></td></tr></table></figure>
+<p>某一帧或者视口的元数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.toNode(<span class="string">"Read1"</span>).metadata(<span class="string">"key"</span>, frame, <span class="string">"view"</span> )</div></pre></td></tr></table></figure>
+<p>已经在一个节点里加载了双目数据，想找出左眼93帧的修改时间：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.toNode(<span class="string">"Read1"</span>).metadata(<span class="string">"input/mtime"</span>, <span class="number">93</span>, <span class="string">"left"</span>)</div></pre></td></tr></table></figure>
+<p>相似，获取右眼95帧文件大小</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.toNode(<span class="string">"Read1"</span>).metadata(<span class="string">"input/filesize"</span>, <span class="number">95</span>, <span class="string">"right”）</span></div></pre></td></tr></table></figure>
+<p>获取指定元数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.toNode(<span class="string">"Read1"</span>).metadata(<span class="string">"key"</span>)</div></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.toNode(<span class="string">"Read1"</span>).metadata(<span class="string">"input/ctime"</span>)</div></pre></td></tr></table></figure>
+<h4 id="创建Dialog和Panel"><a href="#创建Dialog和Panel" class="headerlink" title="创建Dialog和Panel"></a>创建Dialog和Panel</h4><p>创建带有ok和cancel按钮的对话框，请按照如下步骤：</p>
+<ol>
+<li>在plug-in文件夹创建menu.py 文件（如果没有此文件的话）。</li>
+<li>在文件中扩展python类 PythonPanel：</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassName</span><span class="params">( nukescripts.PythonPanel )</span>:</span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">            nukescripts.PythonPanel.__init__( self, <span class="string">"titile"</span>, <span class="string">"ID"</span> )</div></pre></td></tr></table></figure>
+<ol>
+<li>使用addKnob()对对话框添加控制。removeKnob()可以移除控制，knobs()返回控制列表。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">writeKnobs（） readKnobs（）</div></pre></td></tr></table></figure>
+<ol>
+<li>用showModalDialog（）来显示对话框。</li>
+</ol>
+<h5 id="创建模态对话框"><a href="#创建模态对话框" class="headerlink" title="创建模态对话框"></a>创建模态对话框</h5><h5 id="Python对话框-例子"><a href="#Python对话框-例子" class="headerlink" title="Python对话框 例子"></a>Python对话框 例子</h5><p>控制Frame的对话框。</p>
+<p><img src="https://docs.thefoundry.co.uk/nuke/63/pythondevguide/_images/modal_dialog.jpg" alt="image"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nukescripts</div><div class="line"><span class="keyword">if</span> nuke.env[<span class="string">"gui"</span>]:</div><div class="line"><span class="comment"># The following defines a new class called ModalFramePanel.</span></div><div class="line">   <span class="class"><span class="keyword">class</span> <span class="title">ModalFramePanel</span><span class="params">( nukescripts.PythonPanel )</span>:</span></div><div class="line"><span class="comment"># The following function creates a dialog titled 'Go to Frame' with the optional ID uk.co.thefoundry.FramePanel. It aso adds an integer control called</span></div><div class="line"><span class="string">'frame'</span> to the dialog. This control <span class="keyword">is</span> set to the value nuke.frame() which <span class="keyword">is</span> the</div><div class="line">current frame on the timeline.</div><div class="line">      <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">( self )</span>:</span></div><div class="line">         nukescripts.PythonPanel.__init__( self, <span class="string">"Go to Frame"</span>, <span class="string">"uk.co.thefoundry.FramePanel"</span> )</div><div class="line">         self.frame = nuke.Int_Knob( <span class="string">"frame"</span>, <span class="string">"Frame:"</span> )</div><div class="line">         self.addKnob( self.frame )</div><div class="line">         self.frame.setValue( nuke.frame() )</div><div class="line"><span class="comment"># The next function shows the dialog as a modal dialog. Doing this automatically adds the 'OK' and 'Cancel' buttons to the dialog.</span></div><div class="line">      <span class="function"><span class="keyword">def</span> <span class="title">showModalDialog</span><span class="params">( self )</span>:</span></div><div class="line">         result = nukescripts.PythonPanel.showModalDialog( self )</div><div class="line">         <span class="keyword">if</span> result:</div><div class="line">            nuke.frame( self.frame.value() )</div><div class="line"><span class="comment"># The following function is called testModalPanel and tests whether the dialog works.</span></div><div class="line">   <span class="function"><span class="keyword">def</span> <span class="title">testModalPanel</span><span class="params">()</span>:</span></div><div class="line">      <span class="keyword">return</span> ModalFramePanel().showModalDialog()</div><div class="line"><span class="comment"># This last line calls the test function that then displays the dialog.</span></div><div class="line">   testModalPanel()</div><div class="line"><span class="comment"># If you want to add the dialog to a menu item, you can also do the following:</span></div><div class="line">menubar = nuke.menu(<span class="string">"Nuke"</span>)</div><div class="line">menubar.addCommand(<span class="string">"&amp;File/Show My Panel"</span>, testModalPanel)</div></pre></td></tr></table></figure>
+<h5 id="创建非模态对话框"><a href="#创建非模态对话框" class="headerlink" title="创建非模态对话框"></a>创建非模态对话框</h5><h5 id="非模态对话框例子"><a href="#非模态对话框例子" class="headerlink" title="非模态对话框例子"></a>非模态对话框例子</h5><p> 非模式标签可以停靠在窗口里，并被保存下来。创建步骤：</p>
+<ol>
+<li>如果没有menu.py就在plug-in文件夹创建。</li>
+<li>添加如下代码：</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassName</span><span class="params">( nukescripts.PythonPanel )</span>:</span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">( self )</span>:</span></div><div class="line">            nukescripts.PythonPanel.__init__( self, <span class="string">"titile"</span>, <span class="string">"ID"</span> )</div></pre></td></tr></table></figure>
+<ol>
+<li>使用addKnob（）添加控制</li>
+<li>编写第二个创建panel的函数。使用addToPanel（）将其添加到pane。nuke.thisPane()来显示。</li>
+<li>创建菜单来调用前面的函数。</li>
+<li>如果想要panel和窗口格局一起保存，那就必须使用init.py注册自己的panel，因为此文件的读取要早于格局的保存：</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nukescripts.registerPanel( ID, function)</div></pre></td></tr></table></figure>
+<p>注销：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nukescripts.unregisterPanel( ID, funciton)</div></pre></td></tr></table></figure>
+<p>例子：从content 菜单 Pane》Frame Panel可以选择此菜单。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nukescripts</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">FramePanel</span><span class="params">( nukescirtps.PythonPanel )</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        nukescripts.PythonPanel.__init__( self, <span class="string">"Go to frame"</span>, <span class="string">"uk.co.thefoundry.FramePanel"</span>)</div><div class="line">        self.frame = nuke.Int_knob(<span class="string">"frame"</span>, <span class="string">"Frame:"</span> )</div><div class="line">        self.addKnob（self.frame )</div><div class="line">        self.frame.setValue( nuke.frame(） ）</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">knobChanged</span><span class="params">( self, knob )</span>:</span></div><div class="line">        <span class="keyword">if</span> knob == self.frame:</div><div class="line">            nuke.frame( self.frame.value() )</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">testPanel</span><span class="params">()</span>:</span></div><div class="line">        <span class="keyword">return</span> FramePanel().addToPane()</div><div class="line">menu = nuke.menu(<span class="string">"Pane"</span>)</div><div class="line">menu.addCommand( <span class="string">"Frame Panel"</span>, testPanel)</div><div class="line">nukescripts.registerPanel( <span class="string">"uk.co.thefoundry.FramePanel"</span>, testPanel )</div></pre></td></tr></table></figure>
+<h4 id="创建进度条dialog"><a href="#创建进度条dialog" class="headerlink" title="创建进度条dialog"></a>创建进度条dialog</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> threading</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">selfDestruct</span><span class="params">()</span>:</span></div><div class="line">    task = nuke.ProgressTask(<span class="string">"self destructing"</span> )</div><div class="line">    task.setMessage( <span class="string">"deleting files"</span>)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange( <span class="number">0</span>, <span class="number">100</span>):</div><div class="line">        <span class="keyword">if</span> task.isChanged():</div><div class="line">            nuke.executeInMainThread( nuke.message, args= (<span class="string">"Phew!"</span>) )</div><div class="line">            <span class="keyword">break</span></div><div class="line">        task.setProgress(i)</div><div class="line">        time.sleep( <span class="number">0.5</span> )</div><div class="line">threading.Thread（<span class="keyword">None</span>, selfdestruct ）.start()</div></pre></td></tr></table></figure>
+<p>注意：<br>    需要循环，因为不知道何时任务会被取消<br>    不能再nuke的主线程里面运行循环，那会阻塞nuke直到进程结束。<br>    因此，需要开始新线程来控制进度条不能在线程里面调用nuke.message，因此要用nuke.executeInMainThread()来显示消息。</p>
+<h4 id="清空当前Nuke-nk-脚本"><a href="#清空当前Nuke-nk-脚本" class="headerlink" title="清空当前Nuke(.nk)脚本"></a>清空当前<strong>Nuke</strong>(.nk)脚本</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.scriptClear（）</div></pre></td></tr></table></figure>
+<h4 id="给立体项目创建View"><a href="#给立体项目创建View" class="headerlink" title="给立体项目创建View"></a>给立体项目创建View</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.Root().addView(<span class="string">" name"</span> )</div></pre></td></tr></table></figure>
+<p>添加左目：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nuke.Root().addView(<span class="string">" left"</span> )</div></pre></td></tr></table></figure>
+<h4 id="调整立体项目中的控制值"><a href="#调整立体项目中的控制值" class="headerlink" title="调整立体项目中的控制值"></a>调整立体项目中的控制值</h4><p>项目中有left right 的view</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">n = nuke.nodes.Blur()</div><div class="line">n[<span class="string">'size'</span>].splitView()</div><div class="line">n[<span class="string">'size'</span>].setValue( <span class="number">10</span>, view = <span class="string">"left"</span> )</div><div class="line">n[<span class="string">'size'</span>].setValue( <span class="number">20</span>, view = <span class="string">"right"</span>)</div></pre></td></tr></table></figure>
+<p>添加了blur节点，将size的控制分开，左边10，右边20</p>
+<hr>
+<p>本节感谢以下朋友的指正：<br>QQ:</p>
+<ul>
+<li>成都-TD-德贵</li>
+<li>福州-合成-邵冰</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/08/01/nuke-python-1/" data-title="Nuke Python 入门 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/08/09/nuke-python-2/" title="Nuke Python 作为包使用">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 作为包使用</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/08/01/nuke-python-0/"  title="Nuke Python 始">
+ <strong>下一篇：</strong><br/> 
+ <span>Nuke Python 始
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/08/01/nuke-python-1/" data-title="Nuke Python 入门" data-url="http://cgcoder.com/2016/08/01/nuke-python-1/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#创建节点设置节点控制"><span class="toc-number">1.</span> <span class="toc-text">创建节点设置节点控制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#在用户界面创建节点"><span class="toc-number">1.1.</span> <span class="toc-text">在用户界面创建节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建脚本节点"><span class="toc-number">1.2.</span> <span class="toc-text">创建脚本节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建时添加控制"><span class="toc-number">1.3.</span> <span class="toc-text">创建时添加控制</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#赋值"><span class="toc-number">2.</span> <span class="toc-text">赋值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取已存在节点"><span class="toc-number">3.</span> <span class="toc-text">获取已存在节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取选中的节点"><span class="toc-number">4.</span> <span class="toc-text">获取选中的节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#添加控制"><span class="toc-number">5.</span> <span class="toc-text">添加控制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#隐藏、展示节点的属性panel"><span class="toc-number">6.</span> <span class="toc-text">隐藏、展示节点的属性panel</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#连接节点，设置输入"><span class="toc-number">7.</span> <span class="toc-text">连接节点，设置输入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置控制的默认值"><span class="toc-number">8.</span> <span class="toc-text">设置控制的默认值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#渲染时用Write节点"><span class="toc-number">9.</span> <span class="toc-text">渲染时用Write节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#外部程序序列化"><span class="toc-number">10.</span> <span class="toc-text">外部程序序列化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#列举节点的控制"><span class="toc-number">11.</span> <span class="toc-text">列举节点的控制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undo和redo"><span class="toc-number">12.</span> <span class="toc-text">undo和redo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#帧导航"><span class="toc-number">13.</span> <span class="toc-text">帧导航</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置帧范围"><span class="toc-number">14.</span> <span class="toc-text">设置帧范围</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文件名中标注帧号"><span class="toc-number">15.</span> <span class="toc-text">文件名中标注帧号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#节点间拷贝动画曲线"><span class="toc-number">16.</span> <span class="toc-text">节点间拷贝动画曲线</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重载某节点的创建"><span class="toc-number">17.</span> <span class="toc-text">重载某节点的创建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取正在运行的Nuke环境信息"><span class="toc-number">18.</span> <span class="toc-text">获取正在运行的Nuke环境信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取节点的Metadata"><span class="toc-number">19.</span> <span class="toc-text">获取节点的Metadata</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Dialog和Panel"><span class="toc-number">20.</span> <span class="toc-text">创建Dialog和Panel</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#创建模态对话框"><span class="toc-number">20.1.</span> <span class="toc-text">创建模态对话框</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Python对话框-例子"><span class="toc-number">20.2.</span> <span class="toc-text">Python对话框 例子</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建非模态对话框"><span class="toc-number">20.3.</span> <span class="toc-text">创建非模态对话框</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#非模态对话框例子"><span class="toc-number">20.4.</span> <span class="toc-text">非模态对话框例子</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建进度条dialog"><span class="toc-number">21.</span> <span class="toc-text">创建进度条dialog</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#清空当前Nuke-nk-脚本"><span class="toc-number">22.</span> <span class="toc-text">清空当前Nuke(.nk)脚本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#给立体项目创建View"><span class="toc-number">23.</span> <span class="toc-text">给立体项目创建View</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#调整立体项目中的控制值"><span class="toc-number">24.</span> <span class="toc-text">调整立体项目中的控制值</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

@@ -1,0 +1,581 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python Metadata | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="Metadata">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python Metadata">
+<meta property="og:url" content="http://cgcoder.com/2016/09/12/nuke-python-14/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="Metadata">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/setMetaDat_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/setMetaDat_02.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/metaDatCam_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/metaDatCam_02.png">
+<meta property="og:updated_time" content="2016-09-12T13:50:00.849Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python Metadata">
+<meta name="twitter:description" content="Metadata">
+<meta name="twitter:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/setMetaDat_01.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/12/nuke-python-14/" title="Nuke Python Metadata" itemprop="url">Nuke Python Metadata</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-12T13:50:00.849Z" itemprop="datePublished"> 发表于 2016-09-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#读取metadata"><span class="toc-number">1.</span> <span class="toc-text">读取metadata</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#设置metadata"><span class="toc-number">2.</span> <span class="toc-text">设置metadata</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例子："><span class="toc-number">3.</span> <span class="toc-text">例子：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#createMetaDatCam"><span class="toc-number">3.1.</span> <span class="toc-text">createMetaDatCam</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>这章介绍如何读写Metadata。</p>
+<h5 id="读取metadata"><a href="#读取metadata" class="headerlink" title="读取metadata"></a>读取metadata</h5><p>函数<strong>metadata()</strong> 返回一个字典，包含了特点指定节点的metadata：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">node = nuke.toNode( <span class="string">'Read1'</span> )</div><div class="line"><span class="keyword">print</span> node.metadata()</div><div class="line"></div><div class="line"><span class="comment"># Result:</span></div><div class="line">&#123;<span class="string">'exr/displayWindow'</span>: [<span class="number">0</span>, <span class="number">0</span>, <span class="number">2047</span>, <span class="number">1555</span>], <span class="string">'input/width'</span>: <span class="number">2048</span>, <span class="string">'exr/nuke/camera/vaperture'</span>: <span class="string">'18.672'</span>, <span class="string">'input/bitsperchannel'</span>: <span class="string">'16-bit half float'</span>, <span class="string">'input/filereader'</span>: <span class="string">'exr'</span>, <span class="string">'nuke/node_hash'</span>: <span class="string">'c82817f8e9526abe'</span>, <span class="string">'input/mtime'</span>: <span class="string">'2011-04-11 16:47:54'</span>, <span class="string">'exr/nuke/camera/haperture'</span>: <span class="string">'24.576'</span>, <span class="string">'input/ctime'</span>: <span class="string">'2011-04-11 16:47:54'</span>, <span class="string">'exr/nuke/camera/matrix'</span>: <span class="string">'[-0.30901703238487244, -0.16514922678470612, 0.93660777807235718, 9.5105648040771484, 0.0, 0.98480772972106934, 0.1736481785774231, 2.0, -0.95105648040771484, 0.05366024374961853, -0.30432236194610596, -3.0901703834533691, 0.0, 0.0, 0.0, 1.0]'</span>, <span class="string">'input/filename'</span>: <span class="string">'/Volumes/ohufx/consulting/Foundry/PythonDevGuide/footage/metadata/renderWithMetadata.0003.exr'</span>, <span class="string">'input/filesize'</span>: <span class="number">193828</span>, <span class="string">'exr/screenWindowCenter'</span>: [<span class="number">0.0</span>, <span class="number">0.0</span>], <span class="string">'exr/dataWindow'</span>: [<span class="number">463</span>, <span class="number">417</span>, <span class="number">1518</span>, <span class="number">1435</span>], <span class="string">'exr/nuke/camera/focal'</span>: <span class="string">'50.0'</span>, <span class="string">'exr/screenWindowWidth'</span>: <span class="number">1.0</span>, <span class="string">'input/height'</span>: <span class="number">1556</span>, <span class="string">'exr/pixelAspectRatio'</span>: <span class="number">1.0</span>&#125;</div></pre></td></tr></table></figure></p>
+<p>打印出来的结果太长没有可读性，用下面的代码增加可读性：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">node = nuke.toNode(<span class="string">'Read1'</span>)</div><div class="line"><span class="keyword">for</span> k,v <span class="keyword">in</span> node.metadata().iteritems():</div><div class="line">    <span class="keyword">print</span> k,v</div></pre></td></tr></table></figure></p>
+<p>结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"># Result:</div><div class="line">exr/displayWindow [0, 0, 2047, 1555]</div><div class="line">input/width 2048</div><div class="line">exr/nuke/camera/vaperture 18.672</div><div class="line">input/bitsperchannel 16-bit half float</div><div class="line">input/filereader exr</div><div class="line">nuke/node_hash c82817f8e9526abe</div><div class="line">input/mtime 2011-04-11 16:47:54</div><div class="line">exr/nuke/camera/haperture 24.576</div><div class="line">input/ctime 2011-04-11 16:47:54</div><div class="line">exr/nuke/camera/matrix [-0.30901703238487244, -0.16514922678470612, 0.93660777807235718, 9.5105648040771484, 0.0, 0.98480772972106934, 0.1736481785774231, 2.0, -0.95105648040771484, 0.05366024374961853, -0.30432236194610596, -3.0901703834533691, 0.0, 0.0, 0.0, 1.0]</div><div class="line">input/filename /Volumes/ohufx/consulting/Foundry/PythonDevGuide/footage/metadata/renderWithMetadata.0003.exr</div><div class="line">input/filesize 193828</div><div class="line">exr/screenWindowCenter [0.0, 0.0]</div><div class="line">exr/dataWindow [463, 417, 1518, 1435]</div><div class="line">exr/nuke/camera/focal 50.0</div><div class="line">exr/screenWindowWidth 1.0</div><div class="line">input/height 1556</div><div class="line">exr/pixelAspectRatio 1.0</div></pre></td></tr></table></figure></p>
+<h5 id="设置metadata"><a href="#设置metadata" class="headerlink" title="设置metadata"></a>设置metadata</h5><p>在流中创建自定义metadata，需要使用ModifyMetaData节点。想渲染自定义metadata，就要使用支持它的文件格式（ 比如，exr）<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/setMetaDat_01.png" alt=""></p>
+<p><strong>ModifyMetaData</strong> 节点接收表达式语法，意味着你可以使用TCL，有限扩展，python。在这个例子中，我们想要将camrea的焦距和<br>光圈和其变换矩阵写入metadata。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/setMetaDat_02.png" alt=""></p>
+<p>在此例中，camera的两个光圈范围使用tcl表达式。camera的焦距使用python. 变换矩阵使用python设置，自定义函数叫getTransform。<br>写成代码就如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getTransform</span><span class="params">( frame )</span>:</span></div><div class="line">        cam = nuke.toNode( <span class="string">'masterCam'</span>)</div><div class="line">        m = []</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">16</span>):</div><div class="line">            m.append( cam[<span class="string">'world_matrix'</span>].valueAt( frame, i ))</div><div class="line">        <span class="keyword">return</span> m</div></pre></td></tr></table></figure></p>
+<p>将上面的代码加入init.py 或 menu.py ( 或者 import进来 )，你可以让其在knob里面可以用，然后所有自定义部分添加到<br>ModifyMetaData 节点。</p>
+<h5 id="例子："><a href="#例子：" class="headerlink" title="例子："></a>例子：</h5><h6 id="createMetaDatCam"><a href="#createMetaDatCam" class="headerlink" title="createMetaDatCam"></a>createMetaDatCam</h6><p>此例中，先看一段代码，其根据exr文件中的metadata创建camera。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/metaDatCam_01.png" alt=""></p>
+<p>开始一个新的函数，检查节点的metadata，如果有足够的信息就创建camera。想在流中的任何地方读取节点的metadata，请使用<br>metadata方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">createMetaDatcam</span><span class="params">( node )</span>:</span></div><div class="line">        mDat = node.metadata()</div></pre></td></tr></table></figure></p>
+<p>接下来，收集我们想要在metadata中找到的项目，冠以group名最为前缀（ 在metadata中获取全名）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">reqFields = [&apos;exr/nuke/camera/%s&apos; % i for i in (&apos;focal&apos;, &apos;haperture&apos;, &apos;vaperture&apos;, &apos;matrix&apos;) ]</div></pre></td></tr></table></figure></p>
+<p>检查所需数据是否为metadata的子集，如果不是，停止脚本：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> set(reqFiedls).issubset(mDat):</div><div class="line">    <span class="keyword">print</span> <span class="string">'no metadata for camera found'</span></div><div class="line">    <span class="keyword">return</span></div></pre></td></tr></table></figure></p>
+<p>询问需要给camera的帧区间，将节点的帧区间作为默认值放入对话框：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">first = node.firstFrame()</div><div class="line">last = node.lastFrame()</div><div class="line">ret = nuke.getFramesAndViews(<span class="string">' Create Camera from Metadata'</span>, <span class="string">'%s-%s'</span> %(first, last))</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/metaDatCam_02.png" alt=""></p>
+<p><strong>nuke.getFramesAndViews</strong>返回一个列表，第一项为帧区间，第二项为所要求的视图。分离帧区间，并将其转换成帧区间对象。<br>现在可以忽略视图：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fRange = nuke.FrameRange( ret[0] )</div></pre></td></tr></table></figure></p>
+<p>创建一个camera节点，将其useMatrix knob设置为True：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cam = nuke.createNode( &apos;Camera2&apos;)</div><div class="line">cam[&apos;useMatrix&apos;].setValue( True)</div></pre></td></tr></table></figure></p>
+<p>遍历你所需的knob，并设置为动画：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> k <span class="keyword">in</span> (<span class="string">'force'</span>, <span class="string">'haperture'</span>, <span class="string">'vaperture'</span>, <span class="string">'matrix'</span>):</div><div class="line">    cam[k].setAnimated()</div></pre></td></tr></table></figure></p>
+<p>在遍历frame range设置keyframes前，创建一个进度条，用户可以在UI中取消操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">task = nuke.ProcessTask(&apos;Baking camera from meta data in %s&apos; % node.name() )</div></pre></td></tr></table></figure></p>
+<p>用enumerate来循环。其返回当前迭代器的索引，用来更新进度条（这个例子中，名为curTask）。在使用进度条时，要检测用户使用<br>点击“取消”来停止循环：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> curTask, frame <span class="keyword">in</span> enumerate( fRange ):</div><div class="line">    <span class="keyword">if</span> task.isCancelled():</div><div class="line">        <span class="keyword">break</span></div></pre></td></tr></table></figure></p>
+<p>更新任务信息，告知我们进行到何处：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">task.setMessage(&apos;process frame %s&apos; % frame)</div></pre></td></tr></table></figure></p>
+<p>现在从metadata中抓取camera的当前帧的焦距和光圈值，转换成浮点值，就可以赋给knob了：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> k <span class="keyword">in</span> (<span class="string">'focal'</span>, <span class="string">'haperture'</span>, <span class="string">'vaperture'</span>):</div><div class="line">    val = float( node.metadata(<span class="string">'exr/nuke/camera/%s'</span>, %k, frame))</div></pre></td></tr></table></figure></p>
+<p>给knob赋值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cam[k].setValueAt( float(val), frame)</div></pre></td></tr></table></figure></p>
+<p>这会处理投影参数，现在需要处理camera的变换。这种情况下，metadata保存的字符串仅是python的list，可以使用evaluate转变成list。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">matrixList = eval( node.metadata(<span class="string">'exr/nuke/camera/matrix'</span> ))</div></pre></td></tr></table></figure></p>
+<p>迭代整个list并给当前帧的摄像机matrix赋值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i,v <span class="keyword">in</span> enumerate( matrixList ):</div><div class="line">        cam[<span class="string">'matrix'</span>].setValueAt( v, frame, i)</div></pre></td></tr></table></figure></p>
+<p>最后更新进度条，因此，我们就知道进行到哪了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">task.setProgress( int(float(curTask)/fRange.frames()*100))</div></pre></td></tr></table></figure></p>
+<p>全部代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">createMetaDatCam</span><span class="params">( node )</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    create a camera node from meta data.</div><div class="line">    This assumes the following keys in the given nodes meta data stream: 'focal', 'haperture', 'vaperture' and 'matrix',</div><div class="line">    where 'matrix' carries the result of "[python nuke.toNode( 'Camera1' ).knob('world_matrix').valueAt( nuke.frame() )]"</div><div class="line">    args:</div><div class="line">       node  -  node to check for meta data</div><div class="line">       ask   -  prompt before creating camera</div><div class="line">    '''</div><div class="line">    mDat = node.metadata()</div><div class="line">    reqFields = [<span class="string">'exr/nuke/camera/%s'</span> % i <span class="keyword">for</span> i <span class="keyword">in</span> (<span class="string">'focal'</span>, <span class="string">'haperture'</span>, <span class="string">'vaperture'</span>, <span class="string">'matrix'</span>)]</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> set( reqFields ).issubset( mDat ):</div><div class="line">        <span class="keyword">print</span> <span class="string">'no metdata for camera found'</span></div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line">    first = node.firstFrame()</div><div class="line">    last = node.lastFrame()</div><div class="line">    ret = nuke.getFramesAndViews( <span class="string">'Create Camera from Metadata'</span>, <span class="string">'%s-%s'</span> %( first, last )  )</div><div class="line">    fRange = nuke.FrameRange( ret[<span class="number">0</span>] )</div><div class="line"></div><div class="line">    cam = nuke.createNode( <span class="string">'Camera2'</span> )</div><div class="line">    cam[<span class="string">'useMatrix'</span>].setValue( <span class="keyword">True</span> )</div><div class="line"></div><div class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> ( <span class="string">'focal'</span>, <span class="string">'haperture'</span>, <span class="string">'vaperture'</span>, <span class="string">'matrix'</span>):</div><div class="line">        cam[k].setAnimated()</div><div class="line"></div><div class="line">    task = nuke.ProgressTask( <span class="string">'Baking camera from meta data in %s'</span> % node.name() )</div><div class="line"></div><div class="line">    <span class="keyword">for</span> curTask, frame <span class="keyword">in</span> enumerate( fRange ):</div><div class="line">        <span class="keyword">if</span> task.isCancelled():</div><div class="line">            <span class="keyword">break</span></div><div class="line">        task.setMessage( <span class="string">'processing frame %s'</span> % frame )</div><div class="line"></div><div class="line">        <span class="comment"># GET ALL FRAMES</span></div><div class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> ( <span class="string">'focal'</span>, <span class="string">'haperture'</span>, <span class="string">'vaperture'</span> ):</div><div class="line">            val = float( node.metadata( <span class="string">'exr/nuke/camera/%s'</span> % k, frame ) )</div><div class="line">            cam[ k ].setValueAt(  float( val ), frame )</div><div class="line"></div><div class="line">        <span class="comment"># CONVERT STRING BACK TO LIST OBJECT AND ASSIGN</span></div><div class="line">        matrixList = eval( node.metadata(<span class="string">'exr/nuke/camera/matrix'</span>) )</div><div class="line">        <span class="keyword">for</span> i, v <span class="keyword">in</span> enumerate( matrixList ):</div><div class="line">            cam[ <span class="string">'matrix'</span> ].setValueAt( v, frame, i)</div><div class="line">        <span class="comment"># UPDATE PROGRESS BAR</span></div><div class="line">        task.setProgress( int( float(curTask) / fRange.frames() *<span class="number">100</span>) )</div></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/09/12/nuke-python-14/" data-title="Nuke Python Metadata | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/12/nuke-python-15/" title="Nuke Python 控制通道和层">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python 控制通道和层</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/12/nuke-python-13/"  title="Nuke Python 自定义动画">
+ <strong>下一篇：</strong><br/> 
+ <span>Nuke Python 自定义动画
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/12/nuke-python-14/" data-title="Nuke Python Metadata" data-url="http://cgcoder.com/2016/09/12/nuke-python-14/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#读取metadata"><span class="toc-number">1.</span> <span class="toc-text">读取metadata</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#设置metadata"><span class="toc-number">2.</span> <span class="toc-text">设置metadata</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例子："><span class="toc-number">3.</span> <span class="toc-text">例子：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#createMetaDatCam"><span class="toc-number">3.1.</span> <span class="toc-text">createMetaDatCam</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

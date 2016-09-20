@@ -1,0 +1,593 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Alembic文件格式简介--设计思想和理念 4 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="深入了解抽样">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Alembic文件格式简介--设计思想和理念 4">
+<meta property="og:url" content="http://cgcoder.com/2016/09/12/Alembic-design-philosophy-section4/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="深入了解抽样">
+<meta property="og:updated_time" content="2016-09-12T13:50:00.778Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Alembic文件格式简介--设计思想和理念 4">
+<meta name="twitter:description" content="深入了解抽样">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/12/Alembic-design-philosophy-section4/" title="Alembic文件格式简介--设计思想和理念 4" itemprop="url">Alembic文件格式简介--设计思想和理念 4</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-12T13:50:00.778Z" itemprop="datePublished"> 发表于 2016-09-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#深入Simple-Property"><span class="toc-number">1.</span> <span class="toc-text">深入Simple Property</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#OScalarProperties"><span class="toc-number">1.1.</span> <span class="toc-text">OScalarProperties</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h4 id="深入Simple-Property"><a href="#深入Simple-Property" class="headerlink" title="深入Simple Property"></a>深入Simple Property</h4><p>记住容器层次关系：Simple Property包含Sample；Sample包含data。大多数情况下，Sample和data可以当做一<br>回事，大部分客户端代码用同样的方式来创建和操控property。我们将处理Abc，其以数据为核心而不是几何体。<br>随后，我们会介绍AbcGeom层如何使用Abc层的Property来构建几何体的数据。</p>
+<p><br></p>
+<h5 id="OScalarProperties"><a href="#OScalarProperties" class="headerlink" title="OScalarProperties"></a>OScalarProperties</h5><p>首先，我们将关注“O”开头，写入的API。在Abc层，Simple Property被进一步分成有类型和无类型的，就像Scalar和Array。无类型的<br>OScalarProperties在lib/Alembic/Abc/OScalarProperty.h里定义，和有类型OTypedScalrProperty最大的区别在于他们接收void*形式的<br>数据，并且他们必须用AbcA::DataType的实例来构造，是描述样本中几何体大小和类型的类。因此Alembic可以精确跟踪资源。<br>OTypedScalarProperty，另一方面，可以推测传给他的数据大小和类型，因为他知道自己支持啥类型的数据。大部分客户端会处理有类型<br>的数据，既然OTypedScalarProperty是一个OScalarProperty，某些方法以及OTypedScalarProperty的成员都来自父类。此章重点在<br>OtypedScalarProperties.</p>
+<p>请看OTypedScalarProperty的构造过程，主要过程如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//! Create a new TypedScalarProperty</span></div><div class="line"><span class="comment">//! as a child of the passed COMPOUND_PTR</span></div><div class="line"><span class="comment">//! Arguments can specify metadata, timesampling, and error handling.</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> COMPOUND_PTR&gt;</div><div class="line">OTypedScalarProperty(</div><div class="line">     COMPOUND_PTR iParent,</div><div class="line">     <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp;iName,</div><div class="line"></div><div class="line">     constArgument&amp;iArg0 =Argument(),</div><div class="line">     constArgument&amp;iArg1 =Argument(),</div><div class="line">     constArgument&amp;iArg2 =Argument());</div></pre></td></tr></table></figure>
+<p>模板参数，COMPOUND_PTR，是任何可以被转换成AbcA::CompoundPropertyWritePtr（“入侵转换”就是“has-a”或者“is-a”<br>CompoundPropertyWriterPtr，其可以从继承类型中抽取出来，或者从继承类转换。最后的三个可选参数，Abc::Argument是<br>boost::variants，是一个union类型的类，会简单解释下，但给了点该传什么类型的线索。因为参数是多类型的，你可以多传，也可以少<br>传，而不用担心调用的位置。</p>
+<p>如果前面的没看懂别着急，很多Alembic的内容其意义都不明确，将其分解下：</p>
+<ol>
+<li>必备参数，iParent，是property的父节点：客户端构造的Alembic接口必须按照层级来，但不包括Archive。</li>
+<li>Simple property的父节点必定是一个Compound Property。</li>
+<li>第二个参数是名字，在所属层必须唯一。</li>
+<li>simple property构造时有一个可选参数TimeSampling的实例。</li>
+<li>Abc中的类型是基于对象的封装器，封装了AbcCoreAbstract中更底层的几何类型，每个OCompoundProperty有一个<br>AbcA::CompoundPropertyWriterPtr.</li>
+</ol>
+<p>这些是关于Simple Property的总体思想，还有很多具体的，不是针对Simple Property，而是将Alembic作为一个整体：</p>
+<ol>
+<li>前缀“Ptr”，就像AbcA::CompoundPropertyWriterPtr里面的，意味着其类型是boost::shared_pro的指针，指向前面的实例<br>（前面的例子，就是AbcA::CompoundPropertyWriter);</li>
+<li>Alembic中的实体可以用metaData来构建，比如，用AbcA::MetaData的实例，其是一个string，string的关键字—值的哈希表。</li>
+</ol>
+<p>实际上，用来写的Simple Property，不仅仅是OScalarProperties，都有一个Abc::OCompoundProperty。</p>
+<p>总之，从OScalarProperities跑题了，回归正题。如果你查看lib/Alembic/Abc/OTypedScalarProperty.h，在文件最后面，有很多typedef<br>定义模板化OTypedScalarProperties，让其有一个好记的名字。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">typedefOTypedScalarProperty&lt;BooleanTPTraits&gt;         OBoolProperty;</div><div class="line">typedefOTypedScalarProperty&lt;Uint8TPTraits&gt;           OUcharProperty;</div><div class="line">typedefOTypedScalarProperty&lt;Int8TPTraits&gt;            OCharProperty;</div><div class="line">typedefOTypedScalarProperty&lt;Uint16TPTraits&gt;          OUInt16Property;</div><div class="line">typedefOTypedScalarProperty&lt;Int16TPTraits&gt;           OInt16Property;</div><div class="line">typedefOTypedScalarProperty&lt;Uint32TPTraits&gt;          OUInt32Property;</div><div class="line">typedefOTypedScalarProperty&lt;Int32TPTraits&gt;           OInt32Property;</div><div class="line">typedefOTypedScalarProperty&lt;Uint64TPTraits&gt;          OUInt64Property;</div><div class="line">typedefOTypedScalarProperty&lt;Int64TPTraits&gt;           OInt64Property;</div><div class="line">typedefOTypedScalarProperty&lt;Float16TPTraits&gt;         OHalfProperty;</div><div class="line">typedefOTypedScalarProperty&lt;Float32TPTraits&gt;         OFloatProperty;</div><div class="line">typedefOTypedScalarProperty&lt;Float64TPTraits&gt;         ODoubleProperty;</div><div class="line">typedefOTypedScalarProperty&lt;StringTPTraits&gt;          OStringProperty;</div><div class="line">typedefOTypedScalarProperty&lt;WstringTPTraits&gt;         OWstringProperty;</div></pre></td></tr></table></figure>
+<p>模板参数，各种“TPTraints”，和STL的traints是对应的，特殊点的连每个Property占多少字节都有。这些<br>traits在lib/Alembic/Abc/TypedPropertyTraits.h里面定义，如果你想看一眼。当你构造OTypedScalarProperty时，你会这样做：</p>
+<pre><code>OTypedScalarProperty myProp( parent,“this_is_the_property_name”);
+</code></pre><p>取而代之，你会调用其中的dypedef名字，例如</p>
+<pre><code>ODoubleProperty myDoubleProp( parent,“this_is_the_property_name”);
+</code></pre><p>所有的Alembic都会知道这将保存一个64位的浮点数。</p>
+<p>说到property保存的值，其有一个方法set（），带签名的如下：<br>    voidset(const value_type &amp;iVal )</p>
+<p>参数类型的声明，value_type，在OTypedScalarProperty.h的顶部定义，并为Property定义了traits的模板。对ODoubleProperty，<br>value_type是Alembic::Util::float64_t。请查看lib/Alembic/Util/PlainOldDataType.h中的具体类型。返回手头上的事：<br>在Property里面存储值。比如你构造ODoubleProperty，“myDoubleProperty”就像上面展示的。因为它不是靠TimeSampling实例来构<br>造的，那就会使用默认的TimeSampling，并假设数据从0.0开始，后面的样本会比前面的样本多1.0chrono_ts.下面的代码在<br>myDoubleProp上设置10个样本。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>( <span class="keyword">size_t</span> i =<span class="number">0</span>; i &lt;<span class="number">10</span>;++i )</div><div class="line">&#123;</div><div class="line">   myDoubleProp.<span class="built_in">set</span>(<span class="number">2.0</span>* i );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在，调用myDoubleProp.getNumSamples()，将会返回10. 第0个样本为0.0， 第一个是2.0， 第二个是4.0。 下面的软件列表，如果编<br>译运行，将会产生Alembic的Archive其包含一个Simple Property，值如下描述：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#include&lt;Alembic/Abc/All.h&gt;</div><div class="line">// the following include is for the concrete implementation of Alembic</div><div class="line">#include&lt;Alembic/AbcCoreHDF5/All.h&gt;</div><div class="line"></div><div class="line">usingnamespaceAlembic::Abc;</div><div class="line"></div><div class="line">int main(int,char**)</div><div class="line">&#123;</div><div class="line">   OArchive archive(Alembic::AbcCoreHDF5::WriteArchive(),“myFirstArchive.abc”);</div><div class="line">   OObject child( archive.getTop(),“childObject”);</div><div class="line">   ODoubleProperty myDoubleProp( child.getProperties(),“doubleProp”);</div><div class="line">   for( size_t i =0; i &lt;10;++i )</div><div class="line">   &#123;</div><div class="line">       myDoubleProp.set(2.0* i );</div><div class="line">   &#125;</div><div class="line">   return0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>哒哒，相当简单，不是吗？当然，那是HDF5的事情了，archive.getTop().getProperties(),后面会讲的更清楚。你可能会猜，虽然<br>getProperties（）是一个返回Abc：：OCompoundProperty的方法，并且你是对的。那个方法的全名是Abc::OObject::getProperties(),<br>这也会让你猜，正确的是 Abc::OArchive::getTop()返回Abc::OObject. 又一次，又离开了OScalarProperites的话题，随后会返回<br>getTop()和getProperties()的话题。</p>
+<p>就像代码那样简单，它引起的问题比回答的要多，撇开前面图里面暗示的问题：</p>
+<ol>
+<li><p>数据合适被写入？</p>
+</li>
+<li><p>如果不是ODoubleProperty，我有一个OReallyHeavyValueTypeProperty，比如我在堆上分配传给set的内存数据，何时可以安全释放？<br>这些都是好问题。</p>
+</li>
+</ol>
+<p>你可能注意到了，代码里没有明显的资源管理。那是因为在使用标准指针时，Alembic为你做了。在Alembic中，一旦超出生存期，数据<br>就会被写入。因此，一旦main结束，Archive就会将自己写入硬盘，Archive的顶部对象做同样的事，顶部对象的Compound Property跟随，<br>最后compound property的simple property（作为doubleProp写入硬盘）。使用abcecho程序，在examples/bin/AbcEcho/AbcEcho.cpp，<br>你会看到结果Archive有一个simple Propety，就像你期待的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ abcecho myFirstArchive.abc</div><div class="line">Object name=/childObject</div><div class="line">   ScalarProperty name=doubleProp;interpretation=;datatype=float64_t;numsamps=10</div><div class="line">$</div></pre></td></tr></table></figure></p>
+<p>就像你问的第二个问题，何时可以安全释放资源？答案是 你一旦调用set（）函数，Alembic拥有数据后，你就可以安全释放了。<br>这对Alembic中所有的properties（scalar，Array）都有用，同时AbcGeom里的高层几何类型也适用。</p>
+<p>在这点上，从写入上岔开还是有好处的，并将源代码扩展到write/read例子中，展示生存范围的工作机制，和API的对称性很像。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">#include&lt;Alembic/Abc/All.h&gt;</div><div class="line">#include&lt;Alembic/AbcCoreHDF5/All.h&gt;</div><div class="line">#include&lt;iostream&gt;</div><div class="line"></div><div class="line">usingnamespaceAlembic::Abc;</div><div class="line"></div><div class="line">int main(int,char**)</div><div class="line">&#123;</div><div class="line">   std::string archiveName(“myFirstArchive.abc”);</div><div class="line">   &#123;// open new scope for writing</div><div class="line">       OArchive archive(Alembic::AbcCoreHDF5::WriteArchive(),</div><div class="line">                         archiveName );</div><div class="line">       OObject child( archive.getTop(),“childObject”);</div><div class="line">       ODoubleProperty myDoubleProp( child.getProperties(),“doubleProp”);</div><div class="line">       for( std::size_t i =0; i &lt;10;++i )</div><div class="line">       &#123;</div><div class="line">           myDoubleProp.set(2.0* i );</div><div class="line">       &#125;</div><div class="line">   &#125;// the Archive is written here when it goes out of scope</div><div class="line"></div><div class="line">   &#123;// open new scope for reading</div><div class="line">       IArchive archive(Alembic::AbcCoreHDF5::ReadArchive(),</div><div class="line">                         archiveName );</div><div class="line">       IObject child( archive.getTop(),“childObject”);</div><div class="line">       IDoubleProperty myDoubleProp( child.getProperties(),“doubleProp”);</div><div class="line">       for( std::size_t i =0; i &lt; myDoubleProp.getNumSamples();++i )</div><div class="line">       &#123;</div><div class="line">           std::cout &lt;&lt; i &lt;&lt;“th sample is“&lt;&lt; myDoubleProp.getValue( i )</div><div class="line">                     &lt;&lt; std::endl;</div><div class="line">       &#125;</div><div class="line">   &#125;// end of scope for reading</div><div class="line"></div><div class="line">   return0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/open-source/">open source</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/alembic/">alembic</a><a href="/tags/c/">c++</a><a href="/tags/design/">design</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/09/12/Alembic-design-philosophy-section4/" data-title="Alembic文件格式简介--设计思想和理念 4 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/12/c4d-python/" title="C4D python 创建物体修改属性">
+  <strong>上一篇：</strong><br/>
+  <span>
+  C4D python 创建物体修改属性</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/12/Alembic-design-philosophy-section3/"  title="Alembic文件格式简介--设计思想和理念 3">
+ <strong>下一篇：</strong><br/> 
+ <span>Alembic文件格式简介--设计思想和理念 3
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/12/Alembic-design-philosophy-section4/" data-title="Alembic文件格式简介--设计思想和理念 4" data-url="http://cgcoder.com/2016/09/12/Alembic-design-philosophy-section4/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#深入Simple-Property"><span class="toc-number">1.</span> <span class="toc-text">深入Simple Property</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#OScalarProperties"><span class="toc-number">1.1.</span> <span class="toc-text">OScalarProperties</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>

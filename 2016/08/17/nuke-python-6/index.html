@@ -1,0 +1,612 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Nuke Python 立体 | Cgcoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="N景波">
+    
+
+    
+    <meta name="description" content="立体部分的操作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuke Python 立体">
+<meta property="og:url" content="http://cgcoder.com/2016/08/17/nuke-python-6/index.html">
+<meta property="og:site_name" content="Cgcoder">
+<meta property="og:description" content="立体部分的操作">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/stereoPrimer_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/stereoPrimer_02.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/stereoPrimer_03.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/stereoPrimer_04.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/setUpMultiView_01.png">
+<meta property="og:updated_time" content="2016-08-22T01:47:12.629Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nuke Python 立体">
+<meta name="twitter:description" content="立体部分的操作">
+<meta name="twitter:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/stereoPrimer_01.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Cgcoder" title="Cgcoder"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cgcoder">Cgcoder</a></h1>
+				<h2 class="blog-motto">to be a better TD&amp;RD</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/08/17/nuke-python-6/" title="Nuke Python 立体" itemprop="url">Nuke Python 立体</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="N景波" target="_blank" itemprop="author">N景波</a>
+		
+  <p class="article-time">
+    <time datetime="2016-08-17T02:33:18.408Z" itemprop="datePublished"> 发表于 2016-08-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#多视图knob-的数值"><span class="toc-number">1.</span> <span class="toc-text">多视图knob 的数值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例子"><span class="toc-number">2.</span> <span class="toc-text">例子</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#创建、转换立体camera"><span class="toc-number">2.1.</span> <span class="toc-text">创建、转换立体camera</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#设置立体"><span class="toc-number">2.2.</span> <span class="toc-text">设置立体</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>在nuke中如何处理立体</p>
+<h5 id="多视图knob-的数值"><a href="#多视图knob-的数值" class="headerlink" title="多视图knob 的数值"></a>多视图knob 的数值</h5><p>给立体项目的每个view中添数值，就跟向translate的x，y knob添加一样。代码添加Transform节点，并将右view分离出来：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">n = nuke.createNode(<span class="string">'Transform'</span>)</div><div class="line">k = n[<span class="string">'translate'</span>]</div><div class="line">k.splitView(<span class="string">'right'</span>)</div></pre></td></tr></table></figure></p>
+<p>当分离出一个view时，所有的un-split view像一个main view一样在一起控制，因此，如果没有指定view，所有的un-split knob都会改变。<br>下面将main view的knob的值设置为1，但分离view除外：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">k.setValue(1)</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/stereoPrimer_01.png" alt="image"></p>
+<p>将右侧view的值设置为2：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">k.setValue(2, view=&apos;right&apos;)</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/stereoPrimer_02.png" alt="image"></p>
+<p>将main view的translate设置为 x=1， y=2<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">k.setValue(1,0)</div><div class="line">k.setValue(2,1)</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/stereoPrimer_03.png" alt="image"></p>
+<p>right view的translate设置成 x=3， y=4<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">k.setValue(3, 0, view=&apos;right&apos;)</div><div class="line">k.setValue(4, 1, view=&apos;right&apos;)</div></pre></td></tr></table></figure></p>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/stereoPrimer_04.png" alt="image"></p>
+<p>在不同view里面可以用同样的方式创建动画，将main view设置为可动画：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">k.setanimated()</div></pre></td></tr></table></figure></p>
+<p>右侧视图可动画：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">k.setAnimated( view=&apos;right&apos;)</div></pre></td></tr></table></figure></p>
+<p>main和right view的1-100帧设置关键帧：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">k.setValueAt( <span class="number">50</span>, <span class="number">1</span>)</div><div class="line">k.setValueAt(<span class="number">70</span>, <span class="number">100</span>)</div><div class="line">k.setValueAt(<span class="number">80</span>, <span class="number">1</span>, view=<span class="string">'right'</span>)</div><div class="line">k.setValueAt(<span class="number">110</span>, <span class="number">100</span>, view=<span class="string">'right'</span>)</div></pre></td></tr></table></figure></p>
+<p>为两个view渲染动画值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">mainX = k.valueAt(<span class="number">50</span>, <span class="number">0</span>)</div><div class="line">mainY = k.valueAt(<span class="number">50</span>, <span class="number">1</span>)</div><div class="line">rightX = k.valueAt(<span class="number">50</span>, <span class="number">0</span>, view=<span class="string">'right'</span>)</div><div class="line">rightY = k.valueAt(<span class="number">50</span>, <span class="number">1</span>, view=<span class="string">'right'</span>)</div><div class="line"></div><div class="line"><span class="keyword">print</span> <span class="string">'left (main) view values at frame 50 are X=%s, Y=%s'</span> %(mainX, mainY)</div><div class="line"><span class="keyword">print</span> <span class="string">'right view values at frame 50 are X=%s, Y=%s'</span> % (rightX, rightY)</div><div class="line"></div><div class="line">Result:</div><div class="line">left (main) view values at frame <span class="number">50</span> are X=<span class="number">59.898989898</span>, Y=<span class="number">59.898989898</span></div><div class="line">right view values at frame <span class="number">50</span> are X=<span class="number">94.8484848507</span>, Y=<span class="number">94.8484848507</span></div></pre></td></tr></table></figure></p>
+<h5 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h5><h6 id="创建、转换立体camera"><a href="#创建、转换立体camera" class="headerlink" title="创建、转换立体camera"></a>创建、转换立体camera</h6><p>下面有一个例子，用常用的函数，两个参数，一个定义camera节点，一个定义视距。node默认值为none（这种情况创建新camera）视距只<br>要能工作就行：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">serreoCam</span><span class="params">( node=None, interoc=<span class="number">.6</span> )</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        node = node <span class="keyword">or</span> nuke.selectedNode()</div><div class="line">    <span class="keyword">except</span> ValueError:</div><div class="line">        node = nuke.createNode( <span class="string">'Camera2'</span> )</div></pre></td></tr></table></figure></p>
+<p>接下来我们获取当前脚本的视图。假设列表中的第一个视图是左眼，第二个是右眼：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">views = nuke.views() leftView = views[0] right = views[1]</div></pre></td></tr></table></figure></p>
+<p>根据给定的视距值计算摄像机的左右偏移：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rightOffset = float( interoc)/2</div><div class="line">leftOffset = -rightOffset</div></pre></td></tr></table></figure></p>
+<p>可以用matrix或者transform knob来驱动camera。来开始第一个例子，抓取matrix knob并拷贝当前矩阵，就可以创建第二只眼睛。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> node[<span class="string">'useMatrix'</span>].value():</div><div class="line">    knob = node[<span class="string">'matrix'</span>]</div><div class="line">    leftEyeMatrix = node[<span class="string">'transform'</span>].value()</div><div class="line">    rightEyeMatrix = nuke.math.Matrix4( leftEyeMatrix )</div></pre></td></tr></table></figure></p>
+<p>基于上面计算的左眼值，将原始矩阵移动到左边，右眼照做：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">leftEyeMatrix.translate( leftOffset, 0, 0)</div><div class="line">rightEyeMatrix.translate( rightOffset, 0, 0)</div></pre></td></tr></table></figure></p>
+<p>因为node[‘transform’].value() 返回的矩阵是逆序的，使用前需要反转回来。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">leftEyeMatrix.transpose()</div><div class="line">rightEyeMatrix.transpose()</div></pre></td></tr></table></figure></p>
+<p>如果脚本中只有两个view，就使用左眼作为主view，仅分离出右view，如果多于两个view，就都分离出来：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">if len(views) &gt;2:</div><div class="line">    knob.splitView( leftView)</div><div class="line">knob.splitView( rightView)</div></pre></td></tr></table></figure></p>
+<p>现在将4x4的矩阵循环赋值给其他了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for i in range(16):</div><div class="line">    knob.setValue( leftEyeMatrix[i], nuke.frame(), i, leftView)</div><div class="line">    knob.setValue( rightEyeMatrix[i], nuke.frame(), i, rightView)</div></pre></td></tr></table></figure></p>
+<p>这会关心摄像机被matrix knob的哪个部分驱动，其他例子中，事情简单点但是我们做的事情一样。抓取transform knob的<strong>x</strong>值和并<br>按照从视距计算出来的值来offset：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">else:</div><div class="line">    knob = node[&apos;translate&apos;]</div><div class="line">    leftEye = knob.value(0) + leftOffset</div><div class="line">    rightEye = knob.value(0) +rightOffset</div></pre></td></tr></table></figure></p>
+<p>按要求分割knob：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">if len( views) &gt;2:</div><div class="line">        knob.splitView( leftView )</div><div class="line">knob.splitView( rightView )</div></pre></td></tr></table></figure></p>
+<p>将新值赋给新view<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">knob.setValue( leftEye, 0, view=leftView )</div><div class="line">knob.setValue( rightEye, 0, view = rightView )</div></pre></td></tr></table></figure></p>
+<p>最终代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> nuke</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">stereoCam</span><span class="params">( node=None, interoc=<span class="number">.6</span> )</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    Create a simple stereo camera or convert an existing one.</div><div class="line">    args:</div><div class="line">       node - camera node to convert to stereo. if None a camera will be created</div><div class="line">       interoc  -  distance between right and left view</div><div class="line">    '''</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        node = node <span class="keyword">or</span> nuke.selectedNode()</div><div class="line">    <span class="keyword">except</span> ValueError:</div><div class="line">        <span class="comment"># IF NO NODE IS GIVEN AND NOTHING IS SELECTED, CREATE A NEW NODE</span></div><div class="line">        node = nuke.createNode( <span class="string">'Camera2'</span> )</div><div class="line"></div><div class="line">    <span class="comment"># GET SCRIPT SETTIONGS' VIEWS</span></div><div class="line">    views = nuke.views()</div><div class="line">    leftView = views[<span class="number">0</span>]</div><div class="line">    rightView = views[<span class="number">1</span>]</div><div class="line"></div><div class="line">    <span class="comment"># THE OFFSET AS REQUESTED</span></div><div class="line">    rightOffset = float(interoc)/<span class="number">2</span></div><div class="line">    leftOffset = -rightOffset</div><div class="line"></div><div class="line">    <span class="comment"># THE KNOB TO SPLIT</span></div><div class="line">    <span class="keyword">if</span> node[<span class="string">'useMatrix'</span>].value():</div><div class="line">        knob = node[<span class="string">'matrix'</span>]</div><div class="line">        leftEyeMatrix = node[<span class="string">'transform'</span>].value() <span class="comment"># GETS MATRIX BUT IN REVERSE ORDER</span></div><div class="line">        rightEyeMatrix = nuke.math.Matrix4( leftEyeMatrix ) <span class="comment"># COPY MATRIX</span></div><div class="line"></div><div class="line">        <span class="comment"># GET THE NEW VALUES FOR LEFT AND RIGHT EYE</span></div><div class="line">        leftEyeMatrix.translate( leftOffset, <span class="number">0</span>, <span class="number">0</span> )</div><div class="line">        rightEyeMatrix.translate( rightOffset, <span class="number">0</span>, <span class="number">0</span> )</div><div class="line"></div><div class="line">        <span class="comment"># REVERSE FOR ASSIGNMENT</span></div><div class="line">        leftEyeMatrix.transpose()</div><div class="line">        rightEyeMatrix.transpose()</div><div class="line"></div><div class="line">        <span class="comment"># IF THERE ARE MORE THAN 2 VIEWS MAKE SURE TO SPLIT OFF LEFT VIEW AS WELL</span></div><div class="line">        <span class="keyword">if</span> len( views ) &gt; <span class="number">2</span>:</div><div class="line">            knob.splitView( leftView )</div><div class="line">        knob.splitView( rightView )</div><div class="line"></div><div class="line">        <span class="comment"># ASSIGN VALUES</span></div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">16</span>):</div><div class="line">            knob.setValueAt( leftEyeMatrix[i], nuke.frame(), i, leftView )</div><div class="line">            knob.setValueAt( rightEyeMatrix[i], nuke.frame(), i, rightView )</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        knob = node[<span class="string">'translate'</span>]</div><div class="line">        <span class="comment"># GET THE NEW VALUES FOR LEFT AND RIGHT EYE</span></div><div class="line">        leftEye = knob.value(<span class="number">0</span>) + leftOffset</div><div class="line">        rightEye = knob.value(<span class="number">0</span>) + rightOffset</div><div class="line"></div><div class="line">        <span class="comment"># IF THERE ARE MORE THAN 2 VIEWS MAKE SURE TO SPLIT OFF LEFT VIEW AS WELL</span></div><div class="line">        <span class="keyword">if</span> len( views ) &gt; <span class="number">2</span>:</div><div class="line">            knob.splitView( leftView )</div><div class="line">        knob.splitView( rightView )</div><div class="line"></div><div class="line">        <span class="comment"># ASSIGN NEW VALUE</span></div><div class="line">        knob.setValue( leftEye, <span class="number">0</span>, view=leftView )</div><div class="line">        knob.setValue( rightEye, <span class="number">0</span>, view=rightView )</div></pre></td></tr></table></figure>
+<p><br></p>
+<h6 id="设置立体"><a href="#设置立体" class="headerlink" title="设置立体"></a>设置立体</h6><p>有一种方法自动将新的nuke projects设置为立体（或者通常的多视图）。第一，写一个函数将nuke的project转变成多视图，然后将其<br>挂接到回调函数上，确保新的root节点创建时运行。</p>
+<p>创建新view时需要修改的knob是 nuke.root().knob(‘views’), 此knob木有其他方法来设置view，因此检查其脚本语法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">viewKnob = nuke.root().knob(&apos;views&apos;)</div><div class="line">print viewKnob.toScript()</div><div class="line"></div><div class="line">#result:</div><div class="line">left #ff0000</div><div class="line">right #00ff00</div></pre></td></tr></table></figure></p>
+<p>toScript方法将knob转换成脚本语法，就像.nk文件中那样，并是分析复杂knob的好方法。这个例子中，会查出root view的名字，相关的<br>颜色代码 16进制形式。view通过线来分割。有了这个信息，我们可以重建自己的名字和颜色列表。然后使用fromScript方法来初始化我们的值：</p>
+<p>先检测：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">veiwKnob = nuke.root().knob(&apos;views&apos;)</div><div class="line">viewKnob.fromScript( &apos;testView #ff000&apos;)</div></pre></td></tr></table></figure></p>
+<p>root的view knob有叫做testView的单一视图，并将最初的红色付给他。实际上，想赋值红色要比使用16进制码简单的多。因此，写一个<br>小工具来转换这个过程，使用python的字符格式化工程，小case。</p>
+<p>下面将一个int转换成hex值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">intValue = <span class="number">255</span></div><div class="line">hexValue = <span class="string">'%x'</span> % intValue</div><div class="line"><span class="keyword">print</span> hexValue</div></pre></td></tr></table></figure></p>
+<p>用这个来操作r，g，b<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">rgb= (255, 0, 0)</div><div class="line">hexCol = &apos;#%02x%02x%02x&apos; % rgb</div><div class="line">print hexCol</div></pre></td></tr></table></figure></p>
+<p>既然nuke大部分都工作在浮点数据模式下，稍微修改下，就能输入0-1而不是八位int 0-255：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">col = ( .5, .3, .2)</div><div class="line">rgb = tuple( [int(v*255) for v in col ] )</div><div class="line">hexCol = &apos;#02x%02x%02x&apos; % rgb</div><div class="line">print hexCol</div><div class="line"></div><div class="line"># Result:</div><div class="line">#7f4c33</div></pre></td></tr></table></figure></p>
+<p>上面的代码会将每个正规化的浮点值col 变换成 8位整形。 输出是一个列表，其在存储到rgb前被转换成tuple。<br>将所有的东西放在一起来构建testView的view，并赋给黑红色。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">name = &apos;testView&apos;</div><div class="line">col = (.5, 0, 0)</div><div class="line">rgb = tuple( [int(v*255) for v in col ])</div><div class="line">hexCol = &apos;#%02x%02x%02x&apos; % rgb</div><div class="line">view = &apos;%s %s &apos; %(name, hexCol)</div><div class="line">nuke.root().knob(&apos;views&apos;), fromScript( view)</div></pre></td></tr></table></figure></p>
+<p>如果想要不止一个view，会在多个view间有一条线：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">newViews = []</div><div class="line">name = &apos;testView&apos;</div><div class="line">col = (.5, 0, 0)</div><div class="line">rgb = tuple([ int(v*255) for v in col ])</div><div class="line">hexCol = &apos;#%02x%02x%02x&apos; % rgb</div><div class="line">view = &apos;%s %s&apos; % (name, hexCol)</div><div class="line">newViews.append(view)</div><div class="line"></div><div class="line">name2 = &apos;testView2&apos;</div><div class="line">col2 = (0, .5, 0)</div><div class="line">rgb2 = tuple([ int(v*255) for v in col2 ])</div><div class="line">hexCol2 = &apos;#%02x%02x%02x&apos; % rgb2</div><div class="line">view2 = &apos;%s %s&apos; % (name2, hexCol2)</div><div class="line">newViews.append(view2)</div><div class="line"></div><div class="line">nuke.root().knob(&apos;views&apos;).fromScript(&apos;\n&apos;.join(newViews))</div></pre></td></tr></table></figure></p>
+<p>现在将其整理下，添加nuke的import，创建一个函数，参数为元组，view的名字，以及颜色：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> nuke</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">setUpMultiView</span><span class="params">( views=[ <span class="params">(<span class="string">'left'</span>,<span class="params">(<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>)</span>)</span>, <span class="params">(<span class="string">'right'</span>,<span class="params">(<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>)</span> )</span> ] )</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    set up the nuke project with an arbitrary amount of colour coded views</div><div class="line">    args:</div><div class="line">       views  -  nested list with view names and rgb tuples for each view. rgb values are assumed to be normalise, eg red = (1,0,0)</div><div class="line">    '''</div><div class="line">    newViews = []</div><div class="line">    <span class="keyword">for</span> v <span class="keyword">in</span> views:   <span class="comment"># CYCLE THROUGH EACH REQUESTED VIEW</span></div><div class="line">        name = v[<span class="number">0</span>]   <span class="comment"># GRAB THE CURRENT VIEWS NAME</span></div><div class="line">        col = v[<span class="number">1</span>]    <span class="comment"># GRAB THE CURRENT VIEWS COLOUR</span></div><div class="line">        rgb = tuple( [ int(v*<span class="number">255</span>) <span class="keyword">for</span> v <span class="keyword">in</span> col ] ) <span class="comment">#CONVERT FLOAT TO 8BIT INT AND RETURN A TUPLE</span></div><div class="line">        hexCol = <span class="string">'#%02x%02x%02x'</span> % rgb             <span class="comment">#CONVERT INTEGER NUMBERS TO HEX CODE</span></div><div class="line">        curView = <span class="string">'%s %s'</span> % ( name, hexCol )       <span class="comment">#COMBINE NAME AND HEX COLOUR TO SCRIPT SYNTAX</span></div><div class="line">        newViews.append( curView )      <span class="comment"># COLLECT ALL REQUESTED VIEWS</span></div><div class="line"></div><div class="line">    <span class="comment"># COMBINE ALL VIEWS WITH LINE BREAK AND INITIALISE THE VIEWS KNOB WITH THE RESULTING SCRIPT SYNTAX</span></div><div class="line">    nuke.root().knob(<span class="string">'views'</span>).fromScript( <span class="string">'\n'</span>.join( newViews ) )</div></pre></td></tr></table></figure>
+<p>运行来测试下，注意上面的函数定义了左右视图，红蓝色。因为没有任何参数也可以运行此函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">setUpMultiView()</div></pre></td></tr></table></figure></p>
+<p>如果想要左边view为红色，右边为绿色，用不同的值来调用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">setUpMultiView( [(&apos;left&apos;, (1,0,0)), (&apos;right&apos;, (0,1,0)])</div></pre></td></tr></table></figure></p>
+<p>创建了left和right的两个view，分别为红色和绿色：<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/setUpMultiView_01.png" alt="setUpMultiView_01.png"></p>
+<p>如果想要nuke在启动的时候运行次脚本，在立体模式下会自动创建新session，将函数挂载在onUserCreate上。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/nuke/">nuke</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/nuke/">nuke</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cgcoder.com/2016/08/17/nuke-python-6/" data-title="Nuke Python 立体 | Cgcoder" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/08/22/nuke-python-7/" title="Nuke Python roto">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Nuke Python roto</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/08/15/c4d-python/"  title="C4D python 创建物体修改属性">
+ <strong>下一篇：</strong><br/> 
+ <span>C4D python 创建物体修改属性
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/08/17/nuke-python-6/" data-title="Nuke Python 立体" data-url="http://cgcoder.com/2016/08/17/nuke-python-6/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#多视图knob-的数值"><span class="toc-number">1.</span> <span class="toc-text">多视图knob 的数值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例子"><span class="toc-number">2.</span> <span class="toc-text">例子</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#创建、转换立体camera"><span class="toc-number">2.1.</span> <span class="toc-text">创建、转换立体camera</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#设置立体"><span class="toc-number">2.2.</span> <span class="toc-text">设置立体</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="mincau" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/app-plugin/" title="app-plugin">app-plugin<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/code-fun/" title="code-fun">code-fun<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/nuke/" title="nuke">nuke<sup>25</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/open-source/" title="open source">open source<sup>4</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nuke/" title="nuke">nuke<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/alembic/" title="alembic">alembic<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/design/" title="design">design<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c/" title="c++">c++<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fun/" title="fun">fun<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/yeti/" title="yeti">yeti<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mel/" title="mel">mel<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fur/" title="fur">fur<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hair/" title="hair">hair<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c4d/" title="c4d">c4d<sup>1</sup></a></li>
+			
+		
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://cgspread.com/" target="_blank" title="CGspread">CGspread</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Jingbo. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/mincau" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		<a href="https://www.linkedin.com/in/mincau" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:mincau@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="N景波">N景波</a>
+		
+		</p>
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cgcoder"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-81709441-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+
+  </body>
+</html>
