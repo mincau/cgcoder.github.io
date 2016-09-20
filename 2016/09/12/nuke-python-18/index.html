@@ -17,10 +17,13 @@
 <meta property="og:url" content="http://cgcoder.com/2016/09/12/nuke-python-18/index.html">
 <meta property="og:site_name" content="Cgcoder">
 <meta property="og:description" content="各种数学函数">
-<meta property="og:updated_time" content="2016-09-12T14:12:19.931Z">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/paintPoints_01.png">
+<meta property="og:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/paintPoints_01.png">
+<meta property="og:updated_time" content="2016-09-20T06:52:03.921Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nuke Python 数学">
 <meta name="twitter:description" content="各种数学函数">
+<meta name="twitter:image" content="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/paintPoints_01.png">
 
     
     <link rel="alternative" href="/atom.xml" title="Cgcoder" type="application/atom+xml">
@@ -96,11 +99,102 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#使用矩阵"><span class="toc-number">1.</span> <span class="toc-text">使用矩阵</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#案例"><span class="toc-number">2.</span> <span class="toc-text">案例</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#绘制点"><span class="toc-number">2.1.</span> <span class="toc-text">绘制点</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<p>太简单了，不想翻译，嘿嘿</p>
+		<p>本章讲解了一些数学模块的特性，详解了矢量和矩阵对象以及它们的成员函数。你可以在<a href="http://www.nukepedia.com/written-tutorials/using-the-nukemath-python-module-to-do-vector-and-matrix-operations/" target="_blank" rel="external">Nukepedia</a>上找到一个很棒的教学案例。</p>
+<h5 id="使用矩阵"><a href="#使用矩阵" class="headerlink" title="使用矩阵"></a>使用矩阵</h5><p>请参阅：</p>
+<p><a href="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/stereo.html#stereosetup-ref-label" target="_blank" rel="external">Setting Up Stereo</a></p>
+<h5 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h5><h6 id="绘制点"><a href="#绘制点" class="headerlink" title="绘制点"></a>绘制点</h6><p>这是一个比较实验性的函数，它结合了读取几何体信息，获取摄像机投射矩阵，创建绘画笔触等方法。它的性能不是特别好，所以建议只在轻量级的几何体上测试。这个函数的目的是投射3D点到（当前选中的相机）视图空间内的所有物体上，并使用绘制笔触绘制一个点。它不是一个为实际生产制作开发的函数，仅用于展示最新版API的一些功能。<br><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/paintPoints_01.png" alt=""><br>新建一个函数，命名为“paintPoints”。定义提供几何体的节点（我们将仅抓取视图所见的）和一个摄像机（假设已经选中了一个摄像机节点）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">paintPoints</span><span class="params">()</span>:</span></div><div class="line">    geoNode = nuke.activeViewer().node()</div><div class="line">    camera = nuke.selectedNode()</div></pre></td></tr></table></figure>
+<p>以防选中的节点不是摄像机，我们应该让用户知道：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> camera.Class() <span class="keyword">in</span> ( <span class="string">'Camera'</span>, <span class="string">'Camera2'</span> ):</div><div class="line">    nuke.message( <span class="string">'Please select a camera node first'</span>)</div><div class="line">    <span class="keyword">return</span></div></pre></td></tr></table></figure>
+<p>为了获取当前视图所连接的物体，我们抓取视图的geo属性来检查物体。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">geoKnob = geoNode[<span class="string">'geo'</span>]</div><div class="line">objs = geoKnob.getGeometry()</div><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> objs:</div><div class="line">    nuke.message( <span class="string">'No geometry found in %s'</span> % geoNode.name() )</div></pre></td></tr></table></figure>
+<p>为了收集所有3D点的世界坐标，我们需要：</p>
+<ul>
+<li>迭代所有物体</li>
+<li>获得每个物体的世界坐标</li>
+<li>迭代每个物体上的所有点</li>
+<li>获取每个点的本地坐标，并乘以此点的父物体的变换矩阵来获取此点的世界位置：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">pts = []</div><div class="line"><span class="keyword">for</span> o <span class="keyword">in</span> objs:</div><div class="line">    objTransform = o.transform()</div><div class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> o.points():</div><div class="line">        worldP = objTransform * nuke.math.Vector4( p.x, p.y, p.z, <span class="number">1</span> )</div><div class="line">        pts.append( [worldP.x, worldP.y, worldP.z] )</div><div class="line">```    </div><div class="line"></div><div class="line">这就收集了pts列表内每个<span class="number">3</span>D点的世界空间位置，目前代码如下：</div><div class="line"></div><div class="line">```python</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">paintPoints</span><span class="params">()</span>:</span></div><div class="line">    geoNode = nuke.activeViewer().node()</div><div class="line">    camera = nuke.selectedNode()</div><div class="line"></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> camera.Class() <span class="keyword">in</span> ( <span class="string">'Camera'</span>, <span class="string">'Camera2'</span> ):</div><div class="line">        nuke.message( <span class="string">'Please select a camera node first'</span>)</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line">    geoKnob = geoNode[<span class="string">'geo'</span>]</div><div class="line">    objs = geoKnob.getGeometry()</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> objs:</div><div class="line">        nuke.message( <span class="string">'No geometry found in %s'</span> % geoNode.name() )</div><div class="line"></div><div class="line">    pts = []</div><div class="line">    <span class="keyword">for</span> o <span class="keyword">in</span> objs:</div><div class="line">        objTransform = o.transform()</div><div class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> o.points():</div><div class="line">            worldP = objTransform * nuke.math.Vector4(p.x, p.y, p.z, <span class="number">1</span>)</div><div class="line">            pts.append( [worldP.x, worldP.y, worldP.z] )</div><div class="line">```    </div><div class="line"></div><div class="line">现在我们可以迭代所有点，计算出它们的屏幕位置，并使用RotoPaint节点绘制一个绘图笔触来标记这些位置了。在一个Roto或者RotoPaint节点内获取所有的笔触、形状之类的东西，我们得获取它的curves属性。</div><div class="line"></div><div class="line">```python</div><div class="line">curvesKnob = nuke.createNode( <span class="string">'RotoPaint'</span> )[<span class="string">'curves'</span>]</div></pre></td></tr></table></figure>
+<p>因为大家知道这个过程需要一点时间，我们最好能设置一个进度条：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">task  = nuke.ProgressTask( <span class="string">'painting points'</span> )</div></pre></td></tr></table></figure>
+<p>首先，确定进程可以通过进度条取消掉，并且进度条要随着迭代的进行更新，这样你就可以知道正在发生什么：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i, pt <span class="keyword">in</span> enumerate( pts ):</div><div class="line">    <span class="keyword">if</span> task.isCancelled():</div><div class="line">        <span class="keyword">break</span></div><div class="line">task.setMessage( <span class="string">'painting point %s'</span> % i )</div></pre></td></tr></table></figure>
+<p>然后为每个点创建一个绘图笔触对象，并指定到RotoPaint节点的curves属性上：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">stroke = nuke.rotopaint.Stroke( curvesKnob )</div></pre></td></tr></table></figure>
+<p>为了获取点的屏幕空间位置，我们可以用nukescripts.snap3d模块，这个模块可以做很多类似的工作：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pos= nukescripts.snap3d.projectPoint( camera, pt )</div></pre></td></tr></table></figure>
+<blockquote>
+<p>注：其他方便处理点投射和点选择的3D函数请参阅随Nuke软件安装的nukescripts文件夹内的snap3d.py文件。</p>
+</blockquote>
+<p>为了将新发现的屏幕位置指定给一个绘制笔触，我们首先要新建一个AnimationControlPoint，用以定义一个控制点的位置：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ctrlPoint = nuke.rotopaint.AnimControlPoint( pos )</div></pre></td></tr></table></figure>
+<p>现在,我们来添加这个新的控制点到新笔触上：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">stroke.append( ctrlPoint )</div></pre></td></tr></table></figure>
+<p>我们还需要添加它到RotoPaint节点的Root层上：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curvesKnob.rootLayer.append( stroke )</div></pre></td></tr></table></figure>
+<p>最后，我们要开始更新刚才创建的进度条了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">task.setProgress( int( float(i)/len(pts)*<span class="number">100</span> ) )</div></pre></td></tr></table></figure>
+<p>以下是我们的最终代码：</p>
+<pre><code class="python"><span class="keyword">import</span> nuke
+<span class="keyword">import</span> nukescripts
+
+<span class="function"><span class="keyword">def</span> <span class="title">paintPoints</span><span class="params">()</span>:</span>
+    <span class="string">'''
+    Rather experimental but kinda fun. This projects sleected 3D points through a camera ito screen space
+    and draws a dot for each using a paint stroke.
+    '''</span>
+    <span class="comment"># GET THE GEO NODE FROM THE CURRENTLY ACTIVE VIEWER</span>
+    geoNode = nuke.activeViewer().node()   
+
+    <span class="comment"># WE EXPECT A CAMERA TO BE SELECTED</span>
+    camera = nuke.selectedNode()
+    <span class="keyword">if</span> <span class="keyword">not</span> camera.Class() <span class="keyword">in</span> ( <span class="string">'Camera'</span>, <span class="string">'Camera2'</span> ):
+        nuke.message( <span class="string">'Please select a camera node first'</span>)
+        <span class="keyword">return</span>
+
+    <span class="comment"># COLLECT ALL OBJECTS IN THE CURRENT GEO KNOB. QUIT IFNONE WERE FOUND</span>
+    geoKnob = geoNode[<span class="string">'geo'</span>]
+    objs = geoKnob.getGeometry()
+    <span class="keyword">if</span> <span class="keyword">not</span> objs:
+        nuke.message( <span class="string">'No geometry found in %s'</span> % geoNode.name() )
+
+    pts = []
+    <span class="keyword">for</span> o <span class="keyword">in</span> objs:
+        <span class="comment"># CYCLE THROUGH ALL OBJECTS</span>
+        objTransform = o.transform()
+        <span class="keyword">for</span> p <span class="keyword">in</span> o.points():
+            <span class="comment"># CYCLE THROUGH ALL POINTS OF CURRENT OBJECT</span>
+            worldP = objTransform * nuke.math.Vector4(p.x, p.y, p.z, <span class="number">1</span>)
+            pts.append( [worldP.x, worldP.y, worldP.z] )
+
+    <span class="comment"># CREATE THE NODE THAT WILL HOLD THE PAINT STROKES</span>
+    curvesKnob = nuke.createNode( <span class="string">'RotoPaint'</span> )[<span class="string">'curves'</span>]
+    <span class="comment"># PREP THE TASK BAR</span>
+    task  = nuke.ProgressTask( <span class="string">'painting points'</span> )
+
+    <span class="keyword">for</span> i, pt <span class="keyword">in</span> enumerate( pts ):
+        <span class="keyword">if</span> task.isCancelled():
+            <span class="keyword">break</span>
+        task.setMessage( <span class="string">'painting point %s'</span> % i )
+        <span class="comment"># CREATE A NEW STROKE</span>
+        stroke = nuke.rotopaint.Stroke( curvesKnob )
+        <span class="comment"># PROJECT THE POINT TO SCREEN SPACE</span>
+        pos = nukescripts.snap3d.projectPoint( camera, pt )
+        <span class="comment"># CREATE ANE CONTROL POINT FOR</span>
+        ctrlPoint = nuke.rotopaint.AnimControlPoint( pos )
+        <span class="comment"># ASSIGN IT TO THE STROKE</span>
+        stroke.append( ctrlPoint )
+        <span class="comment"># ASSIGN TH E STROKE TO THE ROOT LAYER</span>
+        curvesKnob.rootLayer.append( stroke )
+        <span class="comment"># UPDARE PROGRESS BAR</span>
+        task.setProgress( int( float(i)/len(pts)*<span class="number">100</span> ) )
+</code></pre>
+<p><img src="https://docs.thefoundry.co.uk/products/nuke/developers/100/pythondevguide/_images/paintPoints_01.png" alt=""> </p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -167,7 +261,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#使用矩阵"><span class="toc-number">1.</span> <span class="toc-text">使用矩阵</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#案例"><span class="toc-number">2.</span> <span class="toc-text">案例</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#绘制点"><span class="toc-number">2.1.</span> <span class="toc-text">绘制点</span></a></li></ol></li></ol>
  
   </div>
 
